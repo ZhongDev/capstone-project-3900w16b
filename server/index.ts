@@ -13,17 +13,19 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use("/restaurant", restaurantController);
 
-app.use("*", (req, res, next) => {
+app.use("*", (req, res) => {
   res.status(404).send("Not found");
 });
 
-app.use((err: any, req: Request, res: Response, next: NextFunction) => {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+app.use((err: unknown, req: Request, res: Response, next: NextFunction) => {
   if (err instanceof ZodError) {
     res.status(400).json(err);
   } else if (err instanceof CustomError) {
     res.status(err.status).json({ msg: err.message });
-  } else if (err) {
-    res.status(500).json(err.message);
+  } else {
+    console.error("Error: ", err);
+    res.status(500).json("Internal Server Error");
   }
 });
 
