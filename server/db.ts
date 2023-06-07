@@ -1,6 +1,3 @@
-import { config as dot } from "dotenv";
-dot();
-
 import Knex from "knex";
 import config from "./knexfile";
 
