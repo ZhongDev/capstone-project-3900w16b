@@ -16,5 +16,14 @@
   "bugs": {
     "url": "https://github.com/unsw-cse-comp3900-9900-23T2/capstone-project-3900w16b-drop-table-students/issues"
   },
-  "homepage": "https://github.com/unsw-cse-comp3900-9900-23T2/capstone-project-3900w16b-drop-table-students#readme"
+  "homepage": "https://github.com/unsw-cse-comp3900-9900-23T2/capstone-project-3900w16b-drop-table-students#readme",
+  "devDependencies": {
+    "typescript": "^5.1.3"
+  },
+  "dependencies": {
+    "dotenv": "^16.1.4",
+    "express": "^4.18.2",
+    "knex": "^2.4.2",
+    "objection": "^3.0.1"
+  }
 }
