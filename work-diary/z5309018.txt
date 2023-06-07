@@ -1,0 +1,8 @@
+Week 1
+- Established what project we were to work on (wait management)
+- Roughly talked about general roles
+- Agreed to use node for backend and react for frontend
+
+Week 2
+- Fully planned requirements and functionalities for project proposal
+- 
