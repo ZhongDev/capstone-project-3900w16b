@@ -1,0 +1,3 @@
+Week 1
+- Started with basic functions in the codebase (registering a restaurant, add db)
+
