@@ -1,0 +1,20 @@
+{
+  "name": "capstone-project-3900w16b-drop-table-students",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/unsw-cse-comp3900-9900-23T2/capstone-project-3900w16b-drop-table-students.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/unsw-cse-comp3900-9900-23T2/capstone-project-3900w16b-drop-table-students/issues"
+  },
+  "homepage": "https://github.com/unsw-cse-comp3900-9900-23T2/capstone-project-3900w16b-drop-table-students#readme"
+}
