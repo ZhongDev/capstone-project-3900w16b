@@ -19,4 +19,13 @@ router.post("/category", auth, async (req, res, next) => {
   }
 });
 
+router.get("/:restaurantId", async (req, res, next) => {
+  try {
+    const menu = await menuService.getMenu(Number(req.params.restaurantId));
+    res.json(menu);
+  } catch (err) {
+    next(err);
+  }
+});
+
 export default router;
