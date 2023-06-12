@@ -2,16 +2,25 @@ import { config } from "dotenv";
 config();
 
 import express, { NextFunction, Request, Response } from "express";
+import cookie from "cookie-parser";
 import { ZodError } from "zod";
 import restaurantController from "./controller/restaurant.controller";
+import menuController from "./controller/menu.controller";
 import "./db";
 import CustomError from "./errors/CustomError";
+import auth from "./controller/middleware/auth";
 
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookie());
 
 app.use("/restaurant", restaurantController);
+app.use("/menu", menuController);
+
+app.get("/me", auth, (req, res, next) => {
+  res.send(req.restaurant);
+});
 
 app.use("*", (req, res) => {
   res.status(404).send("Not found");
