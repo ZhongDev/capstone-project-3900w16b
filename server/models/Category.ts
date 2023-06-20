@@ -1,4 +1,5 @@
 import { Model } from "objection";
+import Item from "./Item";
 
 export default class Category extends Model {
   id!: number;
@@ -7,4 +8,15 @@ export default class Category extends Model {
   name!: string;
 
   static tableName = "Category";
+
+  static relationMappings = {
+    items: {
+      relation: Model.HasManyRelation,
+      modelClass: Item,
+      join: {
+        from: "Category.id",
+        to: "Item.categoryId",
+      },
+    },
+  };
 }

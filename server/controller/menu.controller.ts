@@ -7,13 +7,28 @@ const router = Router();
 
 router.post("/category", auth, async (req, res, next) => {
   try {
-    const category = schema.Category.parse(req.body);
+    const category = schema.CreateCategoryRequest.parse(req.body);
     const menuCategory = await menuService.createCategory(
       req.restaurant!.restaurantId,
       category.name,
       category.displayOrder
     );
     res.json(menuCategory);
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.post("/item", auth, async (req, res, next) => {
+  try {
+    const newItem = schema.CreateItemRequest.parse(req.body);
+    const categoryItem = await menuService.createCategoryItem(
+      req.restaurant!.restaurantId,
+      newItem.categoryId,
+      newItem.displayOrder,
+      newItem.item
+    );
+    res.json(categoryItem);
   } catch (err) {
     next(err);
   }
