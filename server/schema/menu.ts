@@ -1,6 +1,17 @@
 import { z } from "zod";
 
-export const Category = z.object({
+export const CreateCategoryRequest = z.object({
   name: z.string(),
   displayOrder: z.number(),
+});
+
+export const CreateItemRequest = z.object({
+  categoryId: z.number(),
+  displayOrder: z.number(),
+  item: z.object({
+    name: z.string(),
+    description: z.string(),
+    ingredients: z.string(),
+    priceCents: z.number(),
+  }),
 });
