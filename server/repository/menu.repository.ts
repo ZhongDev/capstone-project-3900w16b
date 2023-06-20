@@ -35,8 +35,8 @@ export const createCategoryItem = (
 
 export const getMenu = (restaurantId: number) => {
   return Category.query()
-    .debug()
     .where({ restaurantId })
     .withGraphJoined("items")
+    .orderBy("category.displayOrder")
     .orderBy("items.displayOrder");
 };

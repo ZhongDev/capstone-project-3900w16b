@@ -24,7 +24,5 @@ export const createCategoryItem = async (
 };
 
 export const getMenu = async (restaurantId: number) => {
-  const menu = await menuRepo.getMenu(restaurantId);
-  menu.sort((a, b) => a.displayOrder - b.displayOrder);
-  return menu;
+  return menuRepo.getMenu(restaurantId);
 };
