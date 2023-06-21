@@ -103,7 +103,7 @@ export const RegisterForm = () => {
               variant="filled"
               required
               type="password"
-              mb="sm"
+              mb="xl"
               label="Confirm Password"
               placeholder="Confirm Password"
               autoComplete="new-password"
