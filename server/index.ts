@@ -2,6 +2,7 @@ import { config } from "dotenv";
 config();
 
 import express, { NextFunction, Request, Response } from "express";
+import cors from "cors";
 import cookie from "cookie-parser";
 import { ZodError } from "zod";
 import restaurantController from "./controller/restaurant.controller";
@@ -11,6 +12,12 @@ import CustomError from "./errors/CustomError";
 import auth from "./controller/middleware/auth";
 
 const app = express();
+app.use(
+  cors({
+    credentials: true,
+    origin: ["http://localhost:3000"],
+  })
+);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookie());
