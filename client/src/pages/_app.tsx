@@ -20,6 +20,22 @@ export default function App(props: AppProps) {
         withNormalizeCSS
         theme={{
           colorScheme: "light",
+          colors: {
+            gold: [
+              "#F6F4F0",
+              "#E8DFD2",
+              "#DFCEB3",
+              "#DCBE92",
+              "#DFB26D",
+              "#EAA844",
+              "#D4973C",
+              "#B9873C",
+              "#9B7741",
+              "#836A43",
+            ],
+          },
+          primaryColor: "gold",
+          primaryShade: 6,
         }}
       >
         <Component {...pageProps} />
