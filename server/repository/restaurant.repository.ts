@@ -6,11 +6,18 @@ export const createRestaurant = async (
   name: string,
   password: string
 ): Promise<Restaurant> => {
-  const hash = await promiseHash(password);
   return Restaurant.query().insert({
     email,
     name,
-    password: hash,
+    password,
+  });
+};
+
+export const getRestaurantByEmail = async (
+  email: string
+): Promise<Restaurant | undefined> => {
+  return Restaurant.query().findOne({
+    email,
   });
 };
 
