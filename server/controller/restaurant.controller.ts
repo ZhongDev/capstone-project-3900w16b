@@ -1,13 +1,15 @@
 import { Router } from "express";
-import { Restaurant } from "../schema/restaurant";
+import { CreateRestaurantRequest, LoginRequest } from "../schema/restaurant";
 import * as restaurantService from "../service/restaurant.service";
 import jwt from "jsonwebtoken";
 
 const router = Router();
 
-router.post("/", async (req, res, next) => {
+router.post("/register", async (req, res, next) => {
   try {
-    const { email, name, password } = Restaurant.parse(req.body ?? {});
+    const { email, name, password } = CreateRestaurantRequest.parse(
+      req.body ?? {}
+    );
     const restaurant = await restaurantService.createRestaurant(
       email,
       name,
@@ -15,6 +17,21 @@ router.post("/", async (req, res, next) => {
     );
     const token = await signJWT({
       restaurantId: restaurant.id,
+      name: restaurant.name,
+    });
+    res.cookie("Authorization", token).json(restaurant);
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.post("/login", async (req, res, next) => {
+  try {
+    const { email, password } = LoginRequest.parse(req.body ?? {});
+    const restaurant = await restaurantService.login(email, password);
+    const token = await signJWT({
+      restaurantId: restaurant.id,
+      name: restaurant.name,
     });
     res.cookie("Authorization", token).json(restaurant);
   } catch (err) {
