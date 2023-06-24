@@ -5,7 +5,6 @@ export default function MenuManagement() {
   return (
     <Sidebar>
       <b>hi</b>
-      <p>sd</p>
     </Sidebar>
   );
 }
