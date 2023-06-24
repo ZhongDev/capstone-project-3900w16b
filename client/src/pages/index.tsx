@@ -1,12 +1,20 @@
 import {
     Title,
+    Drawer,
     createStyles,
     Header,
     Container,
     Text,
     Button,
+    Burger,
     Group,
     rem,
+    ScrollArea,
+    Divider,
+    UnstyledButton,
+    Center,
+    Box,
+    Collapse,
 } from "@mantine/core";
 import Image from "next/image";
 import { getMe } from "@/api/auth";
@@ -14,6 +22,7 @@ import useSWR from "swr";
 import PlateHolderImg from "@/public/img/landing_ramen.png";
 import Head from "next/head";
 import { useRouter } from "next/router";
+import { useDisclosure } from "@mantine/hooks";
 
 const useStyles = createStyles((theme) => ({
     header: {
@@ -25,9 +34,6 @@ const useStyles = createStyles((theme) => ({
     logo: {
         userSelect: "none",
         cursor: "pointer",
-    },
-    welcome: {
-        //paddingTop: `calc(${theme.spacing.xl} * 4)`,
     },
     outer: {
         display: "flex",
@@ -45,14 +51,37 @@ const useStyles = createStyles((theme) => ({
             fontSize: rem(28),
         },
     },
+    burger: {
+        [theme.fn.largerThan("xs")]: {
+            display: "none",
+        },
+    },
+    registerButton: {
+        [theme.fn.smallerThan("xs")]: {
+            display: "none",
+        },
+    },
+    loginButton: {
+        "&:hover": {
+            color: theme.colors.gray[0],
+            backgroundColor: theme.colors.gold[6],
+        },
+        [theme.fn.smallerThan("xs")]: {
+            display: "none",
+        },
+    },
     image: {
-        //paddingTop: `calc(${theme.spacing.xl} * 4)`,
+        [theme.fn.smallerThan("xs")]: {
+            display: "none",
+        },
     },
 }));
 
 export default function Home() {
     const { data, error, isLoading } = useSWR("/me", getMe);
-    const { classes } = useStyles();
+    const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] =
+        useDisclosure(false);
+    const { classes, theme } = useStyles();
     const router = useRouter();
 
     return (
@@ -73,14 +102,17 @@ export default function Home() {
                     </Title>
                     <Group>
                         <Button
+                            className={classes.registerButton}
                             variant="subtle"
                             size="xl"
                             color="dark"
+                            radius="xl"
                             onClick={() => router.push("/register")}
                         >
                             Join Now
                         </Button>
                         <Button
+                            className={classes.loginButton}
                             variant="outline"
                             radius="xl"
                             size="xl"
@@ -89,10 +121,15 @@ export default function Home() {
                             Sign In
                         </Button>
                     </Group>
+                    <Burger
+                        opened={drawerOpened}
+                        onClick={toggleDrawer}
+                        className={classes.burger}
+                    />
                 </div>
             </Header>
             <div className={classes.outer}>
-                <div className={classes.welcome}>
+                <div>
                     <Container>
                         <Title className={classes.title}>
                             Welcome to the <br /> future of ordering
@@ -117,6 +154,31 @@ export default function Home() {
                     alt="Picture of software usage"
                 ></Image>
             </div>
+            <Drawer
+                opened={drawerOpened}
+                onClose={closeDrawer}
+                size="100%"
+                padding="md"
+                className={classes.burger}
+                zIndex={1000000}
+            >
+                <Divider
+                    my="sm"
+                    color={theme.colorScheme === "dark" ? "dark.5" : "gray.1"}
+                />
+                <Group position="center" grow pb="xl" px="md">
+                    <Button
+                        variant="default"
+                        radius="xl"
+                        onClick={() => router.push("/register")}
+                    >
+                        Join Now
+                    </Button>
+                    <Button radius="xl" onClick={() => router.push("/login")}>
+                        Sign In
+                    </Button>
+                </Group>
+            </Drawer>
         </>
     );
 }
