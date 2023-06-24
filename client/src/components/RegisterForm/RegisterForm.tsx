@@ -1,8 +1,10 @@
+import Link from "next/link";
 import { useRouter } from "next/router";
 import { Card, TextInput, Text, createStyles } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { GradientButton } from "../GradientButton";
 import request from "@/api/request";
+import { registerRestaurant } from "@/api/auth";
 
 const useStyles = createStyles((theme) => ({
   registerForm: {
@@ -26,6 +28,7 @@ export const RegisterForm = () => {
   const registerForm = useForm({
     initialValues: {
       email: "",
+      name: "",
       password: "",
       confirmPassword: "",
     },
@@ -46,21 +49,14 @@ export const RegisterForm = () => {
     name: string;
     password: string;
   }) => {
-    request
-      .post(process.env.NEXT_PUBLIC_BASEURL + "/restaurant", {
-        email,
-        name,
-        password,
-      })
-      .then((res) => router.push("/"))
+    registerRestaurant({ email, name, password })
+      .then(() => router.push("/"))
       .catch((err) => {
-        if (err.response) {
-          /**
-           * For now, the only non 500 error thrown during registering is
-           * 400: email already taken. We will just assume it is always this for now.
-           */
-          registerForm.setFieldError("email", err.response.data.msg);
-        }
+        /**
+         * For now, the only non 500 error thrown during registering is
+         * 400: email already taken. We will just assume it is always this for now.
+         */
+        registerForm.setFieldError("email", err.msg);
       });
   };
 
@@ -68,14 +64,12 @@ export const RegisterForm = () => {
     <div className={classes.registerForm}>
       <Card radius="lg" p="xl" withBorder className={classes.registerCard}>
         <div className={classes.title}>
-          <Text fz="xl">Register Account</Text>
+          <Text fz="xl" fw={500}>
+            Register Account
+          </Text>
         </div>
         <div>
-          <form
-            onSubmit={registerForm.onSubmit((values) =>
-              register({ ...values, name: "test" })
-            )}
-          >
+          <form onSubmit={registerForm.onSubmit((values) => register(values))}>
             <TextInput
               radius="lg"
               variant="filled"
@@ -86,6 +80,17 @@ export const RegisterForm = () => {
               placeholder="Your email"
               autoComplete="username"
               {...registerForm.getInputProps("email")}
+            />
+            <TextInput
+              radius="lg"
+              variant="filled"
+              required
+              type="text"
+              mb="sm"
+              label="Restaurant Name"
+              placeholder="Restaurant Name"
+              autoComplete="username"
+              {...registerForm.getInputProps("name")}
             />
             <TextInput
               radius="lg"
@@ -115,6 +120,14 @@ export const RegisterForm = () => {
           </form>
         </div>
       </Card>
+      <Text mt="xl" align="center" fw={500}>
+        Already have an account?{" "}
+        <Link href="/login">
+          <Text color="gold" span>
+            Sign In
+          </Text>
+        </Link>
+      </Text>
     </div>
   );
 };
