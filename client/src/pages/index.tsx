@@ -4,6 +4,11 @@ import useSWR from "swr";
 
 export default function Home() {
   const { data, error, isLoading } = useSWR("/me", getMe);
+
+  if (isLoading) {
+    return null;
+  }
+
   if (error) {
     return <Title>Hi, you are not logged in</Title>;
   }
