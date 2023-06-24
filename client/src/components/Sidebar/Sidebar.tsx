@@ -1,4 +1,4 @@
-import { AppShell, Navbar, createStyles, Title } from "@mantine/core";
+import { AppShell, Navbar, createStyles, Title, Header } from "@mantine/core";
 import { GradientButton } from "../GradientButton";
 import { useRouter } from "next/router";
 import Link from "next/link";
