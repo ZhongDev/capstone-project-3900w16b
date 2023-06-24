@@ -43,4 +43,13 @@ router.get("/:restaurantId", async (req, res, next) => {
   }
 });
 
+router.get("/", auth, async (req, res, next) => {
+  try {
+    const menu = await menuService.getMenu(req.restaurant!.restaurantId);
+    res.json(menu);
+  } catch (err) {
+    next(err);
+  }
+});
+
 export default router;
