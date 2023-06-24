@@ -41,6 +41,10 @@ const useStyles = createStyles((theme) => ({
         justifyContent: "space-around",
         margin: rem(50),
         paddingTop: `calc(${theme.spacing.xl} * 4)`,
+        [theme.fn.smallerThan("xs")]: {
+            display: "inline-block",
+            textAlign: "center",
+        },
     },
     title: {
         color: theme.colorScheme === "dark" ? theme.white : theme.black,
@@ -49,6 +53,11 @@ const useStyles = createStyles((theme) => ({
 
         [theme.fn.smallerThan("xs")]: {
             fontSize: rem(28),
+        },
+    },
+    text: {
+        [theme.fn.smallerThan("xs")]: {
+            fontSize: rem(15),
         },
     },
     burger: {
@@ -72,7 +81,7 @@ const useStyles = createStyles((theme) => ({
     },
     image: {
         [theme.fn.smallerThan("xs")]: {
-            display: "none",
+            float: "right",
         },
     },
 }));
@@ -134,7 +143,7 @@ export default function Home() {
                         <Title className={classes.title}>
                             Welcome to the <br /> future of ordering
                         </Title>
-                        <Text mt="md">
+                        <Text mt="md" className={classes.text}>
                             Experience a new era of business efficiency with out
                             smartphone-based order management system. Streamline
                             your operations anytime, anywhere. Manage, monitor
