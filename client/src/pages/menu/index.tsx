@@ -150,7 +150,7 @@ const CreateItem = ({
       <Modal opened={opened} onClose={close} title="Create a new category">
         <form
           onSubmit={itemForm.onSubmit((values) => {
-            createItem(categoryId, 0, values).then(() => {
+            createItem(categoryId, values).then(() => {
               mutate("/menu");
               itemForm.reset();
               close();
@@ -246,7 +246,7 @@ const CreateCategory = () => {
               type="submit"
               disabled={!newCategoryName}
               onClick={() => {
-                createCategory(newCategoryName, 0).then(() => {
+                createCategory(newCategoryName).then(() => {
                   mutate("/menu");
                   setNewCategoryName("");
                   close();

@@ -1,5 +1,6 @@
 import { Model } from "objection";
 import Item from "./Item";
+import Restaurant from "./Restaurant";
 
 export default class Category extends Model {
   id!: number;
@@ -7,9 +8,12 @@ export default class Category extends Model {
   displayOrder!: number;
   name!: string;
 
+  items?: Item[];
+  restaurant?: Restaurant;
+
   static tableName = "Category";
 
-  static relationMappings = {
+  static relationMappings = () => ({
     items: {
       relation: Model.HasManyRelation,
       modelClass: Item,
@@ -18,5 +22,13 @@ export default class Category extends Model {
         to: "Item.categoryId",
       },
     },
-  };
+    restaurant: {
+      relation: Model.BelongsToOneRelation,
+      modelClass: Restaurant,
+      join: {
+        from: "Category.restaurantId",
+        to: "Restaurant.id",
+      },
+    },
+  });
 }

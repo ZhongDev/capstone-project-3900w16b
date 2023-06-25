@@ -30,11 +30,10 @@ export type CreateCategoryResponse = {
   restaurantId: number;
   id: number;
 };
-export const createCategory = (name: string, displayOrder: number) => {
+export const createCategory = (name: string) => {
   return request
     .post(process.env.NEXT_PUBLIC_BASEURL + "/menu/category", {
       name,
-      displayOrder,
     })
     .then((res) => res.data)
     .catch((err) => {
@@ -51,7 +50,6 @@ export type CreateItemResponse = {
 };
 export const createItem = (
   categoryId: number,
-  displayOrder: number,
   item: {
     name: string;
     description: string;
@@ -62,7 +60,6 @@ export const createItem = (
   return request
     .post(process.env.NEXT_PUBLIC_BASEURL + "/menu/item", {
       categoryId,
-      displayOrder,
       item,
     })
     .then((res) => res.data)
