@@ -13,7 +13,7 @@ import {
 import { useDisclosure } from "@mantine/hooks";
 import useSWR, { mutate } from "swr";
 import { Sidebar } from "@/components/Sidebar";
-import { GetMenuResponse, createCategory, getMenu } from "@/api/menu";
+import { createCategory, getMenu } from "@/api/menu";
 
 const useStyles = createStyles((theme) => ({
   menuSection: {
@@ -87,30 +87,49 @@ function CreateCategory() {
         New Category
       </Button>
       <Modal opened={opened} onClose={close} title="Create a new category">
-        <TextInput
-          radius="lg"
-          variant="filled"
-          required
-          mb="sm"
-          label="Category name"
-          placeholder="Category name"
-          value={newCategoryName}
-          onChange={(e) => setNewCategoryName(e.target.value)}
-        />
-        <Group position="right">
-          <Button
-            disabled={!newCategoryName}
-            onClick={() => {
-              createCategory(newCategoryName, 0).then(() => {
-                mutate("/menu");
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            if (!newCategoryName) {
+              return;
+            }
+          }}
+        >
+          <TextInput
+            radius="lg"
+            variant="filled"
+            required
+            data-autofocus
+            mb="sm"
+            placeholder="Category name"
+            value={newCategoryName}
+            onChange={(e) => setNewCategoryName(e.target.value)}
+          />
+          <Group position="right">
+            <Button
+              variant="subtle"
+              onClick={() => {
                 setNewCategoryName("");
                 close();
-              });
-            }}
-          >
-            Create Category
-          </Button>
-        </Group>
+              }}
+            >
+              Cancel
+            </Button>
+            <Button
+              type="submit"
+              disabled={!newCategoryName}
+              onClick={() => {
+                createCategory(newCategoryName, 0).then(() => {
+                  mutate("/menu");
+                  setNewCategoryName("");
+                  close();
+                });
+              }}
+            >
+              Create Category
+            </Button>
+          </Group>
+        </form>
       </Modal>
     </>
   );
