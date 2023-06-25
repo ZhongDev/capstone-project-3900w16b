@@ -30,6 +30,8 @@ export const createCategoryItem = (
     displayOrder,
     name: item.name,
     priceCents: item.priceCents,
+    description: item.description,
+    ingredients: item.ingredients,
   });
 };
 

@@ -11,7 +11,7 @@ export const CreateItemRequest = z.object({
   item: z.object({
     name: z.string(),
     description: z.string(),
-    ingredients: z.string(),
+    ingredients: z.string().nullable(),
     priceCents: z.number(),
   }),
 });

@@ -6,7 +6,7 @@ export type GetMenuResponse = {
   displayOrder: number;
   name: string;
   items: MenuItem[];
-}[];
+};
 export type MenuItem = {
   id: number;
   categoryId: number;
@@ -21,7 +21,7 @@ export const getMenu = () => {
     .then((res) => res.data)
     .catch((err) => {
       throw err.response.data;
-    }) as Promise<GetMenuResponse>;
+    }) as Promise<GetMenuResponse[]>;
 };
 
 export type CreateCategoryResponse = {
@@ -40,4 +40,33 @@ export const createCategory = (name: string, displayOrder: number) => {
     .catch((err) => {
       throw err.response.data;
     }) as Promise<CreateCategoryResponse>;
+};
+
+export type CreateItemResponse = {
+  categoryId: number;
+  displayOrder: number;
+  name: string;
+  priceCents: number;
+  id: number;
+};
+export const createItem = (
+  categoryId: number,
+  displayOrder: number,
+  item: {
+    name: string;
+    description: string;
+    ingredients: string | null;
+    priceCents: number;
+  }
+) => {
+  return request
+    .post(process.env.NEXT_PUBLIC_BASEURL + "/menu/item", {
+      categoryId,
+      displayOrder,
+      item,
+    })
+    .then((res) => res.data)
+    .catch((err) => {
+      throw err.response.data;
+    }) as Promise<CreateItemResponse>;
 };
