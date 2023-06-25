@@ -1,6 +1,6 @@
 export type Item = {
   name: string;
   description: string;
-  ingredients: string;
+  ingredients: string | null;
   priceCents: number;
 };

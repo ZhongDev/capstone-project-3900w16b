@@ -7,6 +7,8 @@ export default class Item extends Model {
   name!: string;
   image!: string;
   priceCents!: number;
+  description!: string;
+  ingredients!: string | null;
 
   static tableName = "Item";
 }
