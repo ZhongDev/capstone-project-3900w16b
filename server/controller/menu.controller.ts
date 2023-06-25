@@ -10,10 +10,24 @@ router.post("/category", auth, async (req, res, next) => {
     const category = schema.CreateCategoryRequest.parse(req.body);
     const menuCategory = await menuService.createCategory(
       req.restaurant!.restaurantId,
-      category.name,
-      category.displayOrder
+      category.name
     );
     res.json(menuCategory);
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.patch("/category/:categoryId", auth, async (req, res, next) => {
+  try {
+    const updateRequest = schema.UpdateCategoryRequest.parse(req.body);
+    res.json(
+      await menuService.updateCategory(
+        req.restaurant!.restaurantId,
+        Number(req.params.categoryId),
+        updateRequest
+      )
+    );
   } catch (err) {
     next(err);
   }
@@ -25,8 +39,21 @@ router.post("/item", auth, async (req, res, next) => {
     const categoryItem = await menuService.createCategoryItem(
       req.restaurant!.restaurantId,
       newItem.categoryId,
-      newItem.displayOrder,
       newItem.item
+    );
+    res.json(categoryItem);
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.patch("/item/:itemId", auth, async (req, res, next) => {
+  try {
+    const updateRequest = schema.UpdateItemRequest.parse(req.body);
+    const categoryItem = await menuService.updateCategoryItem(
+      req.restaurant!.restaurantId,
+      Number(req.params.itemId),
+      updateRequest
     );
     res.json(categoryItem);
   } catch (err) {
