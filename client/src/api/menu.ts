@@ -1,11 +1,15 @@
 import request from "./request";
 
-export type GetMenuResponse = {
+export type Menu = {
   id: number;
   restaurantId: number;
   displayOrder: number;
   name: string;
   items: MenuItem[];
+};
+export type GetMenuResponse = {
+  restaurant: { name: string };
+  menu: Menu[];
 };
 export type MenuItem = {
   id: number;
@@ -21,7 +25,17 @@ export const getMenu = () => {
     .then((res) => res.data)
     .catch((err) => {
       throw err.response.data;
-    }) as Promise<GetMenuResponse[]>;
+    }) as Promise<GetMenuResponse>;
+};
+export const getMenuByRestaurantId = (restaurantId: number) => {
+  return request
+    .get(process.env.NEXT_PUBLIC_BASEURL + "/menu/" + restaurantId, {
+      withCredentials: false,
+    })
+    .then((res) => res.data)
+    .catch((err) => {
+      throw err.response.data;
+    }) as Promise<GetMenuResponse>;
 };
 
 export type CreateCategoryResponse = {

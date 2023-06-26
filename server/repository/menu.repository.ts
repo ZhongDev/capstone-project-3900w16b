@@ -7,7 +7,7 @@ import Restaurant from "../models/Restaurant";
 export const createCategory = async (restaurantId: number, name: string) => {
   const newCategory = await Category.query().insert({
     displayOrder: raw(
-      "? + 1",
+      "COALESCE(?, 0) + 1",
       Category.query().max("displayOrder").where({
         restaurantId,
       })
@@ -54,7 +54,7 @@ export const createCategoryItem = async (
   const newItem = await Item.query().insert({
     categoryId,
     displayOrder: raw(
-      "? + 1",
+      "COALESCE(?, 0) + 1",
       Item.query().max("displayOrder").where({ categoryId })
     ),
     name: item.name,

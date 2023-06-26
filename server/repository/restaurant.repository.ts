@@ -21,6 +21,14 @@ export const getRestaurantByEmail = async (
   });
 };
 
+export const getRestaurantById = async (
+  id: number
+): Promise<Restaurant | undefined> => {
+  return Restaurant.query().findOne({
+    id,
+  });
+};
+
 const promiseHash = (password: string): Promise<string> =>
   new Promise((resolve, reject) => {
     bcrypt.hash(password, 10, (err, hash) => {
