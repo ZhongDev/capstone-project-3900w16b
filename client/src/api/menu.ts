@@ -18,6 +18,8 @@ export type MenuItem = {
   name: string;
   image: string | null;
   priceCents: number;
+  description: string;
+  ingredients: string | null;
 };
 export const getMenu = () => {
   return request
