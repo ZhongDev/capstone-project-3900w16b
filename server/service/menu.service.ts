@@ -42,6 +42,17 @@ export const updateCategoryItem = async (
   return menuRepo.updateCategoryItem(itemId, updateItem);
 };
 
+export const deleteCategoryItem = async (
+  restaurantId: number,
+  itemId: number
+) => {
+  const restaurant = await menuRepo.getCategoryItemRestaurant(itemId);
+  if (restaurant?.id !== restaurantId) {
+    throw new NotFound("This item does not exist...");
+  }
+  return menuRepo.deleteCategoryItem(itemId);
+};
+
 export const getMenu = async (restaurantId: number) => {
   return menuRepo.getMenu(restaurantId);
 };

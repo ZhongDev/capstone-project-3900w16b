@@ -1,1 +1,14 @@
-this is text
+Week 1:
+Debated what exactly to do
+
+Week 2:
+Chose topic and scrum master, started proposal
+
+Week 3:
+Finished off proposal
+
+Week 4:
+Try to learn some basic js
+
+Week 5:
+Prepare for Sprint 1 Demo

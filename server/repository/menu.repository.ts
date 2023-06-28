@@ -3,6 +3,7 @@ import Item from "../models/Item";
 import Category from "../models/Category";
 import { Item as ItemType, UpdateCategory, UpdateItem } from "../types/menu";
 import Restaurant from "../models/Restaurant";
+import knex from "knex";
 
 export const createCategory = async (restaurantId: number, name: string) => {
   const newCategory = await Category.query().insert({
@@ -86,6 +87,10 @@ export const updateCategoryItem = async (
     })
     .where({ id });
   return Item.query().findOne({ id });
+};
+
+export const deleteCategoryItem = async (id: number) => {
+  return knex("item").where("id", id).del();
 };
 
 export const getMenu = (restaurantId: number) => {
