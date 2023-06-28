@@ -37,7 +37,7 @@ export default function App(props: AppProps) {
             ],
           },
           primaryColor: "gold",
-          primaryShade: 6,
+          primaryShade: { light: 6, dark: 6 },
         }}
       >
         <Component {...pageProps} />
