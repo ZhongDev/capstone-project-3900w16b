@@ -90,7 +90,7 @@ export const updateCategoryItem = async (
 };
 
 export const deleteCategoryItem = async (id: number) => {
-  return knex("item").where("id", id).del();
+  return Item.query().where("id", id).del();
 };
 
 export const getMenu = (restaurantId: number) => {
