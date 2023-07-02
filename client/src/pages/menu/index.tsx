@@ -23,7 +23,7 @@ import {
   createCategory,
   createItem,
   getMenu,
-  GetMenuResponse,
+  Menu,
   MenuItem,
 } from "@/api/menu";
 
@@ -57,7 +57,7 @@ export default function MenuManagement() {
         {menuDataIsLoading ? (
           <Loader />
         ) : (
-          menuData?.map((category) => {
+          menuData?.menu.map((category) => {
             return <CategoryCard key={category.id} category={category} />;
           })
         )}
@@ -86,7 +86,7 @@ const Item = ({ item }: { item: MenuItem }) => {
   );
 };
 
-const CategoryCard = ({ category }: { category: GetMenuResponse }) => {
+const CategoryCard = ({ category }: { category: Menu }) => {
   const { classes } = useStyles();
 
   return (

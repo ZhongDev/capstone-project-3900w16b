@@ -1,5 +1,6 @@
 import NotFound from "../errors/NotFound";
 import * as menuRepo from "../repository/menu.repository";
+import * as restaurantRepo from "../repository/restaurant.repository";
 import { Item, UpdateCategory, UpdateItem } from "../types/menu";
 
 export const createCategory = async (restaurantId: number, name: string) => {
@@ -42,6 +43,26 @@ export const updateCategoryItem = async (
   return menuRepo.updateCategoryItem(itemId, updateItem);
 };
 
+export const deleteCategoryItem = async (
+  restaurantId: number,
+  itemId: number
+) => {
+  const restaurant = await menuRepo.getCategoryItemRestaurant(itemId);
+  if (restaurant?.id !== restaurantId) {
+    throw new NotFound("This item does not exist...");
+  }
+  return menuRepo.deleteCategoryItem(itemId);
+};
+
 export const getMenu = async (restaurantId: number) => {
-  return menuRepo.getMenu(restaurantId);
+  const restaurant = await restaurantRepo.getRestaurantById(restaurantId);
+  if (!restaurant) {
+    throw new NotFound("Restaurant does not exist.");
+  }
+
+  const restaurantData = { name: restaurant.name };
+  return {
+    restaurant: restaurantData,
+    menu: await menuRepo.getMenu(restaurantId),
+  };
 };
