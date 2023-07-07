@@ -11,15 +11,21 @@ export type CreateOrder = {
 export const createOrder = (
   restaurantId: number,
   tableId: number,
-  order: CreateOrder
+  orders: CreateOrder[]
 ) => {
-  return Order.query().insert({
-    restaurantId,
-    tableId,
-    itemId: order.itemId,
-    placedOn: order.placedOn,
-    status: order.status,
-    units: order.units,
-    device: order.device,
+  return Order.transaction(async (trx) => {
+    return Promise.all(
+      orders.map((order) => {
+        return Order.query(trx).insert({
+          restaurantId,
+          tableId,
+          itemId: order.itemId,
+          placedOn: order.placedOn,
+          status: order.status,
+          units: order.units,
+          device: order.device,
+        });
+      })
+    );
   });
 };
