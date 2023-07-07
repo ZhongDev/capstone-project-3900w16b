@@ -1,10 +1,11 @@
 import { Model } from "objection";
 import Restaurant from "./Restaurant";
+import Order from "./Order";
 
 export default class Table extends Model {
   id!: number;
   restaurantId!: number;
-  displayOrder!: number;
+  name!: string;
   restaurant?: Restaurant;
 
   static tableName = "Table";
@@ -16,6 +17,14 @@ export default class Table extends Model {
       join: {
         from: "Table.restaurantId",
         to: "Restaurant.id",
+      },
+    },
+    orders: {
+      relation: Model.HasManyRelation,
+      modelClass: Order,
+      join: {
+        from: "Table.id",
+        to: "Order.tableId",
       },
     },
   });

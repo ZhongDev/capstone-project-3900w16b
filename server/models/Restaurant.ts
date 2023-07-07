@@ -1,5 +1,6 @@
 import { Model } from "objection";
 import Table from "./Table";
+import Order from "./Order";
 
 export default class Restaurant extends Model {
   id!: number;
@@ -19,6 +20,14 @@ export default class Restaurant extends Model {
       join: {
         from: "Table.id",
         to: "Table.restaurantId",
+      },
+    },
+    orders: {
+      relation: Model.HasManyRelation,
+      modelClass: Order,
+      join: {
+        from: "Restaurant.id",
+        to: "Order.restaurantId",
       },
     },
   });
