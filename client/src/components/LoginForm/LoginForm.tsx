@@ -2,7 +2,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { Card, TextInput, Text, createStyles } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import { GradientButton } from "../GradientButton";
+import { GradientButton } from "../Button/GradientButton";
 import request from "@/api/request";
 import { loginRestaurant } from "@/api/auth";
 

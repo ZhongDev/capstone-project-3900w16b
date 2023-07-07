@@ -1,5 +1,5 @@
 import { AppShell, Navbar, createStyles, Title, Header } from "@mantine/core";
-import { GradientButton } from "../GradientButton";
+import { GradientButton } from "../Button/GradientButton";
 import { useRouter } from "next/router";
 import Link from "next/link";
 
