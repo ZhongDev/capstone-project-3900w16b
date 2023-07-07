@@ -47,6 +47,8 @@ router.post("/table", auth, async (req, res, next) => {
     const resTable = await restaurantService.createRestaurantTable(
       req.restaurant!.restaurantId,
       table.name
+      req.restaurant!.restaurantId,
+      table.name
     );
     res.json(resTable);
   } catch (err) {

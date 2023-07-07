@@ -1,5 +1,4 @@
 import { Model } from "objection";
-import Category from "./Category";
 import Table from "./Table";
 import Restaurant from "./Restaurant";
 import Item from "./Item";
@@ -11,7 +10,8 @@ export default class Order extends Model {
   itemId!: number;
   units!: number;
   status!: "ordered" | "preparing" | "completed";
-  placed_on!: string; // This is a date string
+  device!: string | null; // free text to attempt to identify the device that ordered
+  placedOn!: string; // This is a date string
 
   static tableName = "Order";
 

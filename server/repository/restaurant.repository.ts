@@ -1,4 +1,3 @@
-import { raw } from "objection";
 import Restaurant from "../models/Restaurant";
 import Table from "../models/Table";
 import bcrypt from "bcrypt";
@@ -36,7 +35,6 @@ export const createRestaurantTable = async (restaurantId: number, tableName: str
     restaurantId: restaurantId,
     name: tableName
   });
-  return Table.query().findOne({ id: newTable.id });
 };
 
 export const getRestaurantTables = (restaurantId: number) => {
