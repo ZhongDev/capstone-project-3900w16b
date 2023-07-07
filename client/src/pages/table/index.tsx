@@ -19,13 +19,13 @@ import { useForm } from "@mantine/form";
 import { useDisclosure } from "@mantine/hooks";
 import useSWR, { mutate } from "swr";
 import { Sidebar } from "@/components/Sidebar";
+
 import {
-  createCategory,
-  createItem,
-  getMenu,
-  Menu,
-  MenuItem,
-} from "@/api/menu";
+  Table,
+  createTable,
+  getRestaurantTables,
+  deleteRestaurantTable,
+} from "@/api/table";
 
 const useStyles = createStyles((theme) => ({
   menuSection: {
@@ -43,26 +43,124 @@ const useStyles = createStyles((theme) => ({
 export default function TableManagement() {
   const { classes } = useStyles();
   const {
-    data: menuData,
-    error: menuDataError,
-    isLoading: menuDataIsLoading,
-  } = useSWR("/table", getMenu);
+    data: tableData,
+    error: tableDataError,
+    isLoading: tableDataIsLoading,
+  } = useSWR("/restaurant/table", getRestaurantTables);
 
   return (
     <Sidebar>
       <Flex gap="lg" align="center">
         <Title>Table Setup</Title>
-        {/* <CreateCategory /> */}
+        <CreateTable />
       </Flex> 
-      {/* <div className={classes.menuSection}>
-        {menuDataIsLoading ? (
+      <div className={classes.menuSection}>
+        {tableDataIsLoading ? (
           <Loader />
         ) : (
-          menuData?.menu.map((category) => {
-            return <CategoryCard key={category.id} category={category} />;
+          tableData?.tables.map((table) => {
+            return <TableCard key={table.id} table={table} />;
           })
         )}
-      </div> */}
+      </div>
     </Sidebar>
   );
+}
+
+const TableCard = ({ table }: { table: Table }) => {
+  const { classes } = useStyles();
+
+  return (
+    <Paper
+      mb="sm"
+      key={table.id}
+      shadow="sm"
+      radius="md"
+      p="md"
+      className={classes.menuCategory}
+    >
+      <Flex align="center" justify="space-between">
+        <Title px="xl" align="center">
+          {table.name}
+        </Title>
+        <div>
+          <Button 
+          radius="xl" 
+          variant="outline" 
+          mr="xs"
+          onClick={() => {
+            deleteRestaurantTable(table.id).then(() => {
+              mutate("/restaurant/table");
+              close();
+            });
+          }}
+          >
+            Delete
+          </Button>
+        </div>
+      </Flex>
+    </Paper>
+  );
+};
+
+const CreateTable = () => {
+  const [opened, { open, close }] = useDisclosure(false);
+  const [newTableName, setNewTableName] = useState("");
+
+  return (
+    <>
+      <Button onClick={open} radius="xl" variant="outline">
+        New Table
+      </Button>
+      <Modal opened={opened} onClose={close} title="Create a new table">
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            if (!newTableName) {
+              return;
+            }
+          }}
+        >
+          <TextInput
+            radius="lg"
+            variant="filled"
+            required
+            data-autofocus
+            mb="sm"
+            placeholder="Table name"
+            value={newTableName}
+            onChange={(e) => setNewTableName(e.target.value)}
+          />
+          <Group position="right">
+            <Button
+              variant="subtle"
+              onClick={() => {
+                setNewTableName("");
+                close();
+              }}
+            >
+              Cancel
+            </Button>
+            <Button
+              type="submit"
+              disabled={!newTableName}
+              onClick={() => {
+                createTable(newTableName).then(() => {
+                  mutate("/restaurant/table");
+                  setNewTableName("");
+                  close();
+                });
+              }}
+            >
+              Create Table
+            </Button>
+          </Group>
+        </form>
+      </Modal>
+    </>
+  );
+};
+
+const DeleteTable = () => {
+
 }

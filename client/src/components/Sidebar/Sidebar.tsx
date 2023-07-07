@@ -7,6 +7,12 @@ const useStyles = createStyles((theme) => ({
   titleSection: {
     borderBottom: `1px solid ${theme.colors.gold[6]}`,
   },
+
+  section: {
+    marginLeft: `calc(${theme.spacing.md} * -1)`,
+    marginRight: `calc(${theme.spacing.md} * -1)`,
+    marginBottom: theme.spacing.md,
+  },
 }));
 
 export const Sidebar = ({ children }: { children: React.ReactNode }) => {
@@ -18,34 +24,39 @@ export const Sidebar = ({ children }: { children: React.ReactNode }) => {
       padding="md"
       navbar={
         <Navbar width={{ base: 300 }} p="xl">
-          <Title
-            className={classes.titleSection}
-            mb="xl"
-            p="lg"
-            align="center"
-            color="gold"
-          >
-            Plateholder
-          </Title>
-          <Link href="/menu">
-            <GradientButton
-              variant={router.pathname === "/menu" ? "filled" : "outline"}
-              size="md"
-              fullWidth
+          <Link href="/">
+            <Title
+              className={classes.titleSection}
+              mb="xl"
+              p="lg"
+              align="center"
+              color="gold"
             >
-              Menu Management
-            </GradientButton>
+              Plateholder
+            </Title>
           </Link>
-          
-          <Link href="/table">
-            <GradientButton
-              variant={router.pathname === "/table" ? "filled" : "outline"}
-              size="md"
-              fullWidth
-            >
-              Table Setup
-            </GradientButton>
-          </Link>
+          <Navbar.Section className={classes.section}>
+            <Link href="/menu">
+              <GradientButton
+                variant={router.pathname === "/menu" ? "filled" : "outline"}
+                size="md"
+                fullWidth
+              >
+                Menu Management
+              </GradientButton>
+            </Link>
+          </Navbar.Section>
+          <Navbar.Section className={classes.section}>
+            <Link href="/table">
+              <GradientButton
+                variant={router.pathname === "/table" ? "filled" : "outline"}
+                size="md"
+                fullWidth
+              >
+                Table Setup
+              </GradientButton>
+            </Link>
+          </Navbar.Section>
         </Navbar>
       }
       styles={(theme) => ({

@@ -31,15 +31,10 @@ export const getRestaurantById = async (
   });
 };
 
-export const createRestaurantTable = async (restaurantId: number) => {
+export const createRestaurantTable = async (restaurantId: number, tableName: string) => {
   const newTable = await Table.query().insert({
-    displayOrder: raw(
-      "COALESCE(?, 0) + 1",
-      Table.query().max("displayOrder").where({
-        restaurantId,
-      })
-    ),
-    restaurantId,
+    restaurantId: restaurantId,
+    name: tableName
   });
   return Table.query().findOne({ id: newTable.id });
 };
@@ -48,8 +43,7 @@ export const getRestaurantTables = (restaurantId: number) => {
   return Table.query()
     .where({
       restaurantId,
-    })
-    .orderBy("table.displayOrder");
+    });
 };
 
 export const getRestaurantTableById = (tableId: number) => {

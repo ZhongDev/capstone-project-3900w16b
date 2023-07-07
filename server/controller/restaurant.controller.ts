@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { CreateRestaurantRequest, LoginRequest } from "../schema/restaurant";
+import * as schema from "../schema/restaurant";
 import * as restaurantService from "../service/restaurant.service";
 import auth from "./middleware/auth";
 import jwt from "jsonwebtoken";
@@ -8,7 +8,7 @@ const router = Router();
 
 router.post("/register", async (req, res, next) => {
   try {
-    const { email, name, password } = CreateRestaurantRequest.parse(
+    const { email, name, password } = schema.CreateRestaurantRequest.parse(
       req.body ?? {}
     );
     const restaurant = await restaurantService.createRestaurant(
@@ -28,7 +28,7 @@ router.post("/register", async (req, res, next) => {
 
 router.post("/login", async (req, res, next) => {
   try {
-    const { email, password } = LoginRequest.parse(req.body ?? {});
+    const { email, password } = schema.LoginRequest.parse(req.body ?? {});
     const restaurant = await restaurantService.login(email, password);
     const token = await signJWT({
       restaurantId: restaurant.id,
@@ -43,10 +43,34 @@ router.post("/login", async (req, res, next) => {
 // Controls creation of tables
 router.post("/table", auth, async (req, res, next) => {
   try {
+    const table = schema.CreateTableRequest.parse(req.body);
     const resTable = await restaurantService.createRestaurantTable(
-      req.restaurant!.restaurantId
+      req.restaurant!.restaurantId,
+      table.name
     );
     res.json(resTable);
+  } catch (err) {
+    next(err);
+  }
+});
+
+// controls deletion of table
+router.delete("/table/:tableId", auth, async (req, res, next) => {
+  try {
+    const tableItem = await restaurantService.deleteRestaurantTable(
+      Number(req.params.tableId)
+    );
+    res.json(tableItem);
+  } catch (err) {
+    next(err);
+  }
+});
+
+// Controls get of tables
+router.get("/table", auth, async (req, res, next) => {
+  try {
+    const tables = await restaurantService.getRestaurantTables(req.restaurant!.restaurantId);
+    res.json(tables);
   } catch (err) {
     next(err);
   }

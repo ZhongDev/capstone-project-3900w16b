@@ -1,5 +1,6 @@
 import { UniqueViolationError } from "objection";
 import BadRequest from "../errors/BadRequest";
+import NotFound from "../errors/NotFound";
 import Forbidden from "../errors/Forbidden";
 import * as restaurantRepo from "../repository/restaurant.repository";
 import bcrypt from "bcrypt";
@@ -20,12 +21,25 @@ export const createRestaurant = async (
   }
 };
 
-export const createRestaurantTable = async (restaurantId: number) => {
-  return restaurantRepo.createRestaurantTable(restaurantId);
+export const createRestaurantTable = async (restaurantId: number, tableName: string) => {
+  return restaurantRepo.createRestaurantTable(restaurantId, tableName);
 };
 
 export const deleteRestaurantTable = async (tableId: number) => {
   return restaurantRepo.deleteRestaurantTable(tableId);
+};
+
+export const getRestaurantTables = async (restaurantId: number) => {
+  const restaurant = await restaurantRepo.getRestaurantById(restaurantId);
+  if (!restaurant) {
+    throw new NotFound("Restaurant does not exist.");
+  }
+
+  const restaurantData = { name: restaurant.name };
+  return {
+    restaurant: restaurantData,
+    tables: await restaurantRepo.getRestaurantTables(restaurantId),
+  };
 };
 
 export const login = async (email: string, password: string) => {
