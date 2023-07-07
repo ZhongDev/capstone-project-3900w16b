@@ -1,4 +1,3 @@
-import { raw } from "objection";
 import Restaurant from "../models/Restaurant";
 import Table from "../models/Table";
 import bcrypt from "bcrypt";
@@ -31,17 +30,14 @@ export const getRestaurantById = async (
   });
 };
 
-export const createRestaurantTable = async (restaurantId: number) => {
-  const newTable = await Table.query().insert({
-    displayOrder: raw(
-      "COALESCE(?, 0) + 1",
-      Table.query().max("displayOrder").where({
-        restaurantId,
-      })
-    ),
+export const createRestaurantTable = async (
+  restaurantId: number,
+  name: string
+) => {
+  return Table.query().insert({
     restaurantId,
+    name,
   });
-  return Table.query().findOne({ id: newTable.id });
 };
 
 export const getRestaurantTables = (restaurantId: number) => {

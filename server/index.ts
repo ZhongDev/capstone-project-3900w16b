@@ -7,6 +7,7 @@ import cookie from "cookie-parser";
 import { ZodError } from "zod";
 import restaurantController from "./controller/restaurant.controller";
 import menuController from "./controller/menu.controller";
+import orderController from "./controller/order.controller";
 import "./db";
 import CustomError from "./errors/CustomError";
 import auth from "./controller/middleware/auth";
@@ -24,6 +25,7 @@ app.use(cookie());
 
 app.use("/restaurant", restaurantController);
 app.use("/menu", menuController);
+app.use("/order", orderController);
 
 app.get("/me", auth, (req, res, next) => {
   res.send(req.restaurant);

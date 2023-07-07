@@ -20,8 +20,11 @@ export const createRestaurant = async (
   }
 };
 
-export const createRestaurantTable = async (restaurantId: number) => {
-  return restaurantRepo.createRestaurantTable(restaurantId);
+export const createRestaurantTable = async (
+  restaurantId: number,
+  name: string
+) => {
+  return restaurantRepo.createRestaurantTable(restaurantId, name);
 };
 
 export const deleteRestaurantTable = async (tableId: number) => {

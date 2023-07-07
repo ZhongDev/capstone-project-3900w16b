@@ -20,7 +20,8 @@ export async function up(knex: Knex): Promise<void> {
       .onDelete("CASCADE");
     table.integer("units").notNullable().defaultTo(1);
     table.string("status").notNullable().defaultTo("ordered");
-    table.datetime("placed_on").notNullable();
+    table.string("device");
+    table.datetime("placedOn").notNullable();
   });
 }
 

@@ -8,6 +8,11 @@ const config: { [key: string]: Knex.Config } = {
     connection: {
       filename: "./dev.sqlite3",
     },
+    pool: {
+      afterCreate: (conn: any, cb: any) => {
+        conn.run("PRAGMA foreign_keys = ON", cb);
+      },
+    },
   },
 
   staging: {
