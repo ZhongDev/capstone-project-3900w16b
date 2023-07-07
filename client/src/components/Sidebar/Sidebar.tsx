@@ -36,6 +36,16 @@ export const Sidebar = ({ children }: { children: React.ReactNode }) => {
               Menu Management
             </GradientButton>
           </Link>
+          
+          <Link href="/table">
+            <GradientButton
+              variant={router.pathname === "/table" ? "filled" : "outline"}
+              size="md"
+              fullWidth
+            >
+              Table Setup
+            </GradientButton>
+          </Link>
         </Navbar>
       }
       styles={(theme) => ({
