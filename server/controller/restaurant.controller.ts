@@ -1,5 +1,5 @@
 import { Router } from "express";
-import * as schema from "../schema/restaurant";
+import * as schema from "../schema/restaurant.schema";
 import * as restaurantService from "../service/restaurant.service";
 import auth from "./middleware/auth";
 import jwt from "jsonwebtoken";
@@ -45,8 +45,6 @@ router.post("/table", auth, async (req, res, next) => {
   try {
     const table = schema.CreateTableRequest.parse(req.body);
     const resTable = await restaurantService.createRestaurantTable(
-      req.restaurant!.restaurantId,
-      table.name
       req.restaurant!.restaurantId,
       table.name
     );
