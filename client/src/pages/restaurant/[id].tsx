@@ -1,23 +1,33 @@
-import { getMenuByRestaurantId } from "@/api/menu";
-import { GradientButton } from "@/components/GradientButton";
-import { Title, Tabs, createStyles, Text, Paper, Button } from "@mantine/core";
+import { useMemo, useState } from "react";
 import { useRouter } from "next/router";
-import { useState } from "react";
 import useSWR from "swr";
+import { Title, createStyles, Loader, Drawer } from "@mantine/core";
+import { useDisclosure } from "@mantine/hooks";
+import { getMenuByRestaurantId } from "@/api/menu";
+import { GradientButton } from "@/components/Button";
+import { MenuTab } from "@/components/Menu";
+import { OrderItem, Bill } from "@/components/Menu";
 
 const useStyles = createStyles((theme) => ({
   menuContainer: {
     maxWidth: "50rem",
     margin: `${theme.spacing.xl} auto`,
   },
-  menuBody: {
-    padding: theme.spacing.xl,
-  },
 }));
+
+type View =
+  | {
+      type: "item";
+      itemId: number;
+    }
+  | { type: "bill" }
+  | null;
 
 export default function RestaurantMenu() {
   const router = useRouter();
   const restaurantId = Number(router.query.id);
+  const [view, setView] = useState<View>(null);
+  const [opened, { open, close }] = useDisclosure(false);
   const { classes } = useStyles();
 
   const {
@@ -26,6 +36,14 @@ export default function RestaurantMenu() {
     isLoading: menuIsLoading,
   } = useSWR(router.isReady ? "/menu" : null, () =>
     getMenuByRestaurantId(restaurantId)
+  );
+
+  const allMenuItems = useMemo(
+    () =>
+      menuData?.menu.flatMap((categories) =>
+        categories.items.map((item) => item)
+      ),
+    [menuData]
   );
 
   if (!router.isReady) {
@@ -38,56 +56,40 @@ export default function RestaurantMenu() {
 
   return (
     <>
+      <Drawer
+        withCloseButton={false}
+        size="90%"
+        position="bottom"
+        opened={opened}
+        onClose={close}
+        styles={{
+          body: {
+            height: "100%",
+          },
+        }}
+      >
+        {view?.type === "item" && (
+          <OrderItem close={close} itemId={view.itemId} />
+        )}
+        {view?.type === "bill" && menuData && allMenuItems && (
+          <Bill restaurantName={menuData.restaurant.name} menu={allMenuItems} />
+        )}
+      </Drawer>
       <div className={classes.menuContainer}>
         <Title mb="sm" color="gold" align="center">
           {menuData?.restaurant.name}
         </Title>
-        <Tabs p="lg" defaultValue="0">
-          <Tabs.List>
-            {menuData?.menu?.map((category, i) => {
-              return (
-                <Tabs.Tab key={category.id} value={i.toString()}>
-                  <Text fz="xl" fw={700}>
-                    {category.name}
-                  </Text>
-                </Tabs.Tab>
-              );
-            })}
-          </Tabs.List>
-          {menuData?.menu?.map((category, i) => {
-            return (
-              <Tabs.Panel key={category.id} value={i.toString()} pt="xs">
-                <div className={classes.menuBody}>
-                  {category.items.length ? (
-                    category.items.map((item) => {
-                      return (
-                        <Paper
-                          shadow="md"
-                          withBorder
-                          p="md"
-                          mb="md"
-                          key={item.id}
-                        >
-                          <Text fw={700} fz="lg">
-                            {item.name}
-                          </Text>
-                          <Text>${(item.priceCents / 100).toFixed(2)}</Text>
-                          <Text c="dimmed" fz="md">
-                            {item.description}
-                          </Text>
-                        </Paper>
-                      );
-                    })
-                  ) : (
-                    <Text fs="italic" c="dimmed">
-                      There is nothing here...
-                    </Text>
-                  )}
-                </div>
-              </Tabs.Panel>
-            );
-          })}
-        </Tabs>
+        {menuData?.menu ? (
+          <MenuTab
+            onClick={(itemId) => {
+              setView({ type: "item", itemId });
+              open();
+            }}
+            menus={menuData.menu}
+          />
+        ) : (
+          <Loader />
+        )}
       </div>
       <div
         style={{
@@ -100,7 +102,14 @@ export default function RestaurantMenu() {
           justifyContent: "center",
         }}
       >
-        <GradientButton>View Bill</GradientButton>
+        <GradientButton
+          onClick={() => {
+            setView({ type: "bill" });
+            open();
+          }}
+        >
+          View Bill
+        </GradientButton>
       </div>
     </>
   );

@@ -2,8 +2,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { Card, TextInput, Text, createStyles } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import { GradientButton } from "../GradientButton";
-import request from "@/api/request";
+import { GradientButton } from "../Button";
 import { registerRestaurant } from "@/api/auth";
 
 const useStyles = createStyles((theme) => ({

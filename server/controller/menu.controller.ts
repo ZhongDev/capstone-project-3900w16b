@@ -48,6 +48,15 @@ router.delete("/category/:categoryId", auth, async (req, res, next) => {
   }
 });
 
+router.get("/item/:itemId", async (req, res, next) => {
+  try {
+    const item = await menuService.getMenuItem(Number(req.params.itemId));
+    res.json(item);
+  } catch (err) {
+    next(err);
+  }
+});
+
 // Controls creation of new menu items
 router.post("/item", auth, async (req, res, next) => {
   try {
