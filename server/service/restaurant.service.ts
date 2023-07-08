@@ -38,11 +38,13 @@ export const getRestaurantTables = async (restaurantId: number) => {
     throw new NotFound("Restaurant does not exist.");
   }
 
-  const restaurantData = { name: restaurant.name };
   return {
-    restaurant: restaurantData,
     tables: await restaurantRepo.getRestaurantTables(restaurantId),
   };
+};
+
+export const getRestaurantTable = async (tableId: number) => {
+  return restaurantRepo.getRestaurantTableById(tableId);
 };
 
 export const login = async (email: string, password: string) => {

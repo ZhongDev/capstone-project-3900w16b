@@ -11,12 +11,6 @@ export type GetTableResponse = {
   tables: Table[];
 };
 
-export type CreateTableResponse = {
-  name: string;
-  restaurantId: number;
-  id: number;
-};
-
 export const getRestaurantTables = () => {
   return request
     .get(process.env.NEXT_PUBLIC_BASEURL + "/restaurant/table")
@@ -33,6 +27,12 @@ export const deleteRestaurantTable = (tableId: number) => {
     .catch((err) => {
       throw err.response.data;
     }) as Promise<GetTableResponse>;
+};
+
+export type CreateTableResponse = {
+  name: string;
+  restaurantId: number;
+  id: number;
 };
 
 export const createTable = (name: string) => {
