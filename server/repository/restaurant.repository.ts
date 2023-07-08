@@ -32,20 +32,18 @@ export const getRestaurantById = async (
 
 export const createRestaurantTable = async (
   restaurantId: number,
-  name: string
+  tableName: string
 ) => {
-  return Table.query().insert({
-    restaurantId,
-    name,
+  const newTable = await Table.query().insert({
+    restaurantId: restaurantId,
+    name: tableName,
   });
 };
 
 export const getRestaurantTables = (restaurantId: number) => {
-  return Table.query()
-    .where({
-      restaurantId,
-    })
-    .orderBy("table.displayOrder");
+  return Table.query().where({
+    restaurantId,
+  });
 };
 
 export const getRestaurantTableById = (tableId: number) => {

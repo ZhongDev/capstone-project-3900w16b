@@ -11,4 +11,7 @@ Week 4:
 Try to learn some basic js
 
 Week 5:
-Prepare for Sprint 1 Demo
+Prepare for Sprint 1 Demo, did retrospective and submitted
+
+Week 6:
+Worked on more menu backend

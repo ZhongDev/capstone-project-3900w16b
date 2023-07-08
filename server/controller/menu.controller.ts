@@ -35,6 +35,19 @@ router.patch("/category/:categoryId", auth, async (req, res, next) => {
   }
 });
 
+// Controls deleting of menu categories
+router.delete("/category/:categoryId", auth, async (req, res, next) => {
+  try {
+    const categoryItem = await menuService.deleteCategory(
+      req.restaurant!.restaurantId,
+      Number(req.params.categoryId)
+    );
+    res.json(categoryItem);
+  } catch (err) {
+    next(err);
+  }
+});
+
 router.get("/item/:itemId", async (req, res, next) => {
   try {
     const item = await menuService.getMenuItem(Number(req.params.itemId));
@@ -87,6 +100,7 @@ router.delete("/item/:itemId", auth, async (req, res, next) => {
   }
 });
 
+// Get menu as customer
 router.get("/:restaurantId", async (req, res, next) => {
   try {
     const menu = await menuService.getMenu(Number(req.params.restaurantId));
@@ -96,6 +110,7 @@ router.get("/:restaurantId", async (req, res, next) => {
   }
 });
 
+// Get menu as authorised user
 router.get("/", auth, async (req, res, next) => {
   try {
     const menu = await menuService.getMenu(req.restaurant!.restaurantId);

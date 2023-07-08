@@ -3,6 +3,7 @@ import Item from "../models/Item";
 import Category from "../models/Category";
 import { Item as ItemType, UpdateCategory, UpdateItem } from "../types/menu";
 
+// Creates menu category
 export const createCategory = async (restaurantId: number, name: string) => {
   const newCategory = await Category.query().insert({
     displayOrder: raw(
@@ -17,6 +18,7 @@ export const createCategory = async (restaurantId: number, name: string) => {
   return Category.query().findOne({ id: newCategory.id });
 };
 
+// Update information about menu category
 export const updateCategory = async (
   categoryId: number,
   updateFields: UpdateCategory
@@ -31,6 +33,7 @@ export const updateCategory = async (
   return Category.query().findOne({ id: categoryId });
 };
 
+// Get Category
 export const getCategories = (restaurantId: number) => {
   return Category.query()
     .where({
@@ -39,12 +42,19 @@ export const getCategories = (restaurantId: number) => {
     .orderBy("category.displayOrder");
 };
 
+// Given categoryId, find category
 export const getCategoryById = (categoryId: number) => {
   return Category.query().findOne({
     id: categoryId,
   });
 };
 
+// Delete the category with categoryId in Categories
+export const deleteCategory = async (categoryId: number) => {
+  return Category.query().where("id", categoryId).del();
+};
+
+// Creates an item in the category with categoryId
 export const createCategoryItem = async (
   categoryId: number,
   item: ItemType
@@ -67,6 +77,7 @@ export const getItem = async (itemId: number) => {
   return Item.query().findById(itemId);
 };
 
+// Get a given item's restaurant
 export const getCategoryItemRestaurant = async (id: number) => {
   const item = await Item.query()
     .findById(id)
@@ -74,6 +85,7 @@ export const getCategoryItemRestaurant = async (id: number) => {
   return item?.category?.restaurant;
 };
 
+// Update information about an item
 export const updateCategoryItem = async (
   id: number,
   updateItem: UpdateItem
@@ -90,10 +102,12 @@ export const updateCategoryItem = async (
   return Item.query().findOne({ id });
 };
 
+// Delete an item on the menu
 export const deleteCategoryItem = async (id: number) => {
   return Item.query().where("id", id).del();
 };
 
+// Get the entire menu database given a restaurantId
 export const getMenu = (restaurantId: number) => {
   return Category.query()
     .where({ restaurantId })
