@@ -28,13 +28,17 @@ const useStyles = createStyles((theme) => ({
       borderRadius: theme.radius.md,
     },
   },
+  item: {
+    cursor: "pointer",
+  },
 }));
 
 export type MenuTabProps = {
   menus: Menu[];
+  onClick?: (itemId: number) => void;
 };
 
-export const MenuTab = ({ menus }: MenuTabProps) => {
+export const MenuTab = ({ menus, onClick }: MenuTabProps) => {
   return (
     <Tabs
       styles={{
@@ -59,7 +63,11 @@ export const MenuTab = ({ menus }: MenuTabProps) => {
       {menus.map((category, i) => {
         return (
           <Tabs.Panel key={category.id} value={i.toString()} pt="xs">
-            <MenuItems key={category.id} category={category} />
+            <MenuItems
+              onClick={onClick}
+              key={category.id}
+              category={category}
+            />
           </Tabs.Panel>
         );
       })}
@@ -69,9 +77,10 @@ export const MenuTab = ({ menus }: MenuTabProps) => {
 
 export type MenuItemsProps = {
   category: Menu;
+  onClick?: (itemId: number) => void;
 };
 
-export const MenuItems = ({ category }: MenuItemsProps) => {
+export const MenuItems = ({ category, onClick }: MenuItemsProps) => {
   const { classes } = useStyles();
 
   return (
@@ -79,7 +88,14 @@ export const MenuItems = ({ category }: MenuItemsProps) => {
       {category.items.length ? (
         category.items.map((item) => {
           return (
-            <Paper shadow="md" p="md" mb="md" key={item.id}>
+            <Paper
+              className={classes.item}
+              onClick={() => onClick?.(item.id)}
+              shadow="md"
+              p="md"
+              mb="md"
+              key={item.id}
+            >
               <Flex justify="space-between">
                 <div>
                   <Text fw={700} fz="lg">

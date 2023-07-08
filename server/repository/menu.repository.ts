@@ -63,6 +63,10 @@ export const createCategoryItem = async (
   return Item.query().findOne({ id: newItem.id });
 };
 
+export const getItem = async (itemId: number) => {
+  return Item.query().findById(itemId);
+};
+
 export const getCategoryItemRestaurant = async (id: number) => {
   const item = await Item.query()
     .findById(id)

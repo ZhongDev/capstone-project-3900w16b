@@ -22,11 +22,24 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-export const ButtonGroup = () => {
+type IncrementButtonProps = {
+  value: number;
+  onChange: (value: number) => void;
+};
+
+export const IncrementButton = ({ value, onChange }: IncrementButtonProps) => {
   const { classes } = useStyles();
   return (
     <Flex className={classes.parent} align="center" justify="center">
-      <Button className={classes.button} variant="light">
+      <Button
+        onClick={() => {
+          if (value > 0) {
+            onChange(value - 1);
+          }
+        }}
+        className={classes.button}
+        variant="light"
+      >
         −
       </Button>
       <Button
@@ -42,9 +55,13 @@ export const ButtonGroup = () => {
         })}
         variant="light"
       >
-        2
+        {value}
       </Button>
-      <Button className={classes.button} variant="light">
+      <Button
+        onClick={() => onChange(value + 1)}
+        className={classes.button}
+        variant="light"
+      >
         +
       </Button>
     </Flex>
