@@ -3,6 +3,7 @@ import * as schema from "../schema/restaurant.schema";
 import * as restaurantService from "../service/restaurant.service";
 import auth from "./middleware/auth";
 import jwt from "jsonwebtoken";
+import Unauthorized from "../errors/Unauthorized";
 
 const router = Router();
 
@@ -57,10 +58,20 @@ router.post("/table", auth, async (req, res, next) => {
 // controls deletion of table
 router.delete("/table/:tableId", auth, async (req, res, next) => {
   try {
-    const tableItem = await restaurantService.deleteRestaurantTable(
+    const table = await restaurantService.getRestaurantTable(
       Number(req.params.tableId)
     );
-    res.json(tableItem);
+
+    const tableRest = table?.restaurantId;
+
+    if (tableRest === req.restaurant?.restaurantId) {
+      const tableItem = await restaurantService.deleteRestaurantTable(
+        Number(req.params.tableId)
+      );
+      res.json(tableItem);
+    } else {
+      throw new Unauthorized("You are not the restaurant I am looking for");
+    }
   } catch (err) {
     next(err);
   }
@@ -69,7 +80,9 @@ router.delete("/table/:tableId", auth, async (req, res, next) => {
 // Controls get of tables
 router.get("/table", auth, async (req, res, next) => {
   try {
-    const tables = await restaurantService.getRestaurantTables(req.restaurant!.restaurantId);
+    const tables = await restaurantService.getRestaurantTables(
+      req.restaurant!.restaurantId
+    );
     res.json(tables);
   } catch (err) {
     next(err);

@@ -21,8 +21,18 @@ export const createRestaurant = async (
   }
 };
 
-export const createRestaurantTable = async (restaurantId: number, tableName: string) => {
-  return restaurantRepo.createRestaurantTable(restaurantId, tableName);
+export const createRestaurantTable = async (
+  restaurantId: number,
+  tableName: string
+) => {
+  try {
+    return await restaurantRepo.createRestaurantTable(restaurantId, tableName);
+  } catch (err) {
+    if (err instanceof UniqueViolationError) {
+      throw new BadRequest("Table name already exists");
+    }
+    throw err;
+  }
 };
 
 export const deleteRestaurantTable = async (tableId: number) => {
@@ -35,11 +45,13 @@ export const getRestaurantTables = async (restaurantId: number) => {
     throw new NotFound("Restaurant does not exist.");
   }
 
-  const restaurantData = { name: restaurant.name };
   return {
-    restaurant: restaurantData,
     tables: await restaurantRepo.getRestaurantTables(restaurantId),
   };
+};
+
+export const getRestaurantTable = async (tableId: number) => {
+  return restaurantRepo.getRestaurantTableById(tableId);
 };
 
 export const login = async (email: string, password: string) => {

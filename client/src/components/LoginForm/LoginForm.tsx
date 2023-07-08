@@ -34,7 +34,7 @@ export const LoginForm = () => {
 
   const login = ({ email, password }: { email: string; password: string }) => {
     loginRestaurant({ email, password })
-      .then((res) => router.push("/"))
+      .then((res) => router.push("/menu"))
       .catch((err) => {
         loginForm.setFieldError("password", err.msg);
         loginForm.setFieldError("email", err.msg);
