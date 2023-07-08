@@ -1,6 +1,6 @@
 import { Router } from "express";
 import * as menuService from "../service/menu.service";
-import * as schema from "../schema/menu";
+import * as schema from "../schema/menu.schema";
 import auth from "./middleware/auth";
 
 const router = Router();

@@ -1,6 +1,11 @@
 import { Router } from "express";
-import { CreateRestaurantRequest, LoginRequest } from "../schema/restaurant";
+import {
+  CreateRestaurantRequest,
+  CreateTableRequest,
+  LoginRequest,
+} from "../schema/restaurant.schema";
 import * as restaurantService from "../service/restaurant.service";
+import auth from "./middleware/auth";
 import jwt from "jsonwebtoken";
 
 const router = Router();
@@ -34,6 +39,20 @@ router.post("/login", async (req, res, next) => {
       name: restaurant.name,
     });
     res.cookie("Authorization", token).json(restaurant);
+  } catch (err) {
+    next(err);
+  }
+});
+
+// Controls creation of tables
+router.post("/table", auth, async (req, res, next) => {
+  try {
+    const table = CreateTableRequest.parse(req.body);
+    const resTable = await restaurantService.createRestaurantTable(
+      req.restaurant!.restaurantId,
+      table.name
+    );
+    res.json(resTable);
   } catch (err) {
     next(err);
   }

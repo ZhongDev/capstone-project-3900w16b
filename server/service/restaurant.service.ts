@@ -20,6 +20,17 @@ export const createRestaurant = async (
   }
 };
 
+export const createRestaurantTable = async (
+  restaurantId: number,
+  name: string
+) => {
+  return restaurantRepo.createRestaurantTable(restaurantId, name);
+};
+
+export const deleteRestaurantTable = async (tableId: number) => {
+  return restaurantRepo.deleteRestaurantTable(tableId);
+};
+
 export const login = async (email: string, password: string) => {
   const restaurant = await restaurantRepo.getRestaurantByEmail(email);
   if (!restaurant) {
