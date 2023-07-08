@@ -3,6 +3,8 @@ import * as menuRepo from "../repository/menu.repository";
 import * as restaurantRepo from "../repository/restaurant.repository";
 import { Item, UpdateCategory, UpdateItem } from "../types/menu";
 
+// Calls functions from menu repository
+
 export const createCategory = async (restaurantId: number, name: string) => {
   return menuRepo.createCategory(restaurantId, name);
 };
@@ -17,6 +19,17 @@ export const updateCategory = async (
     throw new NotFound("This category does not exist...");
   }
   return menuRepo.updateCategory(categoryId, updateFields);
+};
+
+export const deleteCategory = async (
+  restaurantId: number,
+  categoryId: number
+) => {
+  const restaurant = await menuRepo.getCategoryById(categoryId);
+  if (restaurant?.id !== restaurantId) {
+    throw new NotFound("This item does not exist...");
+  }
+  return menuRepo.deleteCategory(categoryId);
 };
 
 export const createCategoryItem = async (

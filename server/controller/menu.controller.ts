@@ -35,6 +35,19 @@ router.patch("/category/:categoryId", auth, async (req, res, next) => {
   }
 });
 
+// Controls deleting of menu categories
+router.delete("/category/:categoryId", auth, async (req, res, next) => {
+  try {
+    const categoryItem = await menuService.deleteCategory(
+      req.restaurant!.restaurantId,
+      Number(req.params.categoryId)
+    );
+    res.json(categoryItem);
+  } catch (err) {
+    next(err);
+  }
+});
+
 // Controls creation of new menu items
 router.post("/item", auth, async (req, res, next) => {
   try {
