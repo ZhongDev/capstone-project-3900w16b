@@ -3,7 +3,7 @@ import { Button, ButtonProps } from "@mantine/core";
 export const GradientButton = ({
   children,
   ...props
-}: ButtonProps & Omit<React.HTMLProps<HTMLButtonElement>, "ref">) => {
+}: Omit<React.HTMLProps<HTMLButtonElement>, "ref" | "size"> & ButtonProps) => {
   return (
     <Button
       style={

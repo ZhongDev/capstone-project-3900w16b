@@ -3,8 +3,8 @@ import { useRouter } from "next/router";
 import useSWR from "swr";
 import { Title, createStyles, Loader, Drawer } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { getMenuByRestaurantId, GetMenuResponse, Menu } from "@/api/menu";
-import { GradientButton } from "@/components/Button/GradientButton";
+import { getMenuByRestaurantId } from "@/api/menu";
+import { GradientButton } from "@/components/Button";
 import { MenuTab } from "@/components/Menu";
 import { OrderItem, Bill } from "@/components/Menu";
 
