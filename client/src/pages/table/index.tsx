@@ -87,7 +87,6 @@ const TableCard = ({ table }: { table: Table }) => {
   return (
     <Paper
       mb="sm"
-      key={table.id}
       shadow="sm"
       radius="md"
       p="md"
