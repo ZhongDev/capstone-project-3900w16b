@@ -51,7 +51,7 @@ export const getCategoryById = (categoryId: number) => {
 
 // Delete the category with categoryId in Categories
 export const deleteCategory = async (categoryId: number) => {
-  return Category.query().where("categoryId", categoryId).del();
+  return Category.query().where("id", categoryId).del();
 };
 
 // Creates an item in the category with categoryId
@@ -73,7 +73,7 @@ export const createCategoryItem = async (
   return Item.query().findOne({ id: newItem.id });
 };
 
-// Get an item by its id
+// Get a given item's restaurant
 export const getCategoryItemRestaurant = async (id: number) => {
   const item = await Item.query()
     .findById(id)

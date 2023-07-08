@@ -25,9 +25,9 @@ export const deleteCategory = async (
   restaurantId: number,
   categoryId: number
 ) => {
-  const restaurant = await menuRepo.getCategoryById(categoryId);
-  if (restaurant?.id !== restaurantId) {
-    throw new NotFound("This item does not exist...");
+  const category = await menuRepo.getCategoryById(categoryId);
+  if (category?.restaurantId !== restaurantId) {
+    throw new NotFound("This category does not exist...");
   }
   return menuRepo.deleteCategory(categoryId);
 };
