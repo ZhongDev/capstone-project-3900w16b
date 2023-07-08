@@ -39,7 +39,6 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-
 export default function TableManagement() {
   const { classes } = useStyles();
   const {
@@ -53,7 +52,7 @@ export default function TableManagement() {
       <Flex gap="lg" align="center">
         <Title>Table Setup</Title>
         <CreateTable />
-      </Flex> 
+      </Flex>
       <div className={classes.menuSection}>
         {tableDataIsLoading ? (
           <Loader />
@@ -84,16 +83,16 @@ const TableCard = ({ table }: { table: Table }) => {
           {table.name}
         </Title>
         <div>
-          <Button 
-          radius="xl" 
-          variant="outline" 
-          mr="xs"
-          onClick={() => {
-            deleteRestaurantTable(table.id).then(() => {
-              mutate("/restaurant/table");
-              close();
-            });
-          }}
+          <Button
+            radius="xl"
+            variant="outline"
+            mr="xs"
+            onClick={() => {
+              deleteRestaurantTable(table.id).then(() => {
+                mutate("/restaurant/table");
+                close();
+              });
+            }}
           >
             Delete
           </Button>
@@ -161,6 +160,4 @@ const CreateTable = () => {
   );
 };
 
-const DeleteTable = () => {
-
-}
+const DeleteTable = () => {};

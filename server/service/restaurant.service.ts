@@ -21,7 +21,10 @@ export const createRestaurant = async (
   }
 };
 
-export const createRestaurantTable = async (restaurantId: number, tableName: string) => {
+export const createRestaurantTable = async (
+  restaurantId: number,
+  tableName: string
+) => {
   return restaurantRepo.createRestaurantTable(restaurantId, tableName);
 };
 

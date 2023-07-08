@@ -30,18 +30,20 @@ export const getRestaurantById = async (
   });
 };
 
-export const createRestaurantTable = async (restaurantId: number, tableName: string) => {
+export const createRestaurantTable = async (
+  restaurantId: number,
+  tableName: string
+) => {
   const newTable = await Table.query().insert({
     restaurantId: restaurantId,
-    name: tableName
+    name: tableName,
   });
 };
 
 export const getRestaurantTables = (restaurantId: number) => {
-  return Table.query()
-    .where({
-      restaurantId,
-    });
+  return Table.query().where({
+    restaurantId,
+  });
 };
 
 export const getRestaurantTableById = (tableId: number) => {

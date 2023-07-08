@@ -69,7 +69,9 @@ router.delete("/table/:tableId", auth, async (req, res, next) => {
 // Controls get of tables
 router.get("/table", auth, async (req, res, next) => {
   try {
-    const tables = await restaurantService.getRestaurantTables(req.restaurant!.restaurantId);
+    const tables = await restaurantService.getRestaurantTables(
+      req.restaurant!.restaurantId
+    );
     res.json(tables);
   } catch (err) {
     next(err);
