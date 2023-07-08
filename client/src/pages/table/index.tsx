@@ -15,8 +15,6 @@ import {
   Textarea,
   NumberInput,
 } from "@mantine/core";
-import { useForm } from "@mantine/form";
-import ReactDOM from "react-dom";
 import QRCode from "qrcode.react";
 import { useDisclosure } from "@mantine/hooks";
 import useSWR, { mutate } from "swr";
@@ -138,11 +136,22 @@ const TableCard = ({ table }: { table: Table }) => {
   );
 };
 
-const DoCreateTable = () => {};
-
 const CreateTable = () => {
   const [opened, { open, close }] = useDisclosure(false);
   const [newTableName, setNewTableName] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const DoCreateTable = () => {
+    createTable(newTableName)
+      .then(() => {
+        mutate("/restaurant/table");
+        setNewTableName("");
+        close();
+      })
+      .catch((err) => {
+        setErrorMessage(err.msg);
+      });
+  };
 
   return (
     <>
@@ -164,9 +173,13 @@ const CreateTable = () => {
             required
             data-autofocus
             mb="sm"
+            error={errorMessage}
             placeholder="Table name"
             value={newTableName}
-            onChange={(e) => setNewTableName(e.target.value)}
+            onChange={(e) => {
+              setErrorMessage("");
+              setNewTableName(e.target.value);
+            }}
           />
           <Group position="right">
             <Button
@@ -181,13 +194,7 @@ const CreateTable = () => {
             <Button
               type="submit"
               disabled={!newTableName}
-              onClick={() => {
-                createTable(newTableName).then(() => {
-                  mutate("/restaurant/table");
-                  setNewTableName("");
-                  close();
-                });
-              }}
+              onClick={DoCreateTable}
             >
               Create Table
             </Button>
