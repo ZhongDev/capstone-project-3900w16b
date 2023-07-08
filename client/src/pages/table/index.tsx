@@ -158,47 +158,38 @@ const CreateTable = () => {
         New Table
       </Button>
       <Modal opened={opened} onClose={close} title="Create a new table">
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            if (!newTableName) {
-              return;
-            }
+        <TextInput
+          radius="lg"
+          variant="filled"
+          required
+          data-autofocus
+          mb="sm"
+          error={errorMessage}
+          placeholder="Table name"
+          value={newTableName}
+          onChange={(e) => {
+            setErrorMessage("");
+            setNewTableName(e.target.value);
           }}
-        >
-          <TextInput
-            radius="lg"
-            variant="filled"
-            required
-            data-autofocus
-            mb="sm"
-            error={errorMessage}
-            placeholder="Table name"
-            value={newTableName}
-            onChange={(e) => {
-              setErrorMessage("");
-              setNewTableName(e.target.value);
+        />
+        <Group position="right">
+          <Button
+            variant="subtle"
+            onClick={() => {
+              setNewTableName("");
+              close();
             }}
-          />
-          <Group position="right">
-            <Button
-              variant="subtle"
-              onClick={() => {
-                setNewTableName("");
-                close();
-              }}
-            >
-              Cancel
-            </Button>
-            <Button
-              type="submit"
-              disabled={!newTableName}
-              onClick={DoCreateTable}
-            >
-              Create Table
-            </Button>
-          </Group>
-        </form>
+          >
+            Cancel
+          </Button>
+          <Button
+            type="submit"
+            disabled={!newTableName}
+            onClick={DoCreateTable}
+          >
+            Create Table
+          </Button>
+        </Group>
       </Modal>
     </>
   );
