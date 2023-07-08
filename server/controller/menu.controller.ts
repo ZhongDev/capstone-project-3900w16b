@@ -91,6 +91,7 @@ router.delete("/item/:itemId", auth, async (req, res, next) => {
   }
 });
 
+// Get menu as customer
 router.get("/:restaurantId", async (req, res, next) => {
   try {
     const menu = await menuService.getMenu(Number(req.params.restaurantId));
@@ -100,6 +101,7 @@ router.get("/:restaurantId", async (req, res, next) => {
   }
 });
 
+// Get menu as authorised user
 router.get("/", auth, async (req, res, next) => {
   try {
     const menu = await menuService.getMenu(req.restaurant!.restaurantId);

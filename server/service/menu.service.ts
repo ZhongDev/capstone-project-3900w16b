@@ -3,12 +3,14 @@ import * as menuRepo from "../repository/menu.repository";
 import * as restaurantRepo from "../repository/restaurant.repository";
 import { Item, UpdateCategory, UpdateItem } from "../types/menu";
 
-// Calls functions from menu repository
+// Calls functions from menu repository with restaurantId for authorisation
 
+// Creates a menu catgeory
 export const createCategory = async (restaurantId: number, name: string) => {
   return menuRepo.createCategory(restaurantId, name);
 };
 
+// Updates a menu category with a new name
 export const updateCategory = async (
   restaurantId: number,
   categoryId: number,
@@ -21,6 +23,7 @@ export const updateCategory = async (
   return menuRepo.updateCategory(categoryId, updateFields);
 };
 
+// Delete a menu category
 export const deleteCategory = async (
   restaurantId: number,
   categoryId: number
@@ -32,6 +35,7 @@ export const deleteCategory = async (
   return menuRepo.deleteCategory(categoryId);
 };
 
+// Create an item in a category
 export const createCategoryItem = async (
   restaurantId: number,
   categoryId: number,
@@ -44,6 +48,7 @@ export const createCategoryItem = async (
   return menuRepo.createCategoryItem(categoryId, item);
 };
 
+// Update an item in a category
 export const updateCategoryItem = async (
   restaurantId: number,
   itemId: number,
@@ -56,6 +61,7 @@ export const updateCategoryItem = async (
   return menuRepo.updateCategoryItem(itemId, updateItem);
 };
 
+// Delete item from a category
 export const deleteCategoryItem = async (
   restaurantId: number,
   itemId: number
@@ -67,6 +73,7 @@ export const deleteCategoryItem = async (
   return menuRepo.deleteCategoryItem(itemId);
 };
 
+// Get menu
 export const getMenu = async (restaurantId: number) => {
   const restaurant = await restaurantRepo.getRestaurantById(restaurantId);
   if (!restaurant) {
