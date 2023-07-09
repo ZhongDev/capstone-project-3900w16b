@@ -157,7 +157,14 @@ const CreateTable = () => {
       <Button onClick={open} radius="xl" variant="outline">
         New Table
       </Button>
-      <Modal opened={opened} onClose={close} title="Create a new table">
+      <Modal
+        opened={opened}
+        onClose={() => {
+          setErrorMessage("");
+          close();
+        }}
+        title="Create a new table"
+      >
         <TextInput
           radius="lg"
           variant="filled"
