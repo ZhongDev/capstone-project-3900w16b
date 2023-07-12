@@ -82,7 +82,7 @@ export const Bill = ({ close, restaurantName, menu }: BillProps) => {
         {restaurantName}
       </Title>
       <Title align="center">Bill</Title>
-      <Paper withBorder shadow="md" p="xl">
+      <Paper withBorder shadow="md" p="xl" mt="xl">
         <div>
           <Text align="center" fz="lg">
             Table{" "}
