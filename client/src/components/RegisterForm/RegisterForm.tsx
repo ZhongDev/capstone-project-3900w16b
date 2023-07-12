@@ -2,8 +2,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { Card, TextInput, Text, createStyles } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import { GradientButton } from "../GradientButton";
-import request from "@/api/request";
+import { GradientButton } from "../Button";
 import { registerRestaurant } from "@/api/auth";
 
 const useStyles = createStyles((theme) => ({
@@ -50,7 +49,7 @@ export const RegisterForm = () => {
     password: string;
   }) => {
     registerRestaurant({ email, name, password })
-      .then(() => router.push("/"))
+      .then(() => router.push("/menu"))
       .catch((err) => {
         /**
          * For now, the only non 500 error thrown during registering is

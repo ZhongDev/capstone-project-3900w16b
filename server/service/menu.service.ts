@@ -86,3 +86,11 @@ export const getMenu = async (restaurantId: number) => {
     menu: await menuRepo.getMenu(restaurantId),
   };
 };
+
+export const getMenuItem = async (itemId: number) => {
+  const item = await menuRepo.getItem(itemId);
+  if (!item) {
+    throw new NotFound();
+  }
+  return item;
+};

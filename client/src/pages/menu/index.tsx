@@ -26,6 +26,7 @@ import {
   Menu,
   MenuItem,
 } from "@/api/menu";
+import { formatCurrency } from "@/helpers";
 
 const useStyles = createStyles((theme) => ({
   menuSection: {
@@ -70,9 +71,17 @@ const Item = ({ item }: { item: MenuItem }) => {
   return (
     <Paper shadow="md" mt="xs" px="xl" py="md" radius="md">
       <Flex align="center" justify="space-between">
-        <Text fw={500} fz="lg">
-          {item.name}
-        </Text>
+        <div>
+          <Text fw={500} fz="lg">
+            {item.name}
+          </Text>
+          <Text c="dimmed">{item.description}</Text>
+        </div>
+        <div>
+          <Text fw={500} fz="lg">
+            {formatCurrency(item.priceCents)}
+          </Text>
+        </div>
         {/* <div>
           <Button mr="xs" variant="outline" radius="xl">
             Edit
@@ -150,7 +159,10 @@ const CreateItem = ({
       <Modal opened={opened} onClose={close} title="Create a new category">
         <form
           onSubmit={itemForm.onSubmit((values) => {
-            createItem(categoryId, values).then(() => {
+            createItem(categoryId, {
+              ...values,
+              priceCents: values.priceCents * 100,
+            }).then(() => {
               mutate("/menu");
               itemForm.reset();
               close();

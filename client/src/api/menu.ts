@@ -7,10 +7,12 @@ export type Menu = {
   name: string;
   items: MenuItem[];
 };
+
 export type GetMenuResponse = {
   restaurant: { name: string };
   menu: Menu[];
 };
+
 export type MenuItem = {
   id: number;
   categoryId: number;
@@ -21,6 +23,7 @@ export type MenuItem = {
   description: string;
   ingredients: string | null;
 };
+
 export const getMenu = () => {
   return request
     .get(process.env.NEXT_PUBLIC_BASEURL + "/menu")
@@ -29,6 +32,7 @@ export const getMenu = () => {
       throw err.response.data;
     }) as Promise<GetMenuResponse>;
 };
+
 export const getMenuByRestaurantId = (restaurantId: number) => {
   return request
     .get(process.env.NEXT_PUBLIC_BASEURL + "/menu/" + restaurantId, {
@@ -46,6 +50,7 @@ export type CreateCategoryResponse = {
   restaurantId: number;
   id: number;
 };
+
 export const createCategory = (name: string) => {
   return request
     .post(process.env.NEXT_PUBLIC_BASEURL + "/menu/category", {
@@ -64,6 +69,7 @@ export type CreateItemResponse = {
   priceCents: number;
   id: number;
 };
+
 export const createItem = (
   categoryId: number,
   item: {
@@ -82,4 +88,17 @@ export const createItem = (
     .catch((err) => {
       throw err.response.data;
     }) as Promise<CreateItemResponse>;
+};
+
+export type GetMenuItemResponse = MenuItem;
+
+export const getMenuItem = (itemId: number) => {
+  return request
+    .get(process.env.NEXT_PUBLIC_BASEURL + "/menu/item/" + itemId, {
+      withCredentials: false,
+    })
+    .then((res) => res.data)
+    .catch((err) => {
+      throw err.response.data;
+    }) as Promise<MenuItem>;
 };

@@ -25,7 +25,14 @@ export const createRestaurantTable = async (
   restaurantId: number,
   tableName: string
 ) => {
-  return restaurantRepo.createRestaurantTable(restaurantId, tableName);
+  try {
+    return await restaurantRepo.createRestaurantTable(restaurantId, tableName);
+  } catch (err) {
+    if (err instanceof UniqueViolationError) {
+      throw new BadRequest("Table name already exists");
+    }
+    throw err;
+  }
 };
 
 export const deleteRestaurantTable = async (tableId: number) => {
