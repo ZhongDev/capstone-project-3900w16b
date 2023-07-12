@@ -140,7 +140,7 @@ const CreateTable = () => {
   const [newTableName, setNewTableName] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
-  const DoCreateTable = () => {
+  const doCreateTable = () => {
     createTable(newTableName)
       .then(() => {
         mutate("/restaurant/table");
@@ -192,7 +192,7 @@ const CreateTable = () => {
           <Button
             type="submit"
             disabled={!newTableName}
-            onClick={DoCreateTable}
+            onClick={doCreateTable}
           >
             Create Table
           </Button>
