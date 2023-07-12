@@ -49,7 +49,7 @@ export const RegisterForm = () => {
     password: string;
   }) => {
     registerRestaurant({ email, name, password })
-      .then(() => router.push("/"))
+      .then(() => router.push("/menu"))
       .catch((err) => {
         /**
          * For now, the only non 500 error thrown during registering is

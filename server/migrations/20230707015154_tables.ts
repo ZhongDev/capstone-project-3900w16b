@@ -8,7 +8,8 @@ export async function up(knex: Knex): Promise<void> {
       .references("id")
       .inTable("Restaurant")
       .onDelete("CASCADE");
-    table.string("name", 255).unique();
+    table.string("name", 255);
+    table.unique(["restaurantId", "name"]);
   });
 }
 

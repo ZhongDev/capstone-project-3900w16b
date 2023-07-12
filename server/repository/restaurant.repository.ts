@@ -33,8 +33,8 @@ export const getRestaurantById = async (
 export const createRestaurantTable = async (
   restaurantId: number,
   tableName: string
-) => {
-  const newTable = await Table.query().insert({
+): Promise<Table> => {
+  return Table.query().insert({
     restaurantId: restaurantId,
     name: tableName,
   });
