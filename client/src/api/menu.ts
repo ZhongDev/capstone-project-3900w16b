@@ -102,3 +102,47 @@ export const getMenuItem = (itemId: number) => {
       throw err.response.data;
     }) as Promise<MenuItem>;
 };
+
+export type UpdateItemResponse = {
+  itemId: number;
+  name: string;
+  description: string;
+  ingredients: string | null;
+  priceCents: number;
+  displayOrder: number;
+};
+
+export const updateMenuItem = (
+  itemId: number,
+  updateItem: {
+    name: string;
+    description: string;
+    ingredients: string | null;
+    priceCents: number;
+    displayOrder: number;
+  }
+) => {
+  return request
+    .patch(process.env.NEXT_PUBLIC_BASEURL + "/menu/item/" + itemId, {
+      updateItem,
+    })
+    .then((res) => res.data)
+    .catch((err) => {
+      throw err.response.data;
+    }) as Promise<UpdateItemResponse>; // might be wrong
+};
+
+export type DeleteItemResponse = {
+  // TODO:
+  // 200
+  // 500
+};
+
+export const deleteMenuItem = (itemId: number) => {
+  return request
+    .delete(process.env.NEXT_PUBLIC_BASEURL + "menu/item/" + itemId)
+    .then((res) => res.data)
+    .catch((err) => {
+      throw err.response.data;
+    }) as Promise<DeleteItemResponse>; // ???
+};
