@@ -72,7 +72,11 @@ export default function RestaurantMenu() {
           <OrderItem close={close} itemId={view.itemId} />
         )}
         {view?.type === "bill" && menuData && allMenuItems && (
-          <Bill restaurantName={menuData.restaurant.name} menu={allMenuItems} />
+          <Bill
+            restaurant={menuData.restaurant}
+            close={close}
+            menu={allMenuItems}
+          />
         )}
       </Drawer>
       <div className={classes.menuContainer}>

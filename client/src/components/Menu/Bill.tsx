@@ -1,19 +1,10 @@
-import { useMemo, useState } from "react";
-import Image from "next/image";
-import {
-  Flex,
-  List,
-  Loader,
-  Paper,
-  Text,
-  Title,
-  createStyles,
-} from "@mantine/core";
-import ayaya from "@/public/img/ayaya.jpg";
-import useSWR from "swr";
-import { MenuItem, getMenuItem } from "@/api/menu";
+import { useMemo } from "react";
+import { List, Paper, Text, Title, createStyles } from "@mantine/core";
+import { MenuItem } from "@/api/menu";
 import { useLocalCart } from "@/hooks";
 import { formatCurrency } from "@/helpers";
+import { GradientButton } from "../Button";
+import { createOrder } from "@/api/order";
 
 const useStyles = createStyles((theme) => ({
   foodImageContainer: {
@@ -52,15 +43,14 @@ const useStyles = createStyles((theme) => ({
 
 export type BillProps = {
   close?: () => void;
-  restaurantName: string;
+  restaurant: { name: string; id: number };
   menu: MenuItem[];
 };
 
-export const Bill = ({ close, restaurantName, menu }: BillProps) => {
+export const Bill = ({ close, restaurant, menu }: BillProps) => {
   const { classes } = useStyles();
-  const [units, setUnits] = useState(1);
 
-  const [cart] = useLocalCart();
+  const [cart, { clearCart }] = useLocalCart();
 
   const total = useMemo(() => {
     return cart
@@ -74,70 +64,82 @@ export const Bill = ({ close, restaurantName, menu }: BillProps) => {
       .reduce((acc, curr) => acc + curr, 0);
   }, [cart, menu]);
 
-  console.log({ total });
-
   return (
-    <div>
-      <Title color="gold" align="center">
-        {restaurantName}
-      </Title>
-      <Title align="center">Bill</Title>
-      <Paper withBorder shadow="md" p="xl" mt="xl">
-        <div>
-          <Text align="center" fz="lg">
-            Table{" "}
-            <Text fw={500} span>
-              C24
-            </Text>
-          </Text>
-          <div className={classes.orderInfo}>
-            <Text>
-              Order#{" "}
-              <Text span fw={500}>
-                15a59db
-              </Text>
-            </Text>
-            <Text>
-              Customer{" "}
-              <Text span fw={500}>
-                Michael Min
-              </Text>
-            </Text>
-            <Text>
-              Ordered{" "}
-              <Text span fw={500}>
-                2m ago
-              </Text>
-            </Text>
-          </div>
+    <div className={classes.container}>
+      <div>
+        <Title color="gold" align="center">
+          {restaurant.name}
+        </Title>
+        <Title align="center">Bill</Title>
+        <Paper withBorder shadow="md" p="xl" mt="xl">
           <div>
-            <List>
-              {cart.map((item) => {
-                const inCartItem = menu.find(
-                  (menuItem) => menuItem.id === item.itemId
-                );
-                if (!inCartItem) {
-                  return;
-                }
-                return (
-                  <List.Item key={item.itemId}>
-                    {inCartItem.name}{" "}
-                    <Text span fz="xs">
-                      x{item.units} [
-                      {formatCurrency(inCartItem.priceCents * item.units)}]
-                    </Text>
-                  </List.Item>
-                );
-              })}
-            </List>
-          </div>
-          <div>
-            <Text fz="xl" fw={700} align="center" mt="xl">
-              Total {formatCurrency(total)}
+            <Text align="center" fz="lg">
+              Table{" "}
+              <Text fw={500} span>
+                C24
+              </Text>
             </Text>
+            <div className={classes.orderInfo}>
+              <Text>
+                Order#{" "}
+                <Text span fw={500}>
+                  15a59db
+                </Text>
+              </Text>
+              <Text>
+                Customer{" "}
+                <Text span fw={500}>
+                  Michael Min
+                </Text>
+              </Text>
+              <Text>
+                Ordered{" "}
+                <Text span fw={500}>
+                  2m ago
+                </Text>
+              </Text>
+            </div>
+            <div>
+              <List>
+                {cart.map((item) => {
+                  const inCartItem = menu.find(
+                    (menuItem) => menuItem.id === item.itemId
+                  );
+                  if (!inCartItem) {
+                    return;
+                  }
+                  return (
+                    <List.Item key={item.itemId}>
+                      {inCartItem.name}{" "}
+                      <Text span fz="xs">
+                        x{item.units} [
+                        {formatCurrency(inCartItem.priceCents * item.units)}]
+                      </Text>
+                    </List.Item>
+                  );
+                })}
+              </List>
+            </div>
+            <div>
+              <Text fz="xl" fw={700} align="center" mt="xl">
+                Total {formatCurrency(total)}
+              </Text>
+            </div>
           </div>
-        </div>
-      </Paper>
+        </Paper>
+      </div>
+      <div className={classes.floatingButtonGroup}>
+        <GradientButton
+          onClick={() => {
+            createOrder(restaurant.id, 1, cart).then(() => {
+              clearCart();
+              close?.();
+            });
+          }}
+        >
+          Pay with Apple Pay
+        </GradientButton>
+      </div>
     </div>
   );
 };
