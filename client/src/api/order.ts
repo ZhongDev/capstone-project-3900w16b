@@ -1,5 +1,7 @@
 import request from "./request";
 
+type OrderStatus = "ordered" | "preparing" | "completed";
+
 export type CreateOrderBody = {
   itemId: number;
   units: number;
@@ -11,7 +13,7 @@ export type CreateOrderResponse = {
   tableId: number;
   itemId: number;
   placedOn: string;
-  status: "ordered" | "preparing" | "completed";
+  status: OrderStatus;
   units: number;
   device: string;
   id: number;
@@ -31,3 +33,27 @@ export const createOrder = (
     .catch((err) => {
       throw err.response.data;
     }) as Promise<CreateOrderResponse>;
+
+export type GetRestaurantOrdersByDeviceIdResponse = {
+  id: number;
+  tableId: number;
+  item: {
+    name: string;
+    image: string | null;
+    priceCents: number;
+  };
+  placedOn: string;
+  status: OrderStatus;
+  units: number;
+}[];
+
+export const getRestaurantOrdersByDeviceId = (
+  restaurantId: number,
+  deviceId: string
+) =>
+  request
+    .get(`${process.env.NEXT_PUBLIC_BASEURL}/order/${restaurantId}/${deviceId}`)
+    .then((res) => res.data)
+    .catch((err) => {
+      throw err.response.data;
+    }) as Promise<GetRestaurantOrdersByDeviceIdResponse>;
