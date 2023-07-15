@@ -129,6 +129,7 @@ export const Cart = ({ close, restaurant, menu }: CartProps) => {
         <GradientButton
           disabled={cart.length === 0}
           onClick={() => {
+            // TODO: Convert to real table id
             createOrder(restaurant.id, 1, cart).then(() => {
               clearCart();
               close?.();

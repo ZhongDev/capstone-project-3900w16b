@@ -1,4 +1,4 @@
-import { AppShell, Navbar, createStyles, Title, Header } from "@mantine/core";
+import { AppShell, Navbar, createStyles, Title } from "@mantine/core";
 import { GradientButton } from "../Button";
 import { useRouter } from "next/router";
 import Link from "next/link";
@@ -35,7 +35,7 @@ export const Sidebar = ({ children }: { children: React.ReactNode }) => {
               Plateholder
             </Title>
           </Link>
-          <Navbar.Section className={classes.section}>
+          <Navbar.Section className={classes.section} px="xl">
             <Link href="/menu">
               <GradientButton
                 variant={router.pathname === "/menu" ? "filled" : "outline"}
@@ -46,7 +46,7 @@ export const Sidebar = ({ children }: { children: React.ReactNode }) => {
               </GradientButton>
             </Link>
           </Navbar.Section>
-          <Navbar.Section className={classes.section}>
+          <Navbar.Section className={classes.section} px="xl">
             <Link href="/table">
               <GradientButton
                 variant={router.pathname === "/table" ? "filled" : "outline"}
