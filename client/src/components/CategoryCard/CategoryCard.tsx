@@ -115,25 +115,27 @@ export const CategoryCard = ({ category }: { category: Menu }) => {
             onClose={handler.close}
             title="Are you sure?"
           >
-            <Button
-              variant="subtle"
-              onClick={() => {
-                handler.close();
-              }}
-            >
-              Cancel
-            </Button>
-            <Button
-              type="submit"
-              onClick={() => {
-                deleteMenuCategory(category.id).then(() => {
-                  mutate("/menu");
-                  close();
-                });
-              }}
-            >
-              Yes
-            </Button>
+            <Group position="right">
+              <Button
+                variant="subtle"
+                onClick={() => {
+                  handler.close();
+                }}
+              >
+                Cancel
+              </Button>
+              <Button
+                type="submit"
+                onClick={() => {
+                  deleteMenuCategory(category.id).then(() => {
+                    mutate("/menu");
+                    close();
+                  });
+                }}
+              >
+                Yes
+              </Button>
+            </Group>
           </Modal>
         </div>
       </Flex>
