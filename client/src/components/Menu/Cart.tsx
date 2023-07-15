@@ -41,13 +41,13 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-export type BillProps = {
+export type CartProps = {
   close?: () => void;
   restaurant: { name: string; id: number };
   menu: MenuItem[];
 };
 
-export const Bill = ({ close, restaurant, menu }: BillProps) => {
+export const Cart = ({ close, restaurant, menu }: CartProps) => {
   const { classes } = useStyles();
 
   const [cart, { clearCart }] = useLocalCart();
@@ -67,10 +67,7 @@ export const Bill = ({ close, restaurant, menu }: BillProps) => {
   return (
     <div className={classes.container}>
       <div>
-        <Title color="gold" align="center">
-          {restaurant.name}
-        </Title>
-        <Title align="center">Bill</Title>
+        <Title align="center">Cart</Title>
         <Paper withBorder shadow="md" p="xl" mt="xl">
           <div>
             <Text align="center" fz="lg">
@@ -130,6 +127,7 @@ export const Bill = ({ close, restaurant, menu }: BillProps) => {
       </div>
       <div className={classes.floatingButtonGroup}>
         <GradientButton
+          disabled={cart.length === 0}
           onClick={() => {
             createOrder(restaurant.id, 1, cart).then(() => {
               clearCart();
