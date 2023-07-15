@@ -1,15 +1,5 @@
 import { Menu } from "@/api/menu";
-import { GradientButton } from "@/components/Button/GradientButton";
-import {
-  Title,
-  Tabs,
-  createStyles,
-  Text,
-  Paper,
-  Button,
-  Flex,
-  Loader,
-} from "@mantine/core";
+import { Tabs, createStyles, Text, Paper, Flex } from "@mantine/core";
 import ayaya from "@/public/img/ayaya.jpg";
 import Image from "next/image";
 
@@ -22,7 +12,6 @@ const useStyles = createStyles((theme) => ({
     padding: theme.spacing.xl,
   },
   foodImage: {
-    // border: "1px solid rgba(0, 0, 0, 0.2)",
     filter: "drop-shadow(0px 0px 3px rgba(0, 0, 0, 0.3))",
     "& > img": {
       borderRadius: theme.radius.md,

@@ -16,15 +16,11 @@ import {
   Textarea,
   Group,
   ButtonProps,
-  createStyles,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useDisclosure } from "@mantine/hooks";
+import { useEffect } from "react";
 import { mutate } from "swr";
-
-const useStyles = createStyles((theme) => ({
-  //TODO: Think about if you want to do this
-}));
 
 export const ItemCard = ({ item }: { item: MenuItem }) => {
   const [opened, { open, close }] = useDisclosure(false);
@@ -32,16 +28,25 @@ export const ItemCard = ({ item }: { item: MenuItem }) => {
 
   const itemForm = useForm({
     initialValues: {
+      name: "",
+      description: "",
+      ingredients: null,
+      priceCents: 0,
+    },
+    validate: {
+      priceCents: (value) => (value < 0 ? "Price cannot be less than 0" : null),
+    },
+  });
+
+  const { setValues } = itemForm;
+  useEffect(() => {
+    setValues({
       name: item.name,
       description: item.description,
       ingredients: null,
       priceCents: item.priceCents / 100,
-    },
-    validate: {
-      priceCents: (value, values) =>
-        value < 0 ? "Price cannot be less than 0" : null,
-    },
-  });
+    });
+  }, [item.description, item.name, item.priceCents, setValues]);
 
   return (
     <Paper shadow="md" mt="xs" px="xl" py="md" radius="md">
@@ -52,113 +57,117 @@ export const ItemCard = ({ item }: { item: MenuItem }) => {
           </Text>
           <Text c="dimmed">{item.description}</Text>
         </div>
-        <div>
-          <Text fw={500} fz="lg">
-            {formatCurrency(item.priceCents)}
-          </Text>
-        </div>
-        <div>
-          <Button onClick={open} mr="xs" variant="outline" radius="xl">
-            Edit
-          </Button>
-          <Modal
-            opened={opened}
-            onClose={close}
-            title="Update item information"
-          >
-            <form
-              onSubmit={itemForm.onSubmit((values) => {
-                updateMenuItem(item.id, {
-                  ...values,
-                  priceCents: values.priceCents * 100,
-                }).then(() => {
-                  mutate("/menu");
-                  itemForm.reset();
-                  close();
-                });
-              })}
+        <Flex columnGap="lg" align="center">
+          <div>
+            <Text fw={500} fz="lg">
+              {formatCurrency(item.priceCents)}
+            </Text>
+          </div>
+          <div>
+            <Button onClick={open} mr="xs" variant="outline" radius="xl">
+              Edit
+            </Button>
+            <Modal
+              opened={opened}
+              onClose={close}
+              title="Update item information"
             >
-              <TextInput
-                radius="lg"
-                variant="filled"
-                required
-                data-autofocus
-                mb="sm"
-                placeholder="New item name"
-                {...itemForm.getInputProps("name")}
-              />
-              <NumberInput
-                radius="lg"
-                variant="filled"
-                required
-                data-autofocus
-                mb="sm"
-                placeholder="New item price"
-                parser={(value) => value.replace(/\$\s?|(,*)/g, "")}
-                formatter={(value) =>
-                  !Number.isNaN(parseFloat(value))
-                    ? `$${value}`.replace(
-                        /\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g,
-                        ","
-                      )
-                    : "$ "
-                }
-                precision={2}
-                step={0.1}
-                {...itemForm.getInputProps("priceCents")}
-              />
-              <Textarea
-                radius="lg"
-                variant="filled"
-                required
-                mb="sm"
-                placeholder="Item description"
-                withAsterisk
-                {...itemForm.getInputProps("description")}
-              />
+              <form
+                onSubmit={itemForm.onSubmit((values) => {
+                  updateMenuItem(item.id, {
+                    ...values,
+                    priceCents: values.priceCents * 100,
+                  }).then(() => {
+                    mutate("/menu");
+                    itemForm.reset();
+                    close();
+                  });
+                })}
+              >
+                <TextInput
+                  radius="lg"
+                  variant="filled"
+                  required
+                  data-autofocus
+                  mb="sm"
+                  placeholder="New item name"
+                  {...itemForm.getInputProps("name")}
+                />
+                <NumberInput
+                  radius="lg"
+                  variant="filled"
+                  required
+                  data-autofocus
+                  mb="sm"
+                  placeholder="New item price"
+                  parser={(value) => value.replace(/\$\s?|(,*)/g, "")}
+                  formatter={(value) =>
+                    !Number.isNaN(parseFloat(value))
+                      ? `$${value}`.replace(
+                          /\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g,
+                          ","
+                        )
+                      : "$ "
+                  }
+                  precision={2}
+                  step={0.1}
+                  {...itemForm.getInputProps("priceCents")}
+                />
+                <Textarea
+                  radius="lg"
+                  variant="filled"
+                  required
+                  mb="sm"
+                  placeholder="Item description"
+                  withAsterisk
+                  {...itemForm.getInputProps("description")}
+                />
+                <Group position="right">
+                  <Button
+                    variant="subtle"
+                    onClick={() => {
+                      itemForm.reset();
+                      close();
+                    }}
+                  >
+                    Cancel
+                  </Button>
+                  <Button type="submit">Confirm</Button>
+                </Group>
+              </form>
+            </Modal>
+            <Button variant="outline" radius="xl" onClick={handler.open}>
+              Delete
+            </Button>
+            <Modal
+              opened={openedSure}
+              onClose={handler.close}
+              title="Are you sure?"
+            >
               <Group position="right">
                 <Button
                   variant="subtle"
                   onClick={() => {
-                    itemForm.reset();
-                    close();
+                    handler.close();
                   }}
                 >
                   Cancel
                 </Button>
-                <Button type="submit">Confirm</Button>
+                <Button
+                  type="submit"
+                  onClick={() => {
+                    deleteMenuItem(item.id).then(() => {
+                      mutate("/menu");
+                      close();
+                    });
+                  }}
+                >
+                  Yes
+                </Button>
               </Group>
-            </form>
-          </Modal>
-          <Button variant="outline" radius="xl" onClick={handler.open}>
-            Delete
-          </Button>
-          <Modal
-            opened={openedSure}
-            onClose={handler.close}
-            title="Are you sure?"
-          >
-            <Button
-              variant="subtle"
-              onClick={() => {
-                handler.close();
-              }}
-            >
-              Cancel
-            </Button>
-            <Button
-              type="submit"
-              onClick={() => {
-                deleteMenuItem(item.id).then(() => {
-                  mutate("/menu");
-                  close();
-                });
-              }}
-            >
-              Yes
-            </Button>
-          </Modal>
-        </div>
+            </Modal>
+          </div>
+        </Flex>
       </Flex>
     </Paper>
   );
@@ -180,8 +189,7 @@ export const CreateItem = ({
       priceCents: 0,
     },
     validate: {
-      priceCents: (value, values) =>
-        value < 0 ? "Price cannot be less than 0" : null,
+      priceCents: (value) => (value < 0 ? "Price cannot be less than 0" : null),
     },
   });
 

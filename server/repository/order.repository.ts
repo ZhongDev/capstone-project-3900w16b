@@ -1,7 +1,7 @@
 import Order from "../models/Order";
 
 export type CreateOrder = {
-  status: "ordered" | "preparing" | "completed";
+  status: "ordered" | "completed";
   itemId: number;
   placedOn: string;
   units: number;
