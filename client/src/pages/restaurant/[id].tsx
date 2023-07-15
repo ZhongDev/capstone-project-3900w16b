@@ -1,17 +1,36 @@
 import { useMemo, useState } from "react";
 import { useRouter } from "next/router";
 import useSWR from "swr";
-import { Title, createStyles, Loader, Drawer } from "@mantine/core";
+import {
+  Title,
+  createStyles,
+  Loader,
+  Drawer,
+  Button,
+  ActionIcon,
+} from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
+import { IconHistory } from "@tabler/icons-react";
 import { getMenuByRestaurantId } from "@/api/menu";
 import { GradientButton } from "@/components/Button";
 import { MenuTab } from "@/components/Menu";
-import { OrderItem, Cart } from "@/components/Menu";
+import { OrderItem, Cart, Ordered } from "@/components/Menu";
 
 const useStyles = createStyles((theme) => ({
   menuContainer: {
     maxWidth: "50rem",
     margin: `${theme.spacing.xl} auto`,
+  },
+  floatingButtonGroup: {
+    position: "fixed",
+    bottom: "1rem",
+    left: "50%",
+    width: "50%",
+    transform: "translate(-50%, 0)",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    gap: theme.spacing.md,
   },
 }));
 
@@ -21,6 +40,7 @@ type View =
       itemId: number;
     }
   | { type: "cart" }
+  | { type: "orders" }
   | null;
 
 export default function RestaurantMenu() {
@@ -38,13 +58,12 @@ export default function RestaurantMenu() {
     getMenuByRestaurantId(restaurantId)
   );
 
-  const allMenuItems = useMemo(
-    () =>
-      menuData?.menu.flatMap((categories) =>
-        categories.items.map((item) => item)
-      ),
-    [menuData]
-  );
+  const allMenuItems = useMemo(() => {
+    console.log({ menuData });
+    return menuData?.menu.flatMap((categories) =>
+      categories.items.map((item) => item)
+    );
+  }, [menuData]);
 
   if (!router.isReady) {
     return null;
@@ -78,6 +97,9 @@ export default function RestaurantMenu() {
             menu={allMenuItems}
           />
         )}
+        {view?.type === "orders" && menuData && (
+          <Ordered restaurant={menuData.restaurant} close={close} />
+        )}
       </Drawer>
       <div className={classes.menuContainer}>
         <Title mb="sm" color="gold" align="center">
@@ -95,17 +117,18 @@ export default function RestaurantMenu() {
           <Loader />
         )}
       </div>
-      <div
-        style={{
-          position: "fixed",
-          bottom: "1rem",
-          left: "50%",
-          width: "50%",
-          transform: "translate(-50%, 0)",
-          display: "flex",
-          justifyContent: "center",
-        }}
-      >
+      <div className={classes.floatingButtonGroup}>
+        <ActionIcon
+          onClick={() => {
+            setView({ type: "orders" });
+            open();
+          }}
+          variant="light"
+          radius="lg"
+          size="lg"
+        >
+          <IconHistory size="1.125rem" />
+        </ActionIcon>
         <GradientButton
           onClick={() => {
             setView({ type: "cart" });

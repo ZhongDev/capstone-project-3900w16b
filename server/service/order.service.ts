@@ -33,6 +33,7 @@ export const getRestaurantOrdersByDeviceId = async (
       id: order.id,
       tableId: order.tableId,
       item: {
+        id: order.item?.id,
         name: order.item?.name,
         image: order.item?.image,
         priceCents: order.item?.priceCents,
