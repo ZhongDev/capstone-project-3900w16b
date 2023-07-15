@@ -38,6 +38,7 @@ export type GetRestaurantOrdersByDeviceIdResponse = {
   id: number;
   tableId: number;
   item: {
+    id: number;
     name: string;
     image: string | null;
     priceCents: number;
