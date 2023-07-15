@@ -13,6 +13,7 @@ import {
   TextInput,
   Group,
   createStyles,
+  ButtonProps,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { useState } from "react";
@@ -27,6 +28,20 @@ const useStyles = createStyles((theme) => ({
     marginTop: theme.spacing.xl,
   },
 }));
+
+export type CategoriesProps = {
+  menu: Menu[];
+};
+
+export const Categories = ({ menu }: CategoriesProps) => {
+  return (
+    <>
+      {menu.map((category) => {
+        return <CategoryCard key={category.id} category={category} />;
+      })}
+    </>
+  );
+};
 
 export const CategoryCard = ({ category }: { category: Menu }) => {
   const [opened, { open, close }] = useDisclosure(false);
@@ -139,22 +154,24 @@ export const CategoryCard = ({ category }: { category: Menu }) => {
           </Modal>
         </div>
       </Flex>
-      <div className={classes.menuItems}>
-        {category.items.map((item) => {
-          return <ItemCard key={item.id} item={item} />;
-        })}
-      </div>
+      {category.items.length > 0 && (
+        <div className={classes.menuItems}>
+          {category.items.map((item) => {
+            return <ItemCard key={item.id} item={item} />;
+          })}
+        </div>
+      )}
     </Paper>
   );
 };
 
-export const CreateCategory = () => {
+export const CreateCategory = (props: ButtonProps) => {
   const [opened, { open, close }] = useDisclosure(false);
   const [newCategoryName, setNewCategoryName] = useState("");
 
   return (
     <>
-      <Button onClick={open} radius="xl" variant="outline">
+      <Button {...props} onClick={open} radius="xl" variant="outline">
         New Category
       </Button>
       <Modal opened={opened} onClose={close} title="Create a new category">
