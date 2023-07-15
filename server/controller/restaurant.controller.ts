@@ -89,6 +89,19 @@ router.get("/table", auth, async (req, res, next) => {
   }
 });
 
+router.get("/check/:restaurantId/:tableName", auth, async (req, res, next) => {
+  // const table = schema.CheckTableRequest.parse(req.body);
+  // const restables = await restaurantService.checkRestaurantTable(
+  //   table.restaurantId,
+  //   table.name
+  // );
+  const table = await restaurantService.checkRestaurantTable(
+    Number(req.params.restaurantId),
+    req.params.tableName
+  );
+  res.json({});
+});
+
 const signJWT = (payload: Record<string, any>): Promise<string | undefined> =>
   new Promise((resolve, reject) => {
     if (!process.env.JWT_KEY) {

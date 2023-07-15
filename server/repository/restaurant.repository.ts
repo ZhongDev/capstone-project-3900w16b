@@ -40,6 +40,13 @@ export const createRestaurantTable = async (
   });
 };
 
+// export const checkRestaurantTable = async (
+//   restaurantId: number,
+//   tableName: string
+// ) => {
+
+// }
+
 export const getRestaurantTables = (restaurantId: number) => {
   return Table.query().where({
     restaurantId,

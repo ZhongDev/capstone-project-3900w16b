@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   Title,
   Drawer,
@@ -16,6 +17,7 @@ import {
   Box,
   Collapse,
   Flex,
+  TextInput,
 } from "@mantine/core";
 import Image from "next/image";
 import { getMe } from "@/api/auth";
@@ -25,6 +27,13 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import { useDisclosure } from "@mantine/hooks";
 import { wrap } from "module";
+import {
+  Table,
+  createTable,
+  getRestaurantTables,
+  deleteRestaurantTable,
+  checkTable,
+} from "@/api/table";
 
 const useStyles = createStyles((theme) => ({
   header: {
@@ -60,24 +69,41 @@ const useStyles = createStyles((theme) => ({
     justifyContent: "center",
     gap: "20px",
     paddingBottom: `calc(${theme.spacing.xl} * 2)`,
-    paddingTop: `calc(${theme.spacing.xl} * 2)`,
+    paddingTop: `calc(${theme.spacing.xl} * 1)`,
   },
-  outer: {
-    display: "flex",
+  input: {
+    width: 250,
+  },
+  textbox: {
     alignItems: "center",
-    justifyContent: "space-around",
-    margin: rem(50),
-    paddingTop: `calc(${theme.spacing.xl} * 4)`,
-    // [theme.fn.smallerThan("xs")]: {
-    //   display: "inline-block",
-    //   textAlign: "center",
-    // },
+    justifyContent: "center",
+    display: "flex",
+    paddingTop: `calc(${theme.spacing.xl} * 1)`,
+  },
+  continueButton: {
+    alignItems: "center",
+    justifyContent: "center",
+    display: "flex",
+    paddingTop: `calc(${theme.spacing.xl} * 1)`,
   },
 }));
 
 export default function HomePage() {
   const { classes, theme } = useStyles();
   const router = useRouter();
+  const {
+    data: tableData,
+    error: tableDataError,
+    isLoading: tableDataIsLoading,
+  } = useSWR("/restaurant/table", getRestaurantTables);
+  const restaurant = Number(router.query.id);
+  const [newTableName, setNewTableName] = useState("");
+
+  const doCheckTable = () => {
+    checkTable(restaurant, newTableName).then(() => {
+      setNewTableName("");
+    });
+  };
 
   return (
     <>
@@ -89,10 +115,27 @@ export default function HomePage() {
         </div>
       </Header>
       <Text fw={650} size="2rem" ta="center">
-        Simply
+        Enter
         <br></br>
-        Unbeatable Food.
+        Table Number:
       </Text>
+      <div className={classes.textbox}>
+        <TextInput
+          className={classes.input}
+          placeholder="Enter Table Name"
+          radius="xl"
+          size="xl"
+          value={newTableName}
+          onChange={(e) => {
+            setNewTableName(e.target.value);
+          }}
+        />
+      </div>
+      <div className={classes.continueButton}>
+        <Button color="gold.5" radius="xl" size="xl" onClick={doCheckTable}>
+          Continue
+        </Button>
+      </div>
       <div className={classes.buttons}>
         <Flex
           direction={{ base: "column", sm: "row" }}
@@ -105,28 +148,23 @@ export default function HomePage() {
             variant="outline"
             radius="xl"
             size="lg"
-            onClick={() => router.push(`../${router.query.id}/table_selection`)}
+            onClick={() => router.reload()}
           >
-            Order Now
+            Scan QR
           </Button>
           <Button
             className={classes.button}
             variant="outline"
             radius="xl"
             size="lg"
-            onClick={() => router.reload()}
+            onClick={() => router.push(`../${router.query.id}/homepage`)}
           >
-            Scan QR Code
+            Cancel
           </Button>
         </Flex>
-      </div>
-      <div className={classes.image}>
-        <Image
-          src={PlateHolderImg}
-          sizes="(max-width: 800px) 100vw, (max-width: 582px) 50vw, 33vw"
-          alt="Picture of sample restaurant food"
-        ></Image>
       </div>
     </>
   );
 }
+
+const checkExist = () => {};
