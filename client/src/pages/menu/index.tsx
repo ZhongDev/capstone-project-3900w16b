@@ -71,19 +71,192 @@ export default function MenuManagement() {
   );
 }
 
+const CategoryCard = ({ category }: { category: Menu }) => {
+  const [opened, { open, close }] = useDisclosure(false);
+  const [openedSure, handler] = useDisclosure(false);
+  const [newCategoryName, setNewCategoryName] = useState("");
+  const { classes } = useStyles();
+
+  return (
+    <Paper
+      mb="sm"
+      key={category.id}
+      shadow="sm"
+      radius="md"
+      p="md"
+      className={classes.menuCategory}
+    >
+      <Flex align="center" justify="space-between">
+        <Title px="xl" align="center">
+          {category.name}
+        </Title>
+        <div>
+          <CreateItem categoryId={category.id} mr="xs" />
+          <Button
+            onClick={() => {
+              setNewCategoryName(category.name);
+              open();
+            }}
+            radius="xl"
+            variant="outline"
+            mr="xs"
+          >
+            Edit name
+          </Button>
+          <Modal opened={opened} onClose={close} title="Rename category">
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                if (!newCategoryName) {
+                  return;
+                }
+              }}
+            >
+              <TextInput
+                radius="lg"
+                variant="filled"
+                required
+                data-autofocus
+                mb="sm"
+                placeholder={"New category name"}
+                value={newCategoryName}
+                onChange={(e) => setNewCategoryName(e.target.value)}
+              />
+              <Group position="right">
+                <Button
+                  variant="subtle"
+                  onClick={() => {
+                    setNewCategoryName("");
+                    close();
+                  }}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  type="submit"
+                  disabled={!newCategoryName}
+                  onClick={() => {
+                    updateMenuCategory(category.id, {
+                      name: newCategoryName,
+                    }).then(() => {
+                      mutate("/menu");
+                      setNewCategoryName("");
+                      close();
+                    });
+                  }}
+                >
+                  Confirm
+                </Button>
+              </Group>
+            </form>
+          </Modal>
+          <Button radius="xl" variant="outline" mr="xs" onClick={handler.open}>
+            Delete
+          </Button>
+          <Modal
+            opened={openedSure}
+            onClose={handler.close}
+            title="Are you sure?"
+          >
+            <Button
+              variant="subtle"
+              onClick={() => {
+                handler.close();
+              }}
+            >
+              Cancel
+            </Button>
+            <Button
+              type="submit"
+              onClick={() => {
+                deleteMenuCategory(category.id).then(() => {
+                  mutate("/menu");
+                  close();
+                });
+              }}
+            >
+              Yes
+            </Button>
+          </Modal>
+        </div>
+      </Flex>
+      <div className={classes.menuItems}>
+        {category.items.map((item) => {
+          return <Item key={item.id} item={item} />;
+        })}
+      </div>
+    </Paper>
+  );
+};
+
+const CreateCategory = () => {
+  const [opened, { open, close }] = useDisclosure(false);
+  const [newCategoryName, setNewCategoryName] = useState("");
+
+  return (
+    <>
+      <Button onClick={open} radius="xl" variant="outline">
+        New Category
+      </Button>
+      <Modal opened={opened} onClose={close} title="Create a new category">
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            if (!newCategoryName) {
+              return;
+            }
+          }}
+        >
+          <TextInput
+            radius="lg"
+            variant="filled"
+            required
+            data-autofocus
+            mb="sm"
+            placeholder="Category name"
+            value={newCategoryName}
+            onChange={(e) => setNewCategoryName(e.target.value)}
+          />
+          <Group position="right">
+            <Button
+              variant="subtle"
+              onClick={() => {
+                setNewCategoryName("");
+                close();
+              }}
+            >
+              Cancel
+            </Button>
+            <Button
+              type="submit"
+              disabled={!newCategoryName}
+              onClick={() => {
+                createCategory(newCategoryName).then(() => {
+                  mutate("/menu");
+                  setNewCategoryName("");
+                  close();
+                });
+              }}
+            >
+              Create Category
+            </Button>
+          </Group>
+        </form>
+      </Modal>
+    </>
+  );
+};
+
 const Item = ({ item }: { item: MenuItem }) => {
   const [opened, { open, close }] = useDisclosure(false);
-  // const [newItemName, setNewItemName] = useState("");
-  // const [newItemDescription, setNewItemDescription] = useState("");
-  // const [newItemIngredients, setNewItemIngredients] = useState("");
-  // const [newItemPrice, setNewItemPrice] = useState<number | "">(0);
+  const [openedSure, handler] = useDisclosure(false);
 
   const itemForm = useForm({
     initialValues: {
-      name: "",
-      description: "",
+      name: item.name,
+      description: item.description,
       ingredients: null,
-      priceCents: 0,
+      priceCents: item.priceCents / 100,
     },
     validate: {
       priceCents: (value, values) =>
@@ -178,126 +351,39 @@ const Item = ({ item }: { item: MenuItem }) => {
               </Group>
             </form>
           </Modal>
-          <Button
-            variant="outline"
-            radius="xl"
-            onClick={() => {
-              deleteMenuItem(item.id).then(() => {
-                mutate("/menu");
-                close();
-              });
-            }}
-          >
+          <Button variant="outline" radius="xl" onClick={handler.open}>
             Delete
           </Button>
-        </div>
-      </Flex>
-    </Paper>
-  );
-};
-
-const CategoryCard = ({ category }: { category: Menu }) => {
-  const [opened, { open, close }] = useDisclosure(false);
-  const [newCategoryName, setNewCategoryName] = useState("");
-  const { classes } = useStyles();
-
-  return (
-    <Paper
-      mb="sm"
-      key={category.id}
-      shadow="sm"
-      radius="md"
-      p="md"
-      className={classes.menuCategory}
-    >
-      <Flex align="center" justify="space-between">
-        <Title px="xl" align="center">
-          {category.name}
-        </Title>
-        <div>
-          <CreateItem categoryId={category.id} mr="xs" />
-          <Button
-            onClick={() => {
-              setNewCategoryName(category.name);
-              open();
-            }}
-            radius="xl"
-            variant="outline"
-            mr="xs"
+          <Modal
+            opened={openedSure}
+            onClose={handler.close}
+            title="Are you sure?"
           >
-            Edit name
-          </Button>
-          <Modal opened={opened} onClose={close} title="Rename category">
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                if (!newCategoryName) {
-                  return;
-                }
+            <Button
+              variant="subtle"
+              onClick={() => {
+                handler.close();
               }}
             >
-              <TextInput
-                radius="lg"
-                variant="filled"
-                required
-                data-autofocus
-                mb="sm"
-                placeholder={"New category name"}
-                value={newCategoryName}
-                onChange={(e) => setNewCategoryName(e.target.value)}
-              />
-              <Group position="right">
-                <Button
-                  variant="subtle"
-                  onClick={() => {
-                    setNewCategoryName("");
-                    close();
-                  }}
-                >
-                  Cancel
-                </Button>
-                <Button
-                  type="submit"
-                  disabled={!newCategoryName}
-                  onClick={() => {
-                    updateMenuCategory(category.id, {
-                      name: newCategoryName,
-                    }).then(() => {
-                      mutate("/menu");
-                      setNewCategoryName("");
-                      close();
-                    });
-                  }}
-                >
-                  Confirm
-                </Button>
-              </Group>
-            </form>
+              Cancel
+            </Button>
+            <Button
+              type="submit"
+              onClick={() => {
+                deleteMenuItem(item.id).then(() => {
+                  mutate("/menu");
+                  close();
+                });
+              }}
+            >
+              Yes
+            </Button>
           </Modal>
-          <Button
-            radius="xl"
-            variant="outline"
-            mr="xs"
-            onClick={() => {
-              deleteMenuCategory(category.id).then(() => {
-                mutate("/menu");
-                close();
-              });
-            }}
-          >
-            Delete
-          </Button>
         </div>
       </Flex>
-      <div className={classes.menuItems}>
-        {category.items.map((item) => {
-          return <Item key={item.id} item={item} />;
-        })}
-      </div>
     </Paper>
   );
 };
-
 const CreateItem = ({
   categoryId,
   ...props
@@ -383,64 +469,6 @@ const CreateItem = ({
               Cancel
             </Button>
             <Button type="submit">Create Item</Button>
-          </Group>
-        </form>
-      </Modal>
-    </>
-  );
-};
-
-const CreateCategory = () => {
-  const [opened, { open, close }] = useDisclosure(false);
-  const [newCategoryName, setNewCategoryName] = useState("");
-
-  return (
-    <>
-      <Button onClick={open} radius="xl" variant="outline">
-        New Category
-      </Button>
-      <Modal opened={opened} onClose={close} title="Create a new category">
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            if (!newCategoryName) {
-              return;
-            }
-          }}
-        >
-          <TextInput
-            radius="lg"
-            variant="filled"
-            required
-            data-autofocus
-            mb="sm"
-            placeholder="Category name"
-            value={newCategoryName}
-            onChange={(e) => setNewCategoryName(e.target.value)}
-          />
-          <Group position="right">
-            <Button
-              variant="subtle"
-              onClick={() => {
-                setNewCategoryName("");
-                close();
-              }}
-            >
-              Cancel
-            </Button>
-            <Button
-              type="submit"
-              disabled={!newCategoryName}
-              onClick={() => {
-                createCategory(newCategoryName).then(() => {
-                  mutate("/menu");
-                  setNewCategoryName("");
-                  close();
-                });
-              }}
-            >
-              Create Category
-            </Button>
           </Group>
         </form>
       </Modal>
