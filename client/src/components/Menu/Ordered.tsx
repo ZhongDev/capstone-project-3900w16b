@@ -83,7 +83,7 @@ const OrderedItemCard = ({ item }: OrderedItemCardProps) => {
 
   return (
     <div>
-      <Paper withBorder p="lg" shadow="lg" mb="sm">
+      <Paper p="lg" shadow="lg" mb="sm">
         <Flex justify="space-between">
           <Flex direction="column" justify="space-between">
             <Text fw={700} fz="lg">
