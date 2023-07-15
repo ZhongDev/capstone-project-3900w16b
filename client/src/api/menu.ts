@@ -2,14 +2,13 @@ import request from "./request";
 
 export type Menu = {
   id: number;
-  restaurantId: number;
   displayOrder: number;
   name: string;
   items: MenuItem[];
 };
 
 export type GetMenuResponse = {
-  restaurant: { name: string };
+  restaurant: { name: string; id: number };
   menu: Menu[];
 };
 

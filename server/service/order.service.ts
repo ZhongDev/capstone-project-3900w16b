@@ -1,6 +1,5 @@
 import { ForeignKeyViolationError } from "objection";
 import * as orderRepo from "../repository/order.repository";
-import * as restaurantRepo from "../repository/restaurant.repository";
 import BadRequest from "../errors/BadRequest";
 
 export const createOrder = async (
@@ -18,4 +17,30 @@ export const createOrder = async (
     }
     throw err;
   }
+};
+
+export const getRestaurantOrdersByDeviceId = async (
+  restaurantId: number,
+  deviceId: string
+) => {
+  const orders = await orderRepo.getRestaurantOrdersByDeviceId(
+    restaurantId,
+    deviceId
+  );
+
+  return orders.map((order) => {
+    return {
+      id: order.id,
+      tableId: order.tableId,
+      item: {
+        id: order.item?.id,
+        name: order.item?.name,
+        image: order.item?.image,
+        priceCents: order.item?.priceCents,
+      },
+      placedOn: order.placedOn,
+      status: order.status,
+      units: order.units,
+    };
+  });
 };

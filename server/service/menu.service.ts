@@ -80,7 +80,7 @@ export const getMenu = async (restaurantId: number) => {
     throw new NotFound("Restaurant does not exist.");
   }
 
-  const restaurantData = { name: restaurant.name };
+  const restaurantData = { name: restaurant.name, id: restaurant.id };
   return {
     restaurant: restaurantData,
     menu: await menuRepo.getMenu(restaurantId),

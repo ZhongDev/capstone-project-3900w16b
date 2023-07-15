@@ -1,4 +1,4 @@
-import { Model } from "objection";
+import { Model, QueryBuilder } from "objection";
 import Item from "./Item";
 import Restaurant from "./Restaurant";
 
