@@ -81,7 +81,7 @@ export const updateMenuCategory = (
     .then((res) => res.data)
     .catch((err) => {
       throw err.response.data;
-    }) as Promise<UpdateCategoryResponse>; // might be wrong
+    }) as Promise<UpdateCategoryResponse>;
 };
 
 export const deleteMenuCategory = (categoryId: number) => {
