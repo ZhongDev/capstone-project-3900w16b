@@ -38,35 +38,37 @@ const useStyles = createStyles((theme) => ({
   outer: {
     display: "flex",
     alignItems: "center",
-    justifyContent: "space-around",
-    margin: rem(50),
+    justifyContent: "space-between",
     paddingTop: `calc(${theme.spacing.xl} * 4)`,
-    [theme.fn.smallerThan("xs")]: {
+    [theme.fn.smallerThan("sm")]: {
+      padding: rem(50),
       display: "inline-block",
       textAlign: "center",
     },
   },
   title: {
     color: theme.colorScheme === "dark" ? theme.white : theme.black,
-    fontSize: rem(44),
-    fontWeight: 400,
+    fontSize: rem(60),
+    fontWeight: 700,
 
-    [theme.fn.smallerThan("xs")]: {
-      fontSize: rem(28),
+    [theme.fn.smallerThan("sm")]: {
+      fontSize: rem(45),
     },
   },
+  highlight: { color: theme.colors.gold[5] },
   text: {
-    [theme.fn.smallerThan("xs")]: {
+    fontSize: rem(15),
+    [theme.fn.smallerThan("sm")]: {
       fontSize: rem(15),
     },
   },
   burger: {
-    [theme.fn.largerThan("xs")]: {
+    [theme.fn.largerThan("sm")]: {
       display: "none",
     },
   },
   registerButton: {
-    [theme.fn.smallerThan("xs")]: {
+    [theme.fn.smallerThan("sm")]: {
       display: "none",
     },
   },
@@ -75,13 +77,18 @@ const useStyles = createStyles((theme) => ({
       color: theme.colors.gray[0],
       backgroundColor: theme.colors.gold[6],
     },
-    [theme.fn.smallerThan("xs")]: {
+    [theme.fn.smallerThan("sm")]: {
       display: "none",
     },
   },
   image: {
-    [theme.fn.smallerThan("xs")]: {
-      float: "right",
+    width: rem(450),
+    height: "auto",
+    [theme.fn.smallerThan("md")]: {
+      width: rem(250),
+    },
+    [theme.fn.smallerThan("sm")]: {
+      display: "none",
     },
   },
 }));
@@ -138,27 +145,26 @@ export default function Home() {
         </div>
       </Header>
       <div className={classes.outer}>
-        <div>
-          <Container>
-            <Title className={classes.title}>
-              Welcome to the <br /> future of ordering
-            </Title>
-            <Text mt="md" className={classes.text}>
-              Experience a new era of business efficiency with out
-              smartphone-based order management system. Streamline your
-              operations anytime, anywhere. Manage, monitor and process orders
-              with a tap. Boost productivity, reduce errors, and save valuable
-              time. Empower your team and delight your customers with improved
-              accuracy and faster service. It's more than an order management
-              system - it's your business, simplified. Revolutionize your order
-              process today.
+        <Container>
+          <Title className={classes.title}>
+            Welcome to the
+            <Text inherit className={classes.highlight}>
+              future of ordering
             </Text>
-          </Container>
-        </div>
+          </Title>
+          <Text mt="md" className={classes.text}>
+            Experience a new era of business efficiency with our
+            smartphone-based order management system. Streamline your operations
+            anytime, anywhere. Manage, monitor and process orders with a tap.
+            Boost productivity, reduce errors, and save valuable time. Empower
+            your team and delight your customers with improved accuracy and
+            faster service. It's more than an order management system - it's
+            your business, simplified. Revolutionize your order process today.
+          </Text>
+        </Container>
         <Image
           className={classes.image}
           src={PlateHolderImg}
-          sizes="(max-width: 800px) 100vw, (max-width: 582px) 50vw, 33vw"
           alt="Picture of software usage"
         ></Image>
       </div>
