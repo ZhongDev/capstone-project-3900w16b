@@ -21,7 +21,11 @@ import useSWR, { mutate } from "swr";
 import { Sidebar } from "@/components/Sidebar";
 import {
   createCategory,
+  updateMenuCategory,
+  deleteMenuCategory,
   createItem,
+  updateMenuItem,
+  deleteMenuItem,
   getMenu,
   Menu,
   MenuItem,
@@ -96,6 +100,8 @@ const Item = ({ item }: { item: MenuItem }) => {
 };
 
 const CategoryCard = ({ category }: { category: Menu }) => {
+  const [opened, { open, close }] = useDisclosure(false);
+  const [newCategoryName, setNewCategoryName] = useState("");
   const { classes } = useStyles();
 
   return (
@@ -113,10 +119,67 @@ const CategoryCard = ({ category }: { category: Menu }) => {
         </Title>
         <div>
           <CreateItem categoryId={category.id} mr="xs" />
-          <Button radius="xl" variant="outline" mr="xs">
+          <Button onClick={open} radius="xl" variant="outline" mr="xs">
             Edit name
           </Button>
-          <Button radius="xl" variant="outline" mr="xs">
+          <Modal opened={opened} onClose={close} title="Rename category">
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                if (!newCategoryName) {
+                  return;
+                }
+              }}
+            >
+              <TextInput
+                radius="lg"
+                variant="filled"
+                required
+                data-autofocus
+                mb="sm"
+                placeholder="Category name"
+                value={newCategoryName}
+                onChange={(e) => setNewCategoryName(e.target.value)}
+              />
+              <Group position="right">
+                <Button
+                  variant="subtle"
+                  onClick={() => {
+                    setNewCategoryName("");
+                    close();
+                  }}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  type="submit"
+                  disabled={!newCategoryName}
+                  onClick={() => {
+                    updateMenuCategory(category.id, {
+                      name: newCategoryName,
+                    }).then(() => {
+                      mutate("/menu");
+                      setNewCategoryName("");
+                      close();
+                    });
+                  }}
+                >
+                  Confirm
+                </Button>
+              </Group>
+            </form>
+          </Modal>
+          <Button
+            radius="xl"
+            variant="outline"
+            mr="xs"
+            onClick={() => {
+              deleteMenuCategory(category.id).then(() => {
+                mutate("/menu");
+                close();
+              });
+            }}
+          >
             Delete
           </Button>
         </div>
@@ -156,7 +219,7 @@ const CreateItem = ({
       <Button onClick={open} radius="xl" variant="outline" {...props}>
         Add Item
       </Button>
-      <Modal opened={opened} onClose={close} title="Create a new category">
+      <Modal opened={opened} onClose={close} title="Add a new category item">
         <form
           onSubmit={itemForm.onSubmit((values) => {
             createItem(categoryId, {

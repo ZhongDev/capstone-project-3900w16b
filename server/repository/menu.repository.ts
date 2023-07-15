@@ -23,6 +23,7 @@ export const updateCategory = async (
   categoryId: number,
   updateFields: UpdateCategory
 ) => {
+  console.log({ updateFields });
   await Category.query()
     .patch({
       name: updateFields.name,

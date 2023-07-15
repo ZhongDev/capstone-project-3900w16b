@@ -65,7 +65,6 @@ export const createCategory = (name: string) => {
 export type UpdateCategoryResponse = {
   itemId: number;
   name: string;
-  displayOrder: number;
 };
 
 export const updateMenuCategory = (
@@ -75,9 +74,10 @@ export const updateMenuCategory = (
   }
 ) => {
   return request
-    .patch(process.env.NEXT_PUBLIC_BASEURL + "/menu/category/" + categoryId, {
-      updateCategory,
-    })
+    .patch(
+      process.env.NEXT_PUBLIC_BASEURL + "/menu/category/" + categoryId,
+      updateCategory
+    )
     .then((res) => res.data)
     .catch((err) => {
       throw err.response.data;
@@ -86,7 +86,7 @@ export const updateMenuCategory = (
 
 export const deleteMenuCategory = (categoryId: number) => {
   return request
-    .delete(process.env.NEXT_PUBLIC_BASEURL + "menu/item/" + categoryId)
+    .delete(process.env.NEXT_PUBLIC_BASEURL + "/menu/category/" + categoryId)
     .then((res) => res.data)
     .catch((err) => {
       throw err.response.data;
