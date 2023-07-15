@@ -62,6 +62,37 @@ export const createCategory = (name: string) => {
     }) as Promise<CreateCategoryResponse>;
 };
 
+export type UpdateCategoryResponse = {
+  itemId: number;
+  name: string;
+  displayOrder: number;
+};
+
+export const updateMenuCategory = (
+  categoryId: number,
+  updateCategory: {
+    name: string;
+  }
+) => {
+  return request
+    .patch(process.env.NEXT_PUBLIC_BASEURL + "/menu/category/" + categoryId, {
+      updateCategory,
+    })
+    .then((res) => res.data)
+    .catch((err) => {
+      throw err.response.data;
+    }) as Promise<UpdateCategoryResponse>; // might be wrong
+};
+
+export const deleteMenuCategory = (categoryId: number) => {
+  return request
+    .delete(process.env.NEXT_PUBLIC_BASEURL + "menu/item/" + categoryId)
+    .then((res) => res.data)
+    .catch((err) => {
+      throw err.response.data;
+    }) as Promise<void>;
+};
+
 export type CreateItemResponse = {
   categoryId: number;
   displayOrder: number;
@@ -103,14 +134,7 @@ export const getMenuItem = (itemId: number) => {
     }) as Promise<MenuItem>;
 };
 
-export type UpdateItemResponse = {
-  itemId: number;
-  name: string;
-  description: string;
-  ingredients: string | null;
-  priceCents: number;
-  displayOrder: number;
-};
+export type UpdateItemResponse = MenuItem;
 
 export const updateMenuItem = (
   itemId: number,
@@ -132,17 +156,11 @@ export const updateMenuItem = (
     }) as Promise<UpdateItemResponse>; // might be wrong
 };
 
-export type DeleteItemResponse = {
-  // TODO:
-  // 200
-  // 500
-};
-
 export const deleteMenuItem = (itemId: number) => {
   return request
     .delete(process.env.NEXT_PUBLIC_BASEURL + "menu/item/" + itemId)
     .then((res) => res.data)
     .catch((err) => {
       throw err.response.data;
-    }) as Promise<DeleteItemResponse>; // ???
+    }) as Promise<void>; // ???
 };
