@@ -16,7 +16,6 @@ export const useLocalCart = () => {
       (item) => item.itemId === newItem.itemId
     );
     if (existingItem) {
-      console.log("exists");
       existingItem.units += newItem.units;
       setCart([...localCart]);
     } else {
@@ -36,5 +35,7 @@ export const useLocalCart = () => {
     }
   };
 
-  return [localCart, { addToCart, removeFromCart }] as const;
+  const clearCart = () => setCart([]);
+
+  return [localCart, { addToCart, removeFromCart, clearCart }] as const;
 };

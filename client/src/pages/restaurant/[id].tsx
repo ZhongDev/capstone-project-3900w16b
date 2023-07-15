@@ -6,7 +6,7 @@ import { useDisclosure } from "@mantine/hooks";
 import { getMenuByRestaurantId } from "@/api/menu";
 import { GradientButton } from "@/components/Button";
 import { MenuTab } from "@/components/Menu";
-import { OrderItem, Bill } from "@/components/Menu";
+import { OrderItem, Cart } from "@/components/Menu";
 
 const useStyles = createStyles((theme) => ({
   menuContainer: {
@@ -20,7 +20,7 @@ type View =
       type: "item";
       itemId: number;
     }
-  | { type: "bill" }
+  | { type: "cart" }
   | null;
 
 export default function RestaurantMenu() {
@@ -71,8 +71,12 @@ export default function RestaurantMenu() {
         {view?.type === "item" && (
           <OrderItem close={close} itemId={view.itemId} />
         )}
-        {view?.type === "bill" && menuData && allMenuItems && (
-          <Bill restaurantName={menuData.restaurant.name} menu={allMenuItems} />
+        {view?.type === "cart" && menuData && allMenuItems && (
+          <Cart
+            restaurant={menuData.restaurant}
+            close={close}
+            menu={allMenuItems}
+          />
         )}
       </Drawer>
       <div className={classes.menuContainer}>
@@ -104,11 +108,11 @@ export default function RestaurantMenu() {
       >
         <GradientButton
           onClick={() => {
-            setView({ type: "bill" });
+            setView({ type: "cart" });
             open();
           }}
         >
-          View Bill
+          View Cart
         </GradientButton>
       </div>
     </>

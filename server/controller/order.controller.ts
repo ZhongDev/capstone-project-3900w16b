@@ -25,4 +25,17 @@ router.post("/:restaurantId/:tableId", async (req, res, next) => {
   }
 });
 
+router.get("/:restaurantId/:deviceId", async (req, res, next) => {
+  try {
+    res.json(
+      await orderService.getRestaurantOrdersByDeviceId(
+        Number(req.params.restaurantId),
+        req.params.deviceId
+      )
+    );
+  } catch (err) {
+    next(err);
+  }
+});
+
 export default router;

@@ -29,3 +29,15 @@ export const createOrder = (
     );
   });
 };
+
+export const getRestaurantOrdersByDeviceId = (
+  restaurantId: number,
+  deviceId: string
+) => {
+  return Order.query()
+    .where({
+      restaurantId,
+      device: deviceId,
+    })
+    .withGraphFetched("item");
+};
