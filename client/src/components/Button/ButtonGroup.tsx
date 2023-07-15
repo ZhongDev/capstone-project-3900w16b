@@ -1,4 +1,4 @@
-import { Flex, Button, Text, createStyles } from "@mantine/core";
+import { Flex, Button, createStyles } from "@mantine/core";
 
 const useStyles = createStyles((theme) => ({
   middle: {
