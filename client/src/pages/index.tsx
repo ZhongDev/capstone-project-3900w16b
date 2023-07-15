@@ -36,7 +36,7 @@ const useStyles = createStyles((theme) => ({
     justifyContent: "space-between",
     paddingTop: `calc(${theme.spacing.xl} * 4)`,
     [theme.fn.smallerThan("sm")]: {
-      padding: rem(50),
+      padding: rem(10),
       display: "inline-block",
       textAlign: "center",
     },
