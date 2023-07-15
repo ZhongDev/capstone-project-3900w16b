@@ -143,24 +143,21 @@ export const updateMenuItem = (
     description: string;
     ingredients: string | null;
     priceCents: number;
-    displayOrder: number;
   }
 ) => {
   return request
-    .patch(process.env.NEXT_PUBLIC_BASEURL + "/menu/item/" + itemId, {
-      updateItem,
-    })
+    .patch(process.env.NEXT_PUBLIC_BASEURL + "/menu/item/" + itemId, updateItem)
     .then((res) => res.data)
     .catch((err) => {
       throw err.response.data;
-    }) as Promise<UpdateItemResponse>; // might be wrong
+    }) as Promise<UpdateItemResponse>;
 };
 
 export const deleteMenuItem = (itemId: number) => {
   return request
-    .delete(process.env.NEXT_PUBLIC_BASEURL + "menu/item/" + itemId)
+    .delete(process.env.NEXT_PUBLIC_BASEURL + "/menu/item/" + itemId)
     .then((res) => res.data)
     .catch((err) => {
       throw err.response.data;
-    }) as Promise<void>; // ???
+    }) as Promise<void>;
 };

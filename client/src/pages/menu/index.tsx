@@ -72,6 +72,25 @@ export default function MenuManagement() {
 }
 
 const Item = ({ item }: { item: MenuItem }) => {
+  const [opened, { open, close }] = useDisclosure(false);
+  // const [newItemName, setNewItemName] = useState("");
+  // const [newItemDescription, setNewItemDescription] = useState("");
+  // const [newItemIngredients, setNewItemIngredients] = useState("");
+  // const [newItemPrice, setNewItemPrice] = useState<number | "">(0);
+
+  const itemForm = useForm({
+    initialValues: {
+      name: "",
+      description: "",
+      ingredients: null,
+      priceCents: 0,
+    },
+    validate: {
+      priceCents: (value, values) =>
+        value < 0 ? "Price cannot be less than 0" : null,
+    },
+  });
+
   return (
     <Paper shadow="md" mt="xs" px="xl" py="md" radius="md">
       <Flex align="center" justify="space-between">
@@ -86,14 +105,92 @@ const Item = ({ item }: { item: MenuItem }) => {
             {formatCurrency(item.priceCents)}
           </Text>
         </div>
-        {/* <div>
-          <Button mr="xs" variant="outline" radius="xl">
+        <div>
+          <Button onClick={open} mr="xs" variant="outline" radius="xl">
             Edit
           </Button>
-          <Button variant="outline" radius="xl">
+          <Modal
+            opened={opened}
+            onClose={close}
+            title="Update item information"
+          >
+            <form
+              onSubmit={itemForm.onSubmit((values) => {
+                updateMenuItem(item.id, {
+                  ...values,
+                  priceCents: values.priceCents * 100,
+                }).then(() => {
+                  mutate("/menu");
+                  itemForm.reset();
+                  close();
+                });
+              })}
+            >
+              <TextInput
+                radius="lg"
+                variant="filled"
+                required
+                data-autofocus
+                mb="sm"
+                placeholder="New item name"
+                {...itemForm.getInputProps("name")}
+              />
+              <NumberInput
+                radius="lg"
+                variant="filled"
+                required
+                data-autofocus
+                mb="sm"
+                placeholder="New item price"
+                parser={(value) => value.replace(/\$\s?|(,*)/g, "")}
+                formatter={(value) =>
+                  !Number.isNaN(parseFloat(value))
+                    ? `$${value}`.replace(
+                        /\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g,
+                        ","
+                      )
+                    : "$ "
+                }
+                precision={2}
+                step={0.1}
+                {...itemForm.getInputProps("priceCents")}
+              />
+              <Textarea
+                radius="lg"
+                variant="filled"
+                required
+                mb="sm"
+                placeholder="Item description"
+                withAsterisk
+                {...itemForm.getInputProps("description")}
+              />
+              <Group position="right">
+                <Button
+                  variant="subtle"
+                  onClick={() => {
+                    itemForm.reset();
+                    close();
+                  }}
+                >
+                  Cancel
+                </Button>
+                <Button type="submit">Confirm</Button>
+              </Group>
+            </form>
+          </Modal>
+          <Button
+            variant="outline"
+            radius="xl"
+            onClick={() => {
+              deleteMenuItem(item.id).then(() => {
+                mutate("/menu");
+                close();
+              });
+            }}
+          >
             Delete
           </Button>
-        </div> */}
+        </div>
       </Flex>
     </Paper>
   );
@@ -119,7 +216,15 @@ const CategoryCard = ({ category }: { category: Menu }) => {
         </Title>
         <div>
           <CreateItem categoryId={category.id} mr="xs" />
-          <Button onClick={open} radius="xl" variant="outline" mr="xs">
+          <Button
+            onClick={() => {
+              setNewCategoryName(category.name);
+              open();
+            }}
+            radius="xl"
+            variant="outline"
+            mr="xs"
+          >
             Edit name
           </Button>
           <Modal opened={opened} onClose={close} title="Rename category">
@@ -137,7 +242,7 @@ const CategoryCard = ({ category }: { category: Menu }) => {
                 required
                 data-autofocus
                 mb="sm"
-                placeholder="Category name"
+                placeholder={"New category name"}
                 value={newCategoryName}
                 onChange={(e) => setNewCategoryName(e.target.value)}
               />
@@ -219,7 +324,7 @@ const CreateItem = ({
       <Button onClick={open} radius="xl" variant="outline" {...props}>
         Add Item
       </Button>
-      <Modal opened={opened} onClose={close} title="Add a new category item">
+      <Modal opened={opened} onClose={close} title="Add a new item">
         <form
           onSubmit={itemForm.onSubmit((values) => {
             createItem(categoryId, {
@@ -250,6 +355,12 @@ const CreateItem = ({
             placeholder="Price"
             precision={2}
             step={0.1}
+            parser={(value) => value.replace(/\$\s?|(,*)/g, "")}
+            formatter={(value) =>
+              !Number.isNaN(parseFloat(value))
+                ? `$${value}`.replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")
+                : "$ "
+            }
             {...itemForm.getInputProps("priceCents")}
           />
           <Textarea
