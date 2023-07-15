@@ -14,8 +14,10 @@ import {
   ButtonProps,
   Textarea,
   NumberInput,
+  ActionIcon,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
+import { IconArrowDown, IconArrowUp } from "@tabler/icons-react";
 import { useDisclosure } from "@mantine/hooks";
 import useSWR, { mutate } from "swr";
 import { Sidebar } from "@/components/Sidebar";
@@ -108,9 +110,19 @@ const CategoryCard = ({ category }: { category: Menu }) => {
       className={classes.menuCategory}
     >
       <Flex align="center" justify="space-between">
-        <Title px="xl" align="center">
-          {category.name}
-        </Title>
+        <Flex align="center" justify="center">
+          <Button.Group orientation="vertical">
+            <ActionIcon size="sm">
+              <IconArrowUp size="0.875rem" />
+            </ActionIcon>
+            <ActionIcon size="sm">
+              <IconArrowDown size="0.875rem" />
+            </ActionIcon>
+          </Button.Group>
+          <Title px="xl" align="center">
+            {category.name}
+          </Title>
+        </Flex>
         <div>
           <CreateItem categoryId={category.id} mr="xs" />
           <Button radius="xl" variant="outline" mr="xs">
@@ -121,11 +133,13 @@ const CategoryCard = ({ category }: { category: Menu }) => {
           </Button>
         </div>
       </Flex>
-      <div className={classes.menuItems}>
-        {category.items.map((item) => {
-          return <Item key={item.id} item={item} />;
-        })}
-      </div>
+      {category.items.length > 0 && (
+        <div className={classes.menuItems}>
+          {category.items.map((item) => {
+            return <Item key={item.id} item={item} />;
+          })}
+        </div>
+      )}
     </Paper>
   );
 };

@@ -35,7 +35,7 @@ export const Sidebar = ({ children }: { children: React.ReactNode }) => {
               Plateholder
             </Title>
           </Link>
-          <Navbar.Section className={classes.section}>
+          <Navbar.Section className={classes.section} px="xl">
             <Link href="/menu">
               <GradientButton
                 variant={router.pathname === "/menu" ? "filled" : "outline"}
@@ -46,7 +46,7 @@ export const Sidebar = ({ children }: { children: React.ReactNode }) => {
               </GradientButton>
             </Link>
           </Navbar.Section>
-          <Navbar.Section className={classes.section}>
+          <Navbar.Section className={classes.section} px="xl">
             <Link href="/table">
               <GradientButton
                 variant={router.pathname === "/table" ? "filled" : "outline"}
