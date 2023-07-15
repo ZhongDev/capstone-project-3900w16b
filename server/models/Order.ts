@@ -13,6 +13,8 @@ export default class Order extends Model {
   device!: string | null; // free text to attempt to identify the device that ordered
   placedOn!: string; // This is a date string
 
+  item?: Item;
+
   static tableName = "Order";
 
   static relationMappings = () => ({
