@@ -1,14 +1,7 @@
 import { useMemo, useState } from "react";
 import { useRouter } from "next/router";
 import useSWR from "swr";
-import {
-  Title,
-  createStyles,
-  Loader,
-  Drawer,
-  Button,
-  ActionIcon,
-} from "@mantine/core";
+import { Title, createStyles, Loader, Drawer, ActionIcon } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { IconHistory } from "@tabler/icons-react";
 import { getMenuByRestaurantId } from "@/api/menu";
@@ -50,11 +43,7 @@ export default function RestaurantMenu() {
   const [opened, { open, close }] = useDisclosure(false);
   const { classes } = useStyles();
 
-  const {
-    data: menuData,
-    error: menuError,
-    isLoading: menuIsLoading,
-  } = useSWR(router.isReady ? "/menu" : null, () =>
+  const { data: menuData } = useSWR(router.isReady ? "/menu" : null, () =>
     getMenuByRestaurantId(restaurantId)
   );
 

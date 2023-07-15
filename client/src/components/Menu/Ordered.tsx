@@ -49,11 +49,7 @@ export type OrderedProps = {
 export const Ordered = ({ close, restaurant }: OrderedProps) => {
   const { classes } = useStyles();
 
-  const {
-    data: orderedData,
-    error: orderedError,
-    isLoading: orderedIsLoading,
-  } = useSWR(`/order/${restaurant.id}/${"a"}`, () =>
+  const { data: orderedData } = useSWR(`/order/${restaurant.id}/${"a"}`, () =>
     getRestaurantOrdersByDeviceId(restaurant.id, "a")
   );
 

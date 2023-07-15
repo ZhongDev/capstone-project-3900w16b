@@ -3,7 +3,6 @@ import { useRouter } from "next/router";
 import { Card, TextInput, Text, createStyles } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { GradientButton } from "../Button";
-import request from "@/api/request";
 import { loginRestaurant } from "@/api/auth";
 
 const useStyles = createStyles((theme) => ({
@@ -34,7 +33,7 @@ export const LoginForm = () => {
 
   const login = ({ email, password }: { email: string; password: string }) => {
     loginRestaurant({ email, password })
-      .then((res) => router.push("/menu"))
+      .then(() => router.push("/menu"))
       .catch((err) => {
         loginForm.setFieldError("password", err.msg);
         loginForm.setFieldError("email", err.msg);

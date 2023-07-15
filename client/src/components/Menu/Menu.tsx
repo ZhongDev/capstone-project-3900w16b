@@ -1,14 +1,5 @@
 import { Menu } from "@/api/menu";
-import { GradientButton } from "@/components/Button/GradientButton";
-import {
-  Tabs,
-  createStyles,
-  Text,
-  Paper,
-  Button,
-  Flex,
-  Loader,
-} from "@mantine/core";
+import { Tabs, createStyles, Text, Paper, Flex } from "@mantine/core";
 import ayaya from "@/public/img/ayaya.jpg";
 import Image from "next/image";
 

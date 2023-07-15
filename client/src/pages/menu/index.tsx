@@ -1,39 +1,8 @@
-import { useState } from "react";
-import {
-  Paper,
-  Title,
-  Loader,
-  Button,
-  createStyles,
-  Flex,
-  Modal,
-  TextInput,
-  Group,
-  Text,
-  Accordion,
-  ButtonProps,
-  Textarea,
-  NumberInput,
-  ActionIcon,
-} from "@mantine/core";
-import { useForm } from "@mantine/form";
-import { IconArrowDown, IconArrowUp } from "@tabler/icons-react";
-import { useDisclosure } from "@mantine/hooks";
-import useSWR, { mutate } from "swr";
+import { Title, Loader, createStyles, Flex } from "@mantine/core";
+import useSWR from "swr";
 import { Sidebar } from "@/components/Sidebar";
 import { CategoryCard, CreateCategory } from "@/components/CategoryCard";
-import {
-  createCategory,
-  updateMenuCategory,
-  deleteMenuCategory,
-  createItem,
-  updateMenuItem,
-  deleteMenuItem,
-  getMenu,
-  Menu,
-  MenuItem,
-} from "@/api/menu";
-import { formatCurrency } from "@/helpers";
+import { getMenu } from "@/api/menu";
 
 const useStyles = createStyles((theme) => ({
   menuSection: {
@@ -43,11 +12,10 @@ const useStyles = createStyles((theme) => ({
 
 export default function MenuManagement() {
   const { classes } = useStyles();
-  const {
-    data: menuData,
-    error: menuDataError,
-    isLoading: menuDataIsLoading,
-  } = useSWR("/menu", getMenu);
+  const { data: menuData, isLoading: menuDataIsLoading } = useSWR(
+    "/menu",
+    getMenu
+  );
 
   return (
     <Sidebar>

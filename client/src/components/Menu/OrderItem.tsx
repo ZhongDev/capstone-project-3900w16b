@@ -49,13 +49,11 @@ export const OrderItem = ({ itemId, close }: OrderItemProps) => {
   const { classes } = useStyles();
   const [units, setUnits] = useState(1);
 
-  const {
-    data: itemData,
-    isLoading: itemDataIsLoading,
-    error: itemDataError,
-  } = useSWR(["/menu", itemId], () => getMenuItem(itemId));
+  const { data: itemData } = useSWR(["/menu", itemId], () =>
+    getMenuItem(itemId)
+  );
 
-  const [cart, { addToCart }] = useLocalCart();
+  const [, { addToCart }] = useLocalCart();
 
   if (!itemData) {
     return (

@@ -9,12 +9,7 @@ import {
   Burger,
   Group,
   rem,
-  ScrollArea,
   Divider,
-  UnstyledButton,
-  Center,
-  Box,
-  Collapse,
 } from "@mantine/core";
 import Image from "next/image";
 import { getMe } from "@/api/auth";
@@ -87,7 +82,9 @@ const useStyles = createStyles((theme) => ({
 }));
 
 export default function Home() {
+  // eslint-disable-next-line no-unused-vars
   const { data, error, isLoading } = useSWR("/me", getMe);
+
   const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] =
     useDisclosure(false);
   const { classes, theme } = useStyles();
@@ -149,9 +146,9 @@ export default function Home() {
               operations anytime, anywhere. Manage, monitor and process orders
               with a tap. Boost productivity, reduce errors, and save valuable
               time. Empower your team and delight your customers with improved
-              accuracy and faster service. It's more than an order management
-              system - it's your business, simplified. Revolutionize your order
-              process today.
+              accuracy and faster service. It&apos;s more than an order
+              management system - it&apos;s your business, simplified.
+              Revolutionize your order process today.
             </Text>
           </Container>
         </div>

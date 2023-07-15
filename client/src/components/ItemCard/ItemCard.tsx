@@ -16,15 +16,11 @@ import {
   Textarea,
   Group,
   ButtonProps,
-  createStyles,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useDisclosure } from "@mantine/hooks";
+import { useEffect } from "react";
 import { mutate } from "swr";
-
-const useStyles = createStyles((theme) => ({
-  //TODO: Think about if you want to do this
-}));
 
 export const ItemCard = ({ item }: { item: MenuItem }) => {
   const [opened, { open, close }] = useDisclosure(false);
@@ -32,16 +28,25 @@ export const ItemCard = ({ item }: { item: MenuItem }) => {
 
   const itemForm = useForm({
     initialValues: {
+      name: "",
+      description: "",
+      ingredients: null,
+      priceCents: 0,
+    },
+    validate: {
+      priceCents: (value) => (value < 0 ? "Price cannot be less than 0" : null),
+    },
+  });
+
+  const { setValues } = itemForm;
+  useEffect(() => {
+    setValues({
       name: item.name,
       description: item.description,
       ingredients: null,
       priceCents: item.priceCents / 100,
-    },
-    validate: {
-      priceCents: (value, values) =>
-        value < 0 ? "Price cannot be less than 0" : null,
-    },
-  });
+    });
+  }, [item.description, item.name, item.priceCents, setValues]);
 
   return (
     <Paper shadow="md" mt="xs" px="xl" py="md" radius="md">
@@ -180,8 +185,7 @@ export const CreateItem = ({
       priceCents: 0,
     },
     validate: {
-      priceCents: (value, values) =>
-        value < 0 ? "Price cannot be less than 0" : null,
+      priceCents: (value) => (value < 0 ? "Price cannot be less than 0" : null),
     },
   });
 
