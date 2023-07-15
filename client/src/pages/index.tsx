@@ -9,12 +9,7 @@ import {
   Burger,
   Group,
   rem,
-  ScrollArea,
   Divider,
-  UnstyledButton,
-  Center,
-  Box,
-  Collapse,
 } from "@mantine/core";
 import Image from "next/image";
 import { getMe } from "@/api/auth";
