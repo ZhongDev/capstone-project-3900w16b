@@ -14,7 +14,11 @@ export async function up(knex: Knex): Promise<void> {
     })
     .createTable("Item", function (table) {
       table.increments("id");
-      table.integer("categoryId").references("id").inTable("Category");
+      table
+        .integer("categoryId")
+        .references("id")
+        .inTable("Category")
+        .onDelete("CASCADE");
       table.integer("displayOrder").notNullable();
       table.integer("name", 255).notNullable();
       table.string("image", 255);

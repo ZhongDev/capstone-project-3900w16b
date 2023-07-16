@@ -2,14 +2,13 @@ import request from "./request";
 
 export type Menu = {
   id: number;
-  restaurantId: number;
   displayOrder: number;
   name: string;
   items: MenuItem[];
 };
 
 export type GetMenuResponse = {
-  restaurant: { name: string };
+  restaurant: { name: string; id: number };
   menu: Menu[];
 };
 
@@ -62,6 +61,37 @@ export const createCategory = (name: string) => {
     }) as Promise<CreateCategoryResponse>;
 };
 
+export type UpdateCategoryResponse = {
+  itemId: number;
+  name: string;
+};
+
+export const updateMenuCategory = (
+  categoryId: number,
+  updateCategory: {
+    name: string;
+  }
+) => {
+  return request
+    .patch(
+      process.env.NEXT_PUBLIC_BASEURL + "/menu/category/" + categoryId,
+      updateCategory
+    )
+    .then((res) => res.data)
+    .catch((err) => {
+      throw err.response.data;
+    }) as Promise<UpdateCategoryResponse>;
+};
+
+export const deleteMenuCategory = (categoryId: number) => {
+  return request
+    .delete(process.env.NEXT_PUBLIC_BASEURL + "/menu/category/" + categoryId)
+    .then((res) => res.data)
+    .catch((err) => {
+      throw err.response.data;
+    }) as Promise<void>;
+};
+
 export type CreateItemResponse = {
   categoryId: number;
   displayOrder: number;
@@ -101,4 +131,32 @@ export const getMenuItem = (itemId: number) => {
     .catch((err) => {
       throw err.response.data;
     }) as Promise<MenuItem>;
+};
+
+export type UpdateItemResponse = MenuItem;
+
+export const updateMenuItem = (
+  itemId: number,
+  updateItem: {
+    name: string;
+    description: string;
+    ingredients: string | null;
+    priceCents: number;
+  }
+) => {
+  return request
+    .patch(process.env.NEXT_PUBLIC_BASEURL + "/menu/item/" + itemId, updateItem)
+    .then((res) => res.data)
+    .catch((err) => {
+      throw err.response.data;
+    }) as Promise<UpdateItemResponse>;
+};
+
+export const deleteMenuItem = (itemId: number) => {
+  return request
+    .delete(process.env.NEXT_PUBLIC_BASEURL + "/menu/item/" + itemId)
+    .then((res) => res.data)
+    .catch((err) => {
+      throw err.response.data;
+    }) as Promise<void>;
 };

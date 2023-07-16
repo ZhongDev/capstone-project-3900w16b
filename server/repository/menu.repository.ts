@@ -110,6 +110,7 @@ export const deleteCategoryItem = async (id: number) => {
 // Get the entire menu database given a restaurantId
 export const getMenu = (restaurantId: number) => {
   return Category.query()
+    .select(["category.id", "category.displayOrder", "category.name"])
     .where({ restaurantId })
     .withGraphJoined("items")
     .orderBy("category.displayOrder")

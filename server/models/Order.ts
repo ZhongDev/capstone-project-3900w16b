@@ -9,9 +9,11 @@ export default class Order extends Model {
   tableId!: number;
   itemId!: number;
   units!: number;
-  status!: "ordered" | "preparing" | "completed";
+  status!: "ordered" | "completed";
   device!: string | null; // free text to attempt to identify the device that ordered
   placedOn!: string; // This is a date string
+
+  item?: Item;
 
   static tableName = "Order";
 
