@@ -136,3 +136,23 @@ export const reorderCategories = async (
     );
   });
 };
+
+export const reorderItems = async (
+  categoryId: number,
+  newOrderedItemIds: number[]
+) => {
+  return Item.transaction(async (trx) => {
+    return Promise.all(
+      newOrderedItemIds.map((itemId, i) => {
+        return Item.query(trx)
+          .update({
+            displayOrder: i + 1,
+          })
+          .where({
+            id: itemId,
+            categoryId,
+          });
+      })
+    );
+  });
+};

@@ -18,7 +18,7 @@ import {
 import { useDisclosure } from "@mantine/hooks";
 import { useState } from "react";
 import { mutate } from "swr";
-import { CreateItem, ItemCard } from "../ItemCard";
+import { CreateItem, ItemCard, Items, ReorderItemCard } from "../ItemCard";
 
 const useStyles = createStyles((theme) => ({
   menuCategory: {
@@ -49,6 +49,8 @@ export const CategoryCard = ({ category }: { category: Menu }) => {
   const [newCategoryName, setNewCategoryName] = useState("");
   const { classes } = useStyles();
 
+  const [reorderingItems, setReorderingItems] = useState(false);
+
   return (
     <Paper
       mb="sm"
@@ -64,6 +66,18 @@ export const CategoryCard = ({ category }: { category: Menu }) => {
         </Title>
         <div>
           <CreateItem categoryId={category.id} mr="xs" />
+          {category.items.length > 1 && (
+            <Button
+              onClick={() => {
+                setReorderingItems(true);
+              }}
+              radius="xl"
+              variant="outline"
+              mr="xs"
+            >
+              Reorder
+            </Button>
+          )}
           <Button
             onClick={() => {
               setNewCategoryName(category.name);
@@ -156,9 +170,15 @@ export const CategoryCard = ({ category }: { category: Menu }) => {
       </Flex>
       {category.items.length > 0 && (
         <div className={classes.menuItems}>
-          {category.items.map((item) => {
-            return <ItemCard key={item.id} item={item} />;
-          })}
+          {reorderingItems ? (
+            <ReorderItemCard
+              categoryId={category.id}
+              items={category.items}
+              close={() => setReorderingItems(false)}
+            />
+          ) : (
+            <Items items={category.items} />
+          )}
         </div>
       )}
     </Paper>

@@ -22,6 +22,20 @@ import { useDisclosure } from "@mantine/hooks";
 import { useEffect } from "react";
 import { mutate } from "swr";
 
+export type ItemsProps = {
+  items: MenuItem[];
+};
+
+export const Items = ({ items }: ItemsProps) => {
+  return (
+    <>
+      {items.map((item) => (
+        <ItemCard key={item.id} item={item} />
+      ))}
+    </>
+  );
+};
+
 export const ItemCard = ({ item }: { item: MenuItem }) => {
   const [opened, { open, close }] = useDisclosure(false);
   const [openedSure, handler] = useDisclosure(false);

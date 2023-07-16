@@ -45,8 +45,20 @@ export const getMenuByRestaurantId = (restaurantId: number) => {
 
 export const reorderCategories = (newCategoryOrder: number[]) => {
   return request
-    .post(process.env.NEXT_PUBLIC_BASEURL + "/menu", {
+    .post(process.env.NEXT_PUBLIC_BASEURL + "/menu/displayOrder", {
       categoryOrder: newCategoryOrder,
+    })
+    .then((res) => res.data)
+    .catch((err) => {
+      throw err.response.data;
+    }) as Promise<GetMenuResponse>;
+};
+
+export const reorderItems = (categoryId: number, newItemOrder: number[]) => {
+  return request
+    .post(process.env.NEXT_PUBLIC_BASEURL + "/menu/item/displayOrder", {
+      categoryId,
+      itemOrder: newItemOrder,
     })
     .then((res) => res.data)
     .catch((err) => {
