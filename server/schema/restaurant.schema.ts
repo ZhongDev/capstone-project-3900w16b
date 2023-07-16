@@ -14,3 +14,8 @@ export const LoginRequest = z.object({
 export const CreateTableRequest = z.object({
   name: z.string().min(1),
 });
+
+export const CheckTableRequest = z.object({
+  restaurantId: z.number(),
+  name: z.string(),
+});

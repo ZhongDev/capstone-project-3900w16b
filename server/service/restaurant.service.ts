@@ -40,13 +40,18 @@ export const checkRestaurantTable = async (
   tableName: string
 ) => {
   const restaurant = await restaurantRepo.getRestaurantTables(restaurantId);
-  console.log(restaurant);
-  console.log(restaurantId);
-  console.log(tableName);
-  return [2, "potato"];
-  // if (restaurant.query().where) {
-  //   throw new NotFound("Restaurant does not have this table.");
-  // }
+
+  let isTrue = false;
+  for (let i in restaurant) {
+    if (restaurant[i].name == tableName) {
+      isTrue = true;
+    }
+  }
+
+  if (!isTrue) {
+    throw new Forbidden("Invalid Table");
+  }
+  return [{}];
 };
 
 export const deleteRestaurantTable = async (tableId: number) => {

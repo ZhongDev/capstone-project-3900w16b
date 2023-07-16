@@ -1,30 +1,15 @@
 import {
   Title,
-  Drawer,
   createStyles,
   Header,
-  Container,
   Text,
   Button,
-  Burger,
-  Group,
   rem,
-  ScrollArea,
-  Divider,
-  UnstyledButton,
-  Center,
-  Box,
-  Collapse,
   Flex,
 } from "@mantine/core";
 import Image from "next/image";
-import { getMe } from "@/api/auth";
-import useSWR from "swr";
 import PlateHolderImg from "@/public/img/pikachu_food.jpg";
-import Head from "next/head";
 import { useRouter } from "next/router";
-import { useDisclosure } from "@mantine/hooks";
-import { wrap } from "module";
 
 const useStyles = createStyles((theme) => ({
   header: {
@@ -61,17 +46,6 @@ const useStyles = createStyles((theme) => ({
     gap: "20px",
     paddingBottom: `calc(${theme.spacing.xl} * 2)`,
     paddingTop: `calc(${theme.spacing.xl} * 2)`,
-  },
-  outer: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "space-around",
-    margin: rem(50),
-    paddingTop: `calc(${theme.spacing.xl} * 4)`,
-    // [theme.fn.smallerThan("xs")]: {
-    //   display: "inline-block",
-    //   textAlign: "center",
-    // },
   },
 }));
 

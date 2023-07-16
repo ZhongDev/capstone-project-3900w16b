@@ -1,53 +1,21 @@
 import { useState } from "react";
 import {
   Title,
-  Drawer,
   createStyles,
   Header,
-  Container,
   Text,
   Button,
-  Burger,
-  Group,
-  rem,
-  ScrollArea,
-  Divider,
-  UnstyledButton,
-  Center,
-  Box,
-  Collapse,
   Flex,
   TextInput,
 } from "@mantine/core";
-import Image from "next/image";
-import { getMe } from "@/api/auth";
-import useSWR from "swr";
-import PlateHolderImg from "@/public/img/pikachu_food.jpg";
-import Head from "next/head";
 import { useRouter } from "next/router";
-import { useDisclosure } from "@mantine/hooks";
-import { wrap } from "module";
-import {
-  Table,
-  createTable,
-  getRestaurantTables,
-  deleteRestaurantTable,
-  checkTable,
-} from "@/api/table";
+import { checkTable } from "@/api/table";
 
 const useStyles = createStyles((theme) => ({
   header: {
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-  },
-  image: {
-    [theme.fn.smallerThan("xs")]: {
-      float: "right",
-    },
-    alignItems: "center",
-    justifyContent: "center",
-    display: "flex",
   },
   button: {
     "&:hover": {
@@ -91,18 +59,18 @@ const useStyles = createStyles((theme) => ({
 export default function HomePage() {
   const { classes, theme } = useStyles();
   const router = useRouter();
-  const {
-    data: tableData,
-    error: tableDataError,
-    isLoading: tableDataIsLoading,
-  } = useSWR("/restaurant/table", getRestaurantTables);
-  const restaurant = Number(router.query.id);
   const [newTableName, setNewTableName] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   const doCheckTable = () => {
-    checkTable(restaurant, newTableName).then(() => {
-      setNewTableName("");
-    });
+    const restaurantId = Number(router.query.id);
+    const name = newTableName;
+    checkTable({ restaurantId, name })
+      .then(() => router.push(`../${router.query.id}`))
+      .catch((err) => {
+        setErrorMessage(err.msg);
+      });
+    setNewTableName("");
   };
 
   return (
@@ -125,9 +93,11 @@ export default function HomePage() {
           placeholder="Enter Table Name"
           radius="xl"
           size="xl"
+          error={errorMessage}
           value={newTableName}
           onChange={(e) => {
             setNewTableName(e.target.value);
+            setErrorMessage("");
           }}
         />
       </div>
@@ -166,5 +136,3 @@ export default function HomePage() {
     </>
   );
 }
-
-const checkExist = () => {};

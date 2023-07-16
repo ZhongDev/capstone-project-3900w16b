@@ -89,17 +89,19 @@ router.get("/table", auth, async (req, res, next) => {
   }
 });
 
-router.get("/check/:restaurantId/:tableName", auth, async (req, res, next) => {
-  // const table = schema.CheckTableRequest.parse(req.body);
-  // const restables = await restaurantService.checkRestaurantTable(
-  //   table.restaurantId,
-  //   table.name
-  // );
-  const table = await restaurantService.checkRestaurantTable(
-    Number(req.params.restaurantId),
-    req.params.tableName
-  );
-  res.json({});
+router.post("/check", async (req, res, next) => {
+  try {
+    const { restaurantId, name } = schema.CheckTableRequest.parse(
+      req.body ?? {}
+    );
+    const restaurant = await restaurantService.checkRestaurantTable(
+      restaurantId,
+      name
+    );
+    res.json(restaurant);
+  } catch (err) {
+    next(err);
+  }
 });
 
 const signJWT = (payload: Record<string, any>): Promise<string | undefined> =>
