@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "qrcode.react": "^3.1.0",
-    "swr": "^2.2.0"
+    "swr": "^2.2.0",
+    "tabler-icons-react": "^1.56.0"
   }
 }
