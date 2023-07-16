@@ -26,3 +26,7 @@ export const UpdateItemRequest = z.object({
   priceCents: z.number().optional(),
   displayOrder: z.number().optional(),
 });
+
+export const ReorderCategoriesRequest = z.object({
+  categoryOrder: z.array(z.number()),
+});

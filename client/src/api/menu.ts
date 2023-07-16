@@ -43,6 +43,17 @@ export const getMenuByRestaurantId = (restaurantId: number) => {
     }) as Promise<GetMenuResponse>;
 };
 
+export const reorderCategories = (newCategoryOrder: number[]) => {
+  return request
+    .post(process.env.NEXT_PUBLIC_BASEURL + "/menu", {
+      categoryOrder: newCategoryOrder,
+    })
+    .then((res) => res.data)
+    .catch((err) => {
+      throw err.response.data;
+    }) as Promise<GetMenuResponse>;
+};
+
 export type CreateCategoryResponse = {
   displayOrder: number;
   name: string;

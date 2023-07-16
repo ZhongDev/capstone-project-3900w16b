@@ -120,4 +120,18 @@ router.get("/", auth, async (req, res, next) => {
   }
 });
 
+// Reorder menu
+router.post("/", auth, async (req, res, next) => {
+  try {
+    const { categoryOrder } = schema.ReorderCategoriesRequest.parse(req.body);
+    const reorderedCategories = await menuService.reorderCategories(
+      req.restaurant!.restaurantId,
+      categoryOrder
+    );
+    res.json(reorderedCategories);
+  } catch (err) {
+    next(err);
+  }
+});
+
 export default router;

@@ -116,3 +116,23 @@ export const getMenu = (restaurantId: number) => {
     .orderBy("category.displayOrder")
     .orderBy("items.displayOrder");
 };
+
+export const reorderCategories = async (
+  restaurantId: number,
+  newOrderedCategoryIds: number[]
+) => {
+  return Category.transaction(async (trx) => {
+    return Promise.all(
+      newOrderedCategoryIds.map((categoryId, i) => {
+        return Category.query(trx)
+          .update({
+            displayOrder: i + 1,
+          })
+          .where({
+            id: categoryId,
+            restaurantId,
+          });
+      })
+    );
+  });
+};

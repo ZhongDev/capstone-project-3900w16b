@@ -94,3 +94,11 @@ export const getMenuItem = async (itemId: number) => {
   }
   return item;
 };
+
+export const reorderCategories = async (
+  restaurantId: number,
+  newCategoryOrder: number[]
+) => {
+  await menuRepo.reorderCategories(restaurantId, newCategoryOrder);
+  return getMenu(restaurantId);
+};
