@@ -66,7 +66,7 @@ export default function HomePage() {
     const restaurantId = Number(router.query.id);
     const name = newTableName;
     checkTable({ restaurantId, name })
-      .then(() => router.push(`../${router.query.id}`))
+      .then(() => router.push(`/menu/${router.query.id}`))
       .catch((err) => {
         setErrorMessage(err.msg);
       });
