@@ -35,6 +35,21 @@ export const createRestaurantTable = async (
   }
 };
 
+export const checkRestaurantTable = async (
+  restaurantId: number,
+  tableName: string
+) => {
+  const table = await restaurantRepo.getRestaurantTableByTableName(
+    restaurantId,
+    tableName
+  );
+  if (!table) {
+    throw new NotFound("Invalid Table");
+  }
+
+  return true;
+};
+
 export const deleteRestaurantTable = async (tableId: number) => {
   return restaurantRepo.deleteRestaurantTable(tableId);
 };

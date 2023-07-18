@@ -45,3 +45,18 @@ export const createTable = (name: string) => {
       throw err.response.data;
     }) as Promise<CreateTableResponse>;
 };
+
+export const checkTable = (restaurantId: number, tableName: string) => {
+  return request
+    .get(
+      process.env.NEXT_PUBLIC_BASEURL +
+        "/restaurant/" +
+        restaurantId +
+        "/" +
+        tableName
+    )
+    .then((res) => res.data)
+    .catch((err) => {
+      throw err.response.data;
+    }) as Promise<GetTableResponse>;
+};

@@ -89,6 +89,18 @@ router.get("/table", auth, async (req, res, next) => {
   }
 });
 
+router.get("/:restaurantId/:tableName", async (req, res, next) => {
+  try {
+    const restaurant = await restaurantService.checkRestaurantTable(
+      Number(req.params.restaurantId),
+      req.params.tableName
+    );
+    res.json(restaurant);
+  } catch (err) {
+    next(err);
+  }
+});
+
 const signJWT = (payload: Record<string, any>): Promise<string | undefined> =>
   new Promise((resolve, reject) => {
     if (!process.env.JWT_KEY) {
