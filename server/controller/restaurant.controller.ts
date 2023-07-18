@@ -89,14 +89,17 @@ router.get("/table", auth, async (req, res, next) => {
   }
 });
 
-router.post("/check", async (req, res, next) => {
+router.get("/:restaurantId/:tableName", async (req, res, next) => {
   try {
-    const { restaurantId, name } = schema.CheckTableRequest.parse(
-      req.body ?? {}
-    );
+    // const { restaurantId, name } = schema.CheckTableRequest.parse(
+    //   req.body ?? {}
+    // );
+    console.log("tst");
+    console.log(req.params.restaurantId);
+    console.log("tst");
     const restaurant = await restaurantService.checkRestaurantTable(
-      restaurantId,
-      name
+      Number(req.params.restaurantId),
+      req.params.tableName
     );
     res.json(restaurant);
   } catch (err) {

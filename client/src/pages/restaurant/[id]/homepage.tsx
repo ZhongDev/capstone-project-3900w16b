@@ -50,7 +50,7 @@ const useStyles = createStyles((theme) => ({
 }));
 
 export default function HomePage() {
-  const { classes, theme } = useStyles();
+  const { classes } = useStyles();
   const router = useRouter();
 
   return (
@@ -79,7 +79,9 @@ export default function HomePage() {
             variant="outline"
             radius="xl"
             size="lg"
-            onClick={() => router.push(`../${router.query.id}/table_selection`)}
+            onClick={() =>
+              router.push(`/restaurant/${router.query.id}/table_selection`)
+            }
           >
             Order Now
           </Button>

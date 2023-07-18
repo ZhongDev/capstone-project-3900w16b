@@ -57,7 +57,7 @@ const useStyles = createStyles((theme) => ({
 }));
 
 export default function HomePage() {
-  const { classes, theme } = useStyles();
+  const { classes } = useStyles();
   const router = useRouter();
   const [newTableName, setNewTableName] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
@@ -65,7 +65,7 @@ export default function HomePage() {
   const doCheckTable = () => {
     const restaurantId = Number(router.query.id);
     const name = newTableName;
-    checkTable({ restaurantId, name })
+    checkTable(restaurantId, name)
       .then(() => router.push(`/menu/${router.query.id}`))
       .catch((err) => {
         setErrorMessage(err.msg);
