@@ -50,7 +50,7 @@ export const checkTable = (restaurantId: number, tableName: string) => {
   return request
     .get(
       process.env.NEXT_PUBLIC_BASEURL +
-        "/restaurant" +
+        "/restaurant/" +
         restaurantId +
         "/" +
         tableName

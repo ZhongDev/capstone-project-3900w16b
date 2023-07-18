@@ -91,12 +91,6 @@ router.get("/table", auth, async (req, res, next) => {
 
 router.get("/:restaurantId/:tableName", async (req, res, next) => {
   try {
-    // const { restaurantId, name } = schema.CheckTableRequest.parse(
-    //   req.body ?? {}
-    // );
-    console.log("tst");
-    console.log(req.params.restaurantId);
-    console.log("tst");
     const restaurant = await restaurantService.checkRestaurantTable(
       Number(req.params.restaurantId),
       req.params.tableName
