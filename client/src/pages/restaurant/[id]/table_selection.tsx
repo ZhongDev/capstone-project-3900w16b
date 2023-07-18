@@ -102,7 +102,13 @@ export default function HomePage() {
         />
       </div>
       <div className={classes.continueButton}>
-        <Button color="gold.5" radius="xl" size="xl" onClick={doCheckTable}>
+        <Button
+          color="gold.5"
+          radius="xl"
+          size="xl"
+          onClick={doCheckTable}
+          disabled={!newTableName}
+        >
           Continue
         </Button>
       </div>

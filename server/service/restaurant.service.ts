@@ -44,10 +44,10 @@ export const checkRestaurantTable = async (
     tableName
   );
   if (!table) {
-    throw new Forbidden("Invalid Table");
+    throw new NotFound("Invalid Table");
   }
 
-  return [{}];
+  return true;
 };
 
 export const deleteRestaurantTable = async (tableId: number) => {
