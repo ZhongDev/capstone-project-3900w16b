@@ -19,6 +19,20 @@ router.post("/category", auth, async (req, res, next) => {
   }
 });
 
+// Reorder menu
+router.post("/displayOrder", auth, async (req, res, next) => {
+  try {
+    const { categoryOrder } = schema.ReorderCategoriesRequest.parse(req.body);
+    const reorderedCategories = await menuService.reorderCategories(
+      req.restaurant!.restaurantId,
+      categoryOrder
+    );
+    res.json(reorderedCategories);
+  } catch (err) {
+    next(err);
+  }
+});
+
 // Controls updating of category information
 router.patch("/category/:categoryId", auth, async (req, res, next) => {
   try {
@@ -52,6 +66,22 @@ router.get("/item/:itemId", async (req, res, next) => {
   try {
     const item = await menuService.getMenuItem(Number(req.params.itemId));
     res.json(item);
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.post("/item/displayOrder", auth, async (req, res, next) => {
+  try {
+    const { itemOrder, categoryId } = schema.ReorderItemsRequest.parse(
+      req.body
+    );
+    const newMenu = await menuService.reorderItems(
+      req.restaurant!.restaurantId,
+      categoryId,
+      itemOrder
+    );
+    res.json(newMenu);
   } catch (err) {
     next(err);
   }

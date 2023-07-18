@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { number, z } from "zod";
 
 export const CreateCategoryRequest = z.object({
   name: z.string(),
@@ -25,4 +25,13 @@ export const UpdateItemRequest = z.object({
   ingredients: z.string().nullable().optional(),
   priceCents: z.number().optional(),
   displayOrder: z.number().optional(),
+});
+
+export const ReorderCategoriesRequest = z.object({
+  categoryOrder: z.array(z.number()),
+});
+
+export const ReorderItemsRequest = z.object({
+  categoryId: z.number(),
+  itemOrder: z.array(z.number()),
 });

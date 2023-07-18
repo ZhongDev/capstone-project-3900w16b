@@ -13,11 +13,12 @@ import {
   TextInput,
   Group,
   createStyles,
+  ButtonProps,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { useState } from "react";
 import { mutate } from "swr";
-import { CreateItem, ItemCard } from "../ItemCard";
+import { CreateItem, ItemCard, Items, ReorderItemCard } from "../ItemCard";
 
 const useStyles = createStyles((theme) => ({
   menuCategory: {
@@ -28,11 +29,27 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
+export type CategoriesProps = {
+  menu: Menu[];
+};
+
+export const Categories = ({ menu }: CategoriesProps) => {
+  return (
+    <>
+      {menu.map((category) => {
+        return <CategoryCard key={category.id} category={category} />;
+      })}
+    </>
+  );
+};
+
 export const CategoryCard = ({ category }: { category: Menu }) => {
   const [opened, { open, close }] = useDisclosure(false);
   const [openedSure, handler] = useDisclosure(false);
   const [newCategoryName, setNewCategoryName] = useState("");
   const { classes } = useStyles();
+
+  const [reorderingItems, setReorderingItems] = useState(false);
 
   return (
     <Paper
@@ -49,6 +66,18 @@ export const CategoryCard = ({ category }: { category: Menu }) => {
         </Title>
         <div>
           <CreateItem categoryId={category.id} mr="xs" />
+          {category.items.length > 1 && (
+            <Button
+              onClick={() => {
+                setReorderingItems(true);
+              }}
+              radius="xl"
+              variant="outline"
+              mr="xs"
+            >
+              Reorder
+            </Button>
+          )}
           <Button
             onClick={() => {
               setNewCategoryName(category.name);
@@ -139,22 +168,30 @@ export const CategoryCard = ({ category }: { category: Menu }) => {
           </Modal>
         </div>
       </Flex>
-      <div className={classes.menuItems}>
-        {category.items.map((item) => {
-          return <ItemCard key={item.id} item={item} />;
-        })}
-      </div>
+      {category.items.length > 0 && (
+        <div className={classes.menuItems}>
+          {reorderingItems ? (
+            <ReorderItemCard
+              categoryId={category.id}
+              items={category.items}
+              close={() => setReorderingItems(false)}
+            />
+          ) : (
+            <Items items={category.items} />
+          )}
+        </div>
+      )}
     </Paper>
   );
 };
 
-export const CreateCategory = () => {
+export const CreateCategory = (props: ButtonProps) => {
   const [opened, { open, close }] = useDisclosure(false);
   const [newCategoryName, setNewCategoryName] = useState("");
 
   return (
     <>
-      <Button onClick={open} radius="xl" variant="outline">
+      <Button {...props} onClick={open} radius="xl" variant="outline">
         New Category
       </Button>
       <Modal opened={opened} onClose={close} title="Create a new category">

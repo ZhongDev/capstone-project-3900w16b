@@ -1,7 +1,12 @@
-import { Title, Loader, createStyles, Flex } from "@mantine/core";
+import { useState } from "react";
 import useSWR from "swr";
+import { Title, Loader, createStyles, Flex, Button } from "@mantine/core";
 import { Sidebar } from "@/components/Sidebar";
-import { CategoryCard, CreateCategory } from "@/components/CategoryCard";
+import {
+  Categories,
+  CreateCategory,
+  ReorderCategories,
+} from "@/components/CategoryCard";
 import { getMenu } from "@/api/menu";
 
 const useStyles = createStyles((theme) => ({
@@ -12,25 +17,35 @@ const useStyles = createStyles((theme) => ({
 
 export default function MenuManagement() {
   const { classes } = useStyles();
-  const { data: menuData, isLoading: menuDataIsLoading } = useSWR(
-    "/menu",
-    getMenu
-  );
+  const { data: menuData } = useSWR("/menu", getMenu);
+  const [reordering, setReordering] = useState(false);
 
   return (
     <Sidebar>
       <Flex gap="lg" align="center">
         <Title>Categories</Title>
-        <CreateCategory />
+        <CreateCategory disabled={reordering} />
+        {!reordering && (
+          <Button
+            radius="xl"
+            variant="outline"
+            onClick={() => setReordering(!reordering)}
+          >
+            Reorder
+          </Button>
+        )}
       </Flex>
       <div className={classes.menuSection}>
-        {menuDataIsLoading ? (
-          <Loader />
-        ) : (
-          menuData?.menu.map((category) => {
-            return <CategoryCard key={category.id} category={category} />;
-          })
-        )}
+        {menuData ? (
+          reordering ? (
+            <ReorderCategories
+              close={() => setReordering(false)}
+              menu={menuData.menu}
+            />
+          ) : (
+            <Categories menu={menuData.menu} />
+          )
+        ) : null}
       </div>
     </Sidebar>
   );
