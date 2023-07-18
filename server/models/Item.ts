@@ -24,13 +24,13 @@ export default class Item extends Model {
         from: "Item.categoryId",
         to: "Category.id",
       },
-      orders: {
-        relation: Model.HasManyRelation,
-        modelClass: Order,
-        join: {
-          from: "Item.id",
-          to: "Order.itemId",
-        },
+    },
+    orders: {
+      relation: Model.HasManyRelation,
+      modelClass: Order,
+      join: {
+        from: "Item.id",
+        to: "Order.itemId",
       },
     },
   };

@@ -94,3 +94,26 @@ export const getMenuItem = async (itemId: number) => {
   }
   return item;
 };
+
+export const reorderCategories = async (
+  restaurantId: number,
+  newCategoryOrder: number[]
+) => {
+  await menuRepo.reorderCategories(restaurantId, newCategoryOrder);
+  return getMenu(restaurantId);
+};
+
+export const reorderItems = async (
+  restaurantId: number,
+  categoryId: number,
+  newItemsOrder: number[]
+) => {
+  // Make sure the restaurant owns this category
+  const category = await menuRepo.getCategoryById(categoryId);
+  if (category?.restaurantId !== restaurantId) {
+    throw new NotFound("Category does not exist.");
+  }
+
+  await menuRepo.reorderItems(categoryId, newItemsOrder);
+  return getMenu(restaurantId);
+};
