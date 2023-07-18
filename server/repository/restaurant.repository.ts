@@ -52,6 +52,13 @@ export const getRestaurantTableById = (tableId: number) => {
   });
 };
 
+export const getRestaurantTableByTableName = (
+  restaurantId: number,
+  tableName: string
+) => {
+  return Table.query().findOne({ name: tableName, restaurantId });
+};
+
 export const getRestaurantTableRestaurant = async (id: number) => {
   const table = await Table.query()
     .findById(id)

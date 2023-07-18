@@ -39,18 +39,14 @@ export const checkRestaurantTable = async (
   restaurantId: number,
   tableName: string
 ) => {
-  const restaurant = await restaurantRepo.getRestaurantTables(restaurantId);
-
-  let isTrue = false;
-  for (let i in restaurant) {
-    if (restaurant[i].name == tableName) {
-      isTrue = true;
-    }
-  }
-
-  if (!isTrue) {
+  const table = await restaurantRepo.getRestaurantTableByTableName(
+    restaurantId,
+    tableName
+  );
+  if (!table) {
     throw new Forbidden("Invalid Table");
   }
+
   return [{}];
 };
 
