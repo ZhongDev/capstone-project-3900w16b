@@ -1,4 +1,4 @@
-import { createTable, deleteRestaurantTable } from "@/api/table";
+import { Table, createTable, deleteRestaurantTable } from "@/api/table";
 import {
   Paper,
   Flex,
@@ -14,7 +14,6 @@ import { useDisclosure } from "@mantine/hooks";
 import QRCode from "qrcode.react";
 import { useState } from "react";
 import { mutate } from "swr";
-import { Table } from "@/api/table";
 
 const downloadQR = () => {
   const canvas = document.getElementById("QRCode") as HTMLCanvasElement;
@@ -94,7 +93,6 @@ export const TableCard = ({ table }: { table: Table }) => {
                 Cancel
               </Button>
               <Button
-                type="submit"
                 onClick={() => {
                   deleteRestaurantTable(table.id).then(() => {
                     mutate("/restaurant/table");
