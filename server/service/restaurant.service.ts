@@ -47,7 +47,7 @@ export const checkRestaurantTable = async (
     throw new NotFound("Invalid Table");
   }
 
-  return true;
+  return table;
 };
 
 export const deleteRestaurantTable = async (tableId: number) => {

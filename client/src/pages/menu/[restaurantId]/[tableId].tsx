@@ -8,6 +8,8 @@ import { getMenuByRestaurantId } from "@/api/menu";
 import { GradientButton } from "@/components/Button";
 import { MenuTab } from "@/components/Menu";
 import { OrderItem, Cart, Ordered } from "@/components/Menu";
+import { getRestaurantTableById } from "@/api/table";
+import { isUndefined } from "swr/_internal";
 
 const useStyles = createStyles((theme) => ({
   menuContainer: {
@@ -38,17 +40,21 @@ type View =
 
 export default function RestaurantMenu() {
   const router = useRouter();
-  const restaurantId = Number(router.query.id);
+  const restaurantId = Number(router.query.restaurantId);
+  const tableId = Number(router.query.tableId);
   const [view, setView] = useState<View>(null);
   const [opened, { open, close }] = useDisclosure(false);
   const { classes } = useStyles();
 
+  const { data: tableData, error: err } = useSWR(
+    router.isReady ? `/restaurant/table/${tableId}` : null,
+    () => getRestaurantTableById(tableId)
+  );
   const { data: menuData } = useSWR(router.isReady ? "/menu" : null, () =>
     getMenuByRestaurantId(restaurantId)
   );
 
   const allMenuItems = useMemo(() => {
-    console.log({ menuData });
     return menuData?.menu.flatMap((categories) =>
       categories.items.map((item) => item)
     );
@@ -58,7 +64,7 @@ export default function RestaurantMenu() {
     return null;
   }
 
-  if (isNaN(restaurantId)) {
+  if (isNaN(restaurantId) || err) {
     return <Title>Do you think you&apos;re funny?</Title>;
   }
 
@@ -82,6 +88,7 @@ export default function RestaurantMenu() {
         {view?.type === "cart" && menuData && allMenuItems && (
           <Cart
             restaurant={menuData.restaurant}
+            table={tableData}
             close={close}
             menu={allMenuItems}
           />

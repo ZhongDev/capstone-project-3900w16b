@@ -41,7 +41,6 @@ export const TableCard = ({ table }: { table: Table }) => {
   const { classes } = useStyles();
   const [opened, { open, close }] = useDisclosure(false);
   const [openedSure, handler] = useDisclosure(false);
-  const tableURL = "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
 
   return (
     <Paper
@@ -60,17 +59,13 @@ export const TableCard = ({ table }: { table: Table }) => {
             Generate QR Code
           </Button>
           <Modal opened={opened} onClose={close} title="QR Code">
-            <Text>
-              QR Code should display URL: {process.env.NEXT_PUBLIC_BASEURL}
-              /restaurant/
-              {table.restaurantId}/{table.id}
-            </Text>
+            <Text>QR Code for table: {table.name}</Text>
             <Group position="center">
               <QRCode
                 id="QRCode"
                 size={256}
                 style={{ height: "auto", maxWidth: "100%", width: "100%" }}
-                value={tableURL}
+                value={`${process.env.NEXT_PUBLIC_BASEURL}/restaurant/${table.restaurantId}/${table.id}`}
               />
               <Button onClick={downloadQR}>Save Image</Button>
             </Group>
