@@ -66,7 +66,7 @@ const useStyles = createStyles((theme) => ({
 export type CartProps = {
   close?: () => void;
   restaurant: { name: string; id: number };
-  table: Table;
+  table: Table | undefined;
   menu: MenuItem[];
 };
 
