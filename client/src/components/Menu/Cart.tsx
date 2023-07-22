@@ -73,8 +73,7 @@ export type CartProps = {
 export const Cart = ({ close, restaurant, table, menu }: CartProps) => {
   const { classes } = useStyles();
 
-  const [cart, { addToCart, setUnitInCart, removeFromCart, clearCart }] =
-    useLocalCart();
+  const [cart, { setUnitInCart, removeFromCart, clearCart }] = useLocalCart();
 
   const total = useMemo(() => {
     return cart
@@ -99,7 +98,7 @@ export const Cart = ({ close, restaurant, table, menu }: CartProps) => {
             <Title align="center" size="h1" weight={100}>
               Table:{" "}
               <Title fw={500} size="h1">
-                {table.name}
+                {table?.name}
               </Title>
             </Title>
             <div className={classes.orderInfo}>{/* TODO: Order info??? */}</div>

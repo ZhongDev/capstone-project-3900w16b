@@ -46,9 +46,8 @@ export default function RestaurantMenu() {
   const [opened, { open, close }] = useDisclosure(false);
   const { classes } = useStyles();
 
-  const { data: tableData, error: err } = useSWR(
-    router.isReady ? `/restaurant/table/${tableId}` : null,
-    () => getRestaurantTableById(tableId)
+  const { data: tableData } = useSWR(`/restaurant/table/${tableId}`, () =>
+    getRestaurantTableById(tableId)
   );
   const { data: menuData } = useSWR(router.isReady ? "/menu" : null, () =>
     getMenuByRestaurantId(restaurantId)
@@ -64,7 +63,7 @@ export default function RestaurantMenu() {
     return null;
   }
 
-  if (isNaN(restaurantId) || err) {
+  if (isNaN(restaurantId) || isUndefined(tableData)) {
     return <Title>Do you think you&apos;re funny?</Title>;
   }
 
