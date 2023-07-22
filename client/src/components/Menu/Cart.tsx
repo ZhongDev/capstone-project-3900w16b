@@ -66,15 +66,14 @@ const useStyles = createStyles((theme) => ({
 export type CartProps = {
   close?: () => void;
   restaurant: { name: string; id: number };
-  table: Table;
+  table: Table | undefined;
   menu: MenuItem[];
 };
 
 export const Cart = ({ close, restaurant, table, menu }: CartProps) => {
   const { classes } = useStyles();
 
-  const [cart, { addToCart, setUnitInCart, removeFromCart, clearCart }] =
-    useLocalCart();
+  const [cart, { setUnitInCart, removeFromCart, clearCart }] = useLocalCart();
 
   const total = useMemo(() => {
     return cart
