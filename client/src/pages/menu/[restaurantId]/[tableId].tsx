@@ -46,8 +46,9 @@ export default function RestaurantMenu() {
   const [opened, { open, close }] = useDisclosure(false);
   const { classes } = useStyles();
 
-  const { data: tableData } = useSWR(`/restaurant/table/${tableId}`, () =>
-    getRestaurantTableById(tableId)
+  const { data: tableData, isLoading: tableDataIsLoading } = useSWR(
+    `/restaurant/table/${tableId}`,
+    () => getRestaurantTableById(tableId)
   );
   const { data: menuData } = useSWR(router.isReady ? "/menu" : null, () =>
     getMenuByRestaurantId(restaurantId)
@@ -59,7 +60,7 @@ export default function RestaurantMenu() {
     );
   }, [menuData]);
 
-  if (!router.isReady) {
+  if (!router.isReady || tableDataIsLoading) {
     return null;
   }
 
