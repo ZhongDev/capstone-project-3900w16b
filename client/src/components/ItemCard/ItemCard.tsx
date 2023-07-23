@@ -106,7 +106,7 @@ export const ItemCard = ({ item }: { item: MenuItem }) => {
               {formatCurrency(item.priceCents)}
             </Text>
           </div>
-          <div>
+          <Group spacing="xs">
             <Button
               onClick={() => {
                 populateForm();
@@ -228,7 +228,7 @@ export const ItemCard = ({ item }: { item: MenuItem }) => {
                 </Button>
               </Group>
             </Modal>
-          </div>
+          </Group>
         </Flex>
       </Flex>
     </Paper>

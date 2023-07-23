@@ -54,7 +54,7 @@ export const TableCard = ({ table }: { table: Table }) => {
         <Title px="xl" align="center">
           {table.name}
         </Title>
-        <div>
+        <Group spacing="xs">
           <Button onClick={open} radius="xl" variant="outline" mr="xs">
             Generate QR Code
           </Button>
@@ -99,7 +99,7 @@ export const TableCard = ({ table }: { table: Table }) => {
               </Button>
             </Group>
           </Modal>
-        </div>
+        </Group>
       </Flex>
     </Paper>
   );
