@@ -2,11 +2,13 @@ import { Model } from "objection";
 import Table from "./Table";
 import Restaurant from "./Restaurant";
 
-export default class HelpRequest extends Model {
+export type HelpCallStatus = "resolved" | "unresolved";
+
+export default class HelpCall extends Model {
   id!: number;
   restaurantId!: number;
   tableId!: number;
-  status!: "resolved" | "unresolved";
+  status!: HelpCallStatus;
   device!: string | null; // free text to attempt to identify the device that ordered
   placedOn!: string; // This is a date string
 

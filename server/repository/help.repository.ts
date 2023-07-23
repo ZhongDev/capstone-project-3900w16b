@@ -1,69 +1,64 @@
-import HelpRequest from "../models/HelpRequest";
+import HelpCall, { HelpCallStatus } from "../models/HelpCall";
 
-
-export const createHelpRequest = async (
-    restaurantId: number,
-    tableId: number,
-    status: "resolved" | "unresolved",
-    device: string | null,
-    placedOn: String,
+// Creates a call for help/assistance
+export const createHelpCall = async (
+  restaurantId: number,
+  tableId: number,
+  status: HelpCallStatus,
+  device: string | null,
+  placedOn: string
 ) => {
-    const newHelpRequest = await HelpRequest.query().insert({
-        restaurantId,
-        tableId,
-        placedOn,
-        status,
-        device,
-    })
-    return HelpRequest.query().findOne({id: newHelpRequest.id});
+  const newHelpCall = await HelpCall.query().insert({
+    restaurantId,
+    tableId,
+    placedOn,
+    status,
+    device,
+  });
+  return HelpCall.query().findOne({ id: newHelpCall.id });
 };
 
-// Change request status given orderId 
-export const changeHelpRequestStatus = async (
-    helpRequestId: number,
-    newStatus: "resolved" | "unresolved",
+// Change request status given orderId
+export const updateHelpCallStatus = async (
+  helpCallId: number,
+  newStatus: HelpCallStatus
 ) => {
-    await HelpRequest.query()
+  await HelpCall.query()
     .patch({
       status: newStatus,
     })
-    .where({ id: helpRequestId });
+    .where({ id: helpCallId });
 
-    return HelpRequest.query().findOne({ id: helpRequestId });
+  return HelpCall.query().findOne({ id: helpCallId });
 };
 
-
 // Find help request with id
-export const getHelpRequestById = async (helpRequestId: number) => {
-    return HelpRequest.query().findOne({
-        id: helpRequestId,
-    })
-}
-
+export const getHelpCallById = async (helpCallId: number) => {
+  return HelpCall.query().findOne({
+    id: helpCallId,
+  });
+};
 
 // Delete a help request with specific id
-export const deleteHelpRequest = (helpRequestId: number) => {
-    return HelpRequest.query().where("id", helpRequestId).del()
-}
-
+export const deleteHelpCall = (helpCallId: number) => {
+  return HelpCall.query().where("id", helpCallId).del();
+};
 
 // Get all requests regardless of status
-export const getAllHelpRequests = async (
-    restaurantId: number,
-) => {
-    return HelpRequest.query()
+export const getAllHelpCalls = async (restaurantId: number) => {
+  return HelpCall.query()
     .where({
-        restaurantId,
-    }).orderBy("HelpRequest.placedOn")
-}
+      restaurantId,
+    })
+    .orderBy("HelpCall.placedOn");
+};
 
 // Get all requests that are incomplete
-export const getIncompleteHelpRequests = async (
-    restaurantId: number,
-) => {
-    return HelpRequest.query()
+export const getUnresolvedHelpCalls = async (restaurantId: number) => {
+  return HelpCall.query()
     .where({
-        restaurantId,
-        status: "unresolved",
-    }).orderBy("HelpRequest.placedOn")
-}
+      restaurantId,
+      status: "unresolved",
+    })
+    .orderBy("HelpCall.placedOn");
+};
