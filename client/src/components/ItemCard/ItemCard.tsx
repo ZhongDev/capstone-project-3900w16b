@@ -6,6 +6,7 @@ import {
 } from "@/api/menu";
 import { formatCurrency } from "@/helpers";
 import {
+  rem,
   Text,
   Flex,
   Paper,
@@ -16,11 +17,23 @@ import {
   Textarea,
   Group,
   ButtonProps,
+  createStyles,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useDisclosure } from "@mantine/hooks";
+import { it } from "node:test";
 import { useEffect } from "react";
 import { mutate } from "swr";
+
+const useStyles = createStyles((theme) => ({
+  estTimeGroup: {
+    display: "flex",
+    alignItems: "center",
+    position: "relative",
+    justifyContent: "space-between",
+    flexWrap: "nowrap",
+  },
+}));
 
 export type ItemsProps = {
   items: MenuItem[];
@@ -37,6 +50,7 @@ export const Items = ({ items }: ItemsProps) => {
 };
 
 export const ItemCard = ({ item }: { item: MenuItem }) => {
+  const { classes } = useStyles();
   const [opened, { open, close }] = useDisclosure(false);
   const [openedSure, handler] = useDisclosure(false);
 
@@ -46,21 +60,36 @@ export const ItemCard = ({ item }: { item: MenuItem }) => {
       description: "",
       ingredients: null,
       priceCents: 0,
+      minPrepMins: 0,
+      maxPrepMins: 0,
     },
     validate: {
       priceCents: (value) => (value < 0 ? "Price cannot be less than 0" : null),
+      minPrepMins: (value) =>
+        value < 0 ? "Prep time cannot be less than 0" : null,
+      maxPrepMins: (value) =>
+        value < 0 ? "Prep time cannot be less than 0" : null,
     },
   });
 
   const { setValues } = itemForm;
-  useEffect(() => {
+  const populateForm = () => {
     setValues({
       name: item.name,
       description: item.description,
       ingredients: null,
       priceCents: item.priceCents / 100,
+      minPrepMins: item.minPrepMins,
+      maxPrepMins: item.maxPrepMins,
     });
-  }, [item.description, item.name, item.priceCents, setValues]);
+  };
+
+  useEffect(populateForm, [
+    item.description,
+    item.name,
+    item.priceCents,
+    setValues,
+  ]);
 
   return (
     <Paper shadow="md" mt="xs" px="xl" py="md" radius="md">
@@ -78,7 +107,15 @@ export const ItemCard = ({ item }: { item: MenuItem }) => {
             </Text>
           </div>
           <div>
-            <Button onClick={open} mr="xs" variant="outline" radius="xl">
+            <Button
+              onClick={() => {
+                populateForm();
+                open();
+              }}
+              mr="xs"
+              variant="outline"
+              radius="xl"
+            >
               Edit
             </Button>
             <Modal
@@ -136,14 +173,25 @@ export const ItemCard = ({ item }: { item: MenuItem }) => {
                   withAsterisk
                   {...itemForm.getInputProps("description")}
                 />
+                <Text fz="xs">Estimated preparation time (minutes):</Text>
+                <Group className={classes.estTimeGroup} grow>
+                  <NumberInput
+                    radius="lg"
+                    variant="filled"
+                    mb="xs"
+                    description="Min"
+                    {...itemForm.getInputProps("minPrepMins")}
+                  />
+                  <NumberInput
+                    radius="lg"
+                    variant="filled"
+                    mb="xs"
+                    description="Max"
+                    {...itemForm.getInputProps("maxPrepMins")}
+                  />
+                </Group>
                 <Group position="right">
-                  <Button
-                    variant="subtle"
-                    onClick={() => {
-                      itemForm.reset();
-                      close();
-                    }}
-                  >
+                  <Button variant="subtle" onClick={close}>
                     Cancel
                   </Button>
                   <Button type="submit">Confirm</Button>
@@ -193,6 +241,7 @@ export const CreateItem = ({
 }: {
   categoryId: number;
 } & ButtonProps) => {
+  const { classes } = useStyles();
   const [opened, { open, close }] = useDisclosure(false);
 
   const itemForm = useForm({
@@ -201,9 +250,15 @@ export const CreateItem = ({
       description: "",
       ingredients: null,
       priceCents: 0,
+      minPrepMins: 0,
+      maxPrepMins: 0,
     },
     validate: {
       priceCents: (value) => (value < 0 ? "Price cannot be less than 0" : null),
+      minPrepMins: (value) =>
+        value < 0 ? "Prep time cannot be less than 0" : null,
+      maxPrepMins: (value) =>
+        value < 0 ? "Prep time cannot be less than 0" : null,
     },
   });
 
@@ -231,7 +286,7 @@ export const CreateItem = ({
             required
             data-autofocus
             mb="sm"
-            placeholder="Item name"
+            placeholder="Item name*"
             {...itemForm.getInputProps("name")}
           />
           <NumberInput
@@ -256,10 +311,27 @@ export const CreateItem = ({
             variant="filled"
             required
             mb="sm"
-            placeholder="Item description"
+            placeholder="Item description*"
             withAsterisk
             {...itemForm.getInputProps("description")}
           />
+          <Text fz="xs">Estimated preparation time (minutes):</Text>
+          <Group className={classes.estTimeGroup} grow>
+            <NumberInput
+              radius="lg"
+              variant="filled"
+              mb="xs"
+              description="Min"
+              {...itemForm.getInputProps("minPrepMins")}
+            />
+            <NumberInput
+              radius="lg"
+              variant="filled"
+              mb="xs"
+              description="Max"
+              {...itemForm.getInputProps("maxPrepMins")}
+            />
+          </Group>
           <Group position="right">
             <Button
               variant="subtle"
