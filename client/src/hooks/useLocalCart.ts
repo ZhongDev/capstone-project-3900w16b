@@ -1,6 +1,5 @@
 import { Cart, Item } from "@/types/localstorage";
 import { useState } from "react";
-import { isUndefined } from "swr/_internal";
 
 export const useLocalCart = () => {
   const [localCart, setLocalCart] = useState<Cart>(
@@ -48,7 +47,7 @@ export const useLocalCart = () => {
       (item) => item.itemId === itemId
     );
 
-    if (!isUndefined(existingItemIndex)) {
+    if (existingItemIndex > -1) {
       let cart = [
         ...localCart.slice(0, existingItemIndex),
         { ...localCart[existingItemIndex], units: units },
