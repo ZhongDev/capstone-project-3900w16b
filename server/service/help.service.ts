@@ -7,16 +7,9 @@ export const createHelpCall = async (
   restaurantId: number,
   tableId: number,
   status: HelpCallStatus,
-  device: string | null,
   placedOn: string
 ) => {
-  return helpRepo.createHelpCall(
-    restaurantId,
-    tableId,
-    status,
-    device,
-    placedOn
-  );
+  return helpRepo.createHelpCall(restaurantId, tableId, status, placedOn);
 };
 
 export const updateHelpCallStatus = async (

@@ -8,13 +8,11 @@ const router = Router();
 
 // Controls creation of help requests
 router.post("/:restaurantId/:tableId", async (req, res, next) => {
-  const helpCall = schema.CreateHelpCallRequest.parse(req.body);
   try {
     const newHelpCall = await helpService.createHelpCall(
-      req.restaurant!.restaurantId,
-      helpCall.tableId,
+      Number(req.params.restaurantId),
+      Number(req.params.tableId),
       "unresolved",
-      helpCall.device,
       new Date().toISOString()
     );
     res.json(newHelpCall);
@@ -24,7 +22,7 @@ router.post("/:restaurantId/:tableId", async (req, res, next) => {
 });
 
 // Controls updating status of a help call
-router.patch("/helpCall/:helpCallId", auth, async (req, res, next) => {
+router.patch("/:helpCallId", auth, async (req, res, next) => {
   try {
     const updateRequest = schema.UpdateHelpCallRequest.parse(req.body);
     res.json(
@@ -40,7 +38,7 @@ router.patch("/helpCall/:helpCallId", auth, async (req, res, next) => {
 });
 
 // Delete help call
-router.delete("/helpCall/:helpCallId", auth, async (req, res, next) => {
+router.delete("/:helpCallId", auth, async (req, res, next) => {
   try {
     const categoryItem = await helpService.deleteHelpCall(
       req.restaurant!.restaurantId,
@@ -53,7 +51,7 @@ router.delete("/helpCall/:helpCallId", auth, async (req, res, next) => {
 });
 
 // Get all unresolved help calls
-router.get("/helpCall", auth, async (req, res, next) => {
+router.get("", auth, async (req, res, next) => {
   try {
     const menu = await helpService.getAllUnresolvedHelpCalls(
       req.restaurant!.restaurantId
@@ -63,3 +61,5 @@ router.get("/helpCall", auth, async (req, res, next) => {
     next(err);
   }
 });
+
+export default router;

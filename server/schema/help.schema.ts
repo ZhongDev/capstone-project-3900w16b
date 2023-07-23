@@ -6,6 +6,5 @@ export const CreateHelpCallRequest = z.object({
 });
 
 export const UpdateHelpCallRequest = z.object({
-  helpCallId: z.number(),
   newStatus: z.string(),
 });

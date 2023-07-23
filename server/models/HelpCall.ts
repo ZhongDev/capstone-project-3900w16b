@@ -9,10 +9,9 @@ export default class HelpCall extends Model {
   restaurantId!: number;
   tableId!: number;
   status!: HelpCallStatus;
-  device!: string | null; // free text to attempt to identify the device that ordered
   placedOn!: string; // This is a date string
 
-  static tableName = "Order";
+  static tableName = "Help";
 
   static relationMappings = () => ({
     table: {

@@ -5,15 +5,13 @@ export const createHelpCall = async (
   restaurantId: number,
   tableId: number,
   status: HelpCallStatus,
-  device: string | null,
   placedOn: string
 ) => {
   const newHelpCall = await HelpCall.query().insert({
     restaurantId,
     tableId,
-    placedOn,
     status,
-    device,
+    placedOn,
   });
   return HelpCall.query().findOne({ id: newHelpCall.id });
 };
@@ -50,7 +48,7 @@ export const getAllHelpCalls = async (restaurantId: number) => {
     .where({
       restaurantId,
     })
-    .orderBy("HelpCall.placedOn");
+    .orderBy("Help.placedOn");
 };
 
 // Get all requests that are incomplete
@@ -60,5 +58,5 @@ export const getUnresolvedHelpCalls = async (restaurantId: number) => {
       restaurantId,
       status: "unresolved",
     })
-    .orderBy("HelpCall.placedOn");
+    .orderBy("Help.placedOn");
 };
