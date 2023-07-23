@@ -74,9 +74,10 @@ export const Cart = ({ close, restaurant, table, menu }: CartProps) => {
   const { classes } = useStyles();
 
   const [cart, { setUnitInCart, removeFromCart, clearCart }] = useLocalCart();
+  let restCart = cart[restaurant.id] ? cart[restaurant.id] : [];
 
   const total = useMemo(() => {
-    return cart
+    return restCart
       .map((inCartItem) => {
         const itemData = menu.find((item) => item.id === inCartItem.itemId);
         if (!itemData) {
@@ -103,7 +104,7 @@ export const Cart = ({ close, restaurant, table, menu }: CartProps) => {
             </Title>
             <div className={classes.orderInfo}>{/* TODO: Order info??? */}</div>
             <div>
-              {cart.map((item) => {
+              {restCart.map((item) => {
                 const inCartItem = menu.find(
                   (menuItem) => menuItem.id === item.itemId
                 );
@@ -140,7 +141,7 @@ export const Cart = ({ close, restaurant, table, menu }: CartProps) => {
                       <IncrementButton
                         value={item.units}
                         onChange={(value) => {
-                          setUnitInCart(inCartItem.id, value);
+                          setUnitInCart(inCartItem.id, restaurant.id, value);
                         }}
                       />
                       <ActionIcon
@@ -149,7 +150,7 @@ export const Cart = ({ close, restaurant, table, menu }: CartProps) => {
                         size="lg"
                         color="gold5"
                         onClick={() => {
-                          removeFromCart(inCartItem.id);
+                          removeFromCart(inCartItem.id, restaurant.id);
                         }}
                       >
                         <IconTrash />
@@ -169,12 +170,14 @@ export const Cart = ({ close, restaurant, table, menu }: CartProps) => {
       </div>
       <div className={classes.floatingButtonGroup}>
         <GradientButton
-          disabled={cart.length === 0}
+          disabled={restCart.length === 0}
           onClick={() => {
-            createOrder(restaurant.id, table.id, cart).then(() => {
-              clearCart();
-              close?.();
-            });
+            createOrder(restaurant.id, table.id, cart[restaurant.id]).then(
+              () => {
+                clearCart();
+                close?.();
+              }
+            );
           }}
         >
           Pay with Apple Pay
