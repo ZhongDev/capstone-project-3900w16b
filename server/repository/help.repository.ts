@@ -4,7 +4,7 @@ import HelpRequest from "../models/HelpRequest";
 export const createHelpRequest = async (
     restaurantId: number,
     tableId: number,
-    status: "complete" | "incomplete",
+    status: "resolved" | "unresolved",
     device: string | null,
     placedOn: String,
 ) => {
@@ -21,7 +21,7 @@ export const createHelpRequest = async (
 // Change request status given orderId 
 export const changeHelpRequestStatus = async (
     helpRequestId: number,
-    newStatus: "complete" | "incomplete",
+    newStatus: "resolved" | "unresolved",
 ) => {
     await HelpRequest.query()
     .patch({
@@ -32,10 +32,18 @@ export const changeHelpRequestStatus = async (
     return HelpRequest.query().findOne({ id: helpRequestId });
 };
 
+
+// Find help request with id
 export const getHelpRequestById = async (helpRequestId: number) => {
     return HelpRequest.query().findOne({
         id: helpRequestId,
     })
+}
+
+
+// Delete a help request with specific id
+export const deleteHelpRequest = (helpRequestId: number) => {
+    return HelpRequest.query().where("id", helpRequestId).del()
 }
 
 
@@ -56,6 +64,6 @@ export const getIncompleteHelpRequests = async (
     return HelpRequest.query()
     .where({
         restaurantId,
-        status: "incomplete",
+        status: "unresolved",
     }).orderBy("HelpRequest.placedOn")
 }

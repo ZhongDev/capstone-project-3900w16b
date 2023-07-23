@@ -6,7 +6,7 @@ export default class HelpRequest extends Model {
   id!: number;
   restaurantId!: number;
   tableId!: number;
-  status!: "complete" | "incomplete";
+  status!: "resolved" | "unresolved";
   device!: string | null; // free text to attempt to identify the device that ordered
   placedOn!: string; // This is a date string
 
