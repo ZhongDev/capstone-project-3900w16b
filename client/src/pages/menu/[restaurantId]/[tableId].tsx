@@ -9,7 +9,6 @@ import { GradientButton } from "@/components/Button";
 import { MenuTab } from "@/components/Menu";
 import { OrderItem, Cart, Ordered } from "@/components/Menu";
 import { getRestaurantTableById } from "@/api/table";
-import { isUndefined } from "swr/_internal";
 
 const useStyles = createStyles((theme) => ({
   menuContainer: {
@@ -64,7 +63,7 @@ export default function RestaurantMenu() {
     return null;
   }
 
-  if (isNaN(restaurantId) || isUndefined(tableData)) {
+  if (isNaN(restaurantId) || tableData === undefined) {
     return <Title>Do you think you&apos;re funny?</Title>;
   }
 
