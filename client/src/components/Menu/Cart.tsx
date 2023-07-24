@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { List, Paper, Text, Title, createStyles } from "@mantine/core";
 import { MenuItem } from "@/api/menu";
-import { useLocalCart } from "@/hooks";
+import { useDeviceId, useLocalCart } from "@/hooks";
 import { formatCurrency } from "@/helpers";
 import { GradientButton } from "../Button";
 import { createOrder } from "@/api/order";
@@ -51,6 +51,7 @@ export const Cart = ({ close, restaurant, menu }: CartProps) => {
   const { classes } = useStyles();
 
   const [cart, { clearCart }] = useLocalCart();
+  const deviceId = useDeviceId();
 
   const total = useMemo(() => {
     return cart
@@ -130,7 +131,7 @@ export const Cart = ({ close, restaurant, menu }: CartProps) => {
           disabled={cart.length === 0}
           onClick={() => {
             // TODO: Convert to real table id
-            createOrder(restaurant.id, 1, cart).then(() => {
+            createOrder(restaurant.id, 1, deviceId, cart).then(() => {
               clearCart();
               close?.();
             });

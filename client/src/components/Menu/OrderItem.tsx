@@ -89,7 +89,7 @@ export const OrderItem = ({ itemId, close }: OrderItemProps) => {
         <GradientButton
           fullWidth
           onClick={() => {
-            addToCart({ device: "a", itemId: itemData.id, units });
+            addToCart({ itemId: itemData.id, units });
             close?.();
           }}
         >
