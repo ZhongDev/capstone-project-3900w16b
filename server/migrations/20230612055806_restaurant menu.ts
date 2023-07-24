@@ -23,6 +23,8 @@ export async function up(knex: Knex): Promise<void> {
       table.integer("name", 255).notNullable();
       table.string("image", 255);
       table.integer("priceCents", 255).notNullable();
+      table.integer("minPrepMins", 255);
+      table.integer("maxPrepMins", 255);
     });
 }
 

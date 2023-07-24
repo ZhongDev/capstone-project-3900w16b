@@ -3,7 +3,7 @@ import { useState } from "react";
 
 export const useLocalCart = () => {
   const [localCart, setLocalCart] = useState<Cart>(
-    JSON.parse(localStorage.getItem("cart") ?? "[]")
+    JSON.parse(localStorage.getItem("cart") ?? "{}")
   );
 
   const setCart = (cart: Cart) => {
@@ -12,48 +12,70 @@ export const useLocalCart = () => {
   };
 
   const addToCart = (newItem: Item) => {
-    const existingItem = localCart.find(
+    const restaurantId = newItem.restaurantId;
+    let restCart = localCart[restaurantId];
+    let newCart: Cart = {};
+
+    const existingItem = restCart?.find(
       (item) => item.itemId === newItem.itemId
     );
     if (existingItem) {
       existingItem.units += newItem.units;
-      setCart([...localCart]);
+      newCart[restaurantId] = [...localCart[restaurantId]];
+      setCart(newCart);
     } else {
-      setCart([...localCart, newItem]);
+      newCart[restaurantId] = restCart ? [...restCart, newItem] : [newItem];
+      setCart(newCart);
     }
   };
 
-  const removeFromCart = (itemId: number) => {
-    const existingItem = localCart.find((item) => item.itemId === itemId);
+  const removeFromCart = (itemId: number, restaurantId: number) => {
+    const existingItem = localCart[restaurantId]?.find(
+      (item) => item.itemId === itemId
+    );
     if (existingItem) {
-      setCart(localCart.filter((item) => item.itemId !== itemId));
+      let newCart: Cart = {};
+      newCart[restaurantId] = localCart[restaurantId].filter(
+        (item) => item.itemId !== itemId
+      );
+      setCart(newCart);
     }
   };
 
-  const removeOneFromCart = (itemId: number) => {
-    const existingItem = localCart.find((item) => item.itemId === itemId);
+  const removeOneFromCart = (itemId: number, restaurantId: number) => {
+    let newCart: Cart = {};
+    const existingItem = localCart[restaurantId]?.find(
+      (item) => item.itemId === itemId
+    );
     if (existingItem) {
       if (existingItem.units === 1) {
-        setCart(localCart.filter((item) => item.itemId !== itemId));
+        removeFromCart(itemId, restaurantId);
       } else {
         existingItem.units -= 1;
-        setCart([...localCart]);
+        newCart[restaurantId] = [...localCart[restaurantId]];
+        setCart(newCart);
       }
     }
   };
 
-  const setUnitInCart = (itemId: number, units: number) => {
-    const existingItemIndex = localCart.findIndex(
+  const setUnitInCart = (
+    itemId: number,
+    restaurantId: number,
+    units: number
+  ) => {
+    const existingItemIndex = localCart[restaurantId]?.findIndex(
       (item) => item.itemId === itemId
     );
 
     if (existingItemIndex > -1) {
-      let cart = [
-        ...localCart.slice(0, existingItemIndex),
-        { ...localCart[existingItemIndex], units: units },
-        ...localCart.slice(existingItemIndex + 1),
+      let newCart: Cart = {};
+      let items = [
+        ...localCart[restaurantId].slice(0, existingItemIndex),
+        { ...localCart[restaurantId][existingItemIndex], units: units },
+        ...localCart[restaurantId].slice(existingItemIndex + 1),
       ];
-      setCart(cart);
+      newCart[restaurantId] = items;
+      setCart(newCart);
     }
   };
 

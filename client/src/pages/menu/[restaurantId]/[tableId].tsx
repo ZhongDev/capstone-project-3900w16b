@@ -82,7 +82,11 @@ export default function RestaurantMenu() {
         }}
       >
         {view?.type === "item" && (
-          <OrderItem close={close} itemId={view.itemId} />
+          <OrderItem
+            close={close}
+            itemId={view.itemId}
+            restaurantId={restaurantId}
+          />
         )}
         {view?.type === "cart" && menuData && allMenuItems && (
           <Cart

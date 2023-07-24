@@ -69,6 +69,8 @@ export const createCategoryItem = async (
     priceCents: item.priceCents,
     description: item.description,
     ingredients: item.ingredients,
+    minPrepMins: item.minPrepMins,
+    maxPrepMins: item.maxPrepMins,
   });
   return Item.query().findOne({ id: newItem.id });
 };
@@ -97,6 +99,8 @@ export const updateCategoryItem = async (
       description: updateItem.description,
       ingredients: updateItem.ingredients,
       priceCents: updateItem.priceCents,
+      minPrepMins: updateItem.minPrepMins,
+      maxPrepMins: updateItem.maxPrepMins,
     })
     .where({ id });
   return Item.query().findOne({ id });
