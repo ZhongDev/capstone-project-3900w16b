@@ -52,7 +52,7 @@ export const MenuTab = ({ menus, onClick }: MenuTabProps) => {
       {menus.map((category, i) => {
         return (
           <Tabs.Panel key={category.id} value={i.toString()} pt="xs">
-            <MenuItems
+            <MenuItemsCards
               onClick={onClick}
               key={category.id}
               category={category}
@@ -69,7 +69,7 @@ export type MenuItemsProps = {
   onClick?: (itemId: number) => void;
 };
 
-export const MenuItems = ({ category, onClick }: MenuItemsProps) => {
+export const MenuItemsCards = ({ category, onClick }: MenuItemsProps) => {
   const { classes } = useStyles();
 
   return (

@@ -21,6 +21,8 @@ export type MenuItem = {
   priceCents: number;
   description: string;
   ingredients: string | null;
+  minPrepMins: number;
+  maxPrepMins: number;
 };
 
 export const getMenu = () => {
@@ -130,6 +132,8 @@ export const createItem = (
     description: string;
     ingredients: string | null;
     priceCents: number;
+    minPrepMins: number;
+    maxPrepMins: number;
   }
 ) => {
   return request
@@ -165,6 +169,8 @@ export const updateMenuItem = (
     description: string;
     ingredients: string | null;
     priceCents: number;
+    minPrepMins: number;
+    maxPrepMins: number;
   }
 ) => {
   return request

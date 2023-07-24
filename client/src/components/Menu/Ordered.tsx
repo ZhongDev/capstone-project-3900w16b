@@ -9,6 +9,7 @@ import {
   Text,
   Title,
   createStyles,
+  rem,
 } from "@mantine/core";
 import Image from "next/image";
 import {
@@ -41,6 +42,7 @@ const useStyles = createStyles((theme) => ({
   },
   foodImage: {
     marginBottom: theme.spacing.xs,
+    alignSelf: "right",
   },
 }));
 
@@ -60,7 +62,7 @@ export const Ordered = ({ close, restaurant }: OrderedProps) => {
   return (
     <div className={classes.container}>
       <div>
-        <Title align="center" mb="lg">
+        <Title align="center" mb="lg" size={rem(50)}>
           Past Orders
         </Title>
         <List>
@@ -137,7 +139,7 @@ const OrderedItemCard = ({ orderGroup }: OrderedItemCardProps) => {
               </Flex>
             )}
           </Flex>
-          <Flex direction="column" align="center">
+          <Flex direction="column" justify="space-between" align="flex-end">
             <Image
               className={classes.foodImage}
               src={ayaya}
