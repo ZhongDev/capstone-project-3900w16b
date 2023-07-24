@@ -48,7 +48,7 @@ export const getAllHelpCalls = async (restaurantId: number) => {
     .where({
       restaurantId,
     })
-    .orderBy("Help.placedOn");
+    .orderBy("Help.placedOn", "desc");
 };
 
 // Get all requests that are incomplete
@@ -58,5 +58,5 @@ export const getUnresolvedHelpCalls = async (restaurantId: number) => {
       restaurantId,
       status: "unresolved",
     })
-    .orderBy("Help.placedOn");
+    .orderBy("Help.placedOn", "desc");
 };

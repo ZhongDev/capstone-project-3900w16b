@@ -40,5 +40,5 @@ export const getAllUnresolvedHelpCalls = async (restaurantId: number) => {
   if (!restaurant) {
     throw new NotFound("Restaurant does not exist.");
   }
-  return helpRepo.getUnresolvedHelpCalls(restaurantId);
+  return await helpRepo.getUnresolvedHelpCalls(restaurantId);
 };

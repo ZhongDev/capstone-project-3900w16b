@@ -47,13 +47,7 @@ export const deleteHelpCall = (helpCallId: number) => {
     }) as Promise<void>;
 };
 
-// for getting all unresolved help calls
-export type GetUnresolvedHelpCallsResponse = {
-  restaurant: { name: string; id: number };
-  helpCalls: helpCall[];
-};
-
-export type helpCall = {
+export type HelpCall = {
   id: number;
   tableId: number;
   status: HelpCallStatus;
@@ -66,5 +60,5 @@ export const getUnresolvedHelpCalls = () => {
     .then((res) => res.data)
     .catch((err) => {
       throw err.response.data;
-    }) as Promise<GetUnresolvedHelpCallsResponse>;
+    }) as Promise<HelpCall[]>;
 };
