@@ -1,6 +1,7 @@
 import { Model } from "objection";
 import Category from "./Category";
 import Order from "./Order";
+import Alteration from "./Alteration";
 
 export default class Item extends Model {
   id!: number;
@@ -15,6 +16,7 @@ export default class Item extends Model {
   maxPrepMins?: number;
 
   category?: Category;
+  alterations?: Alteration[];
 
   static tableName = "Item";
 
@@ -25,6 +27,14 @@ export default class Item extends Model {
       join: {
         from: "Item.categoryId",
         to: "Category.id",
+      },
+    },
+    alterations: {
+      relation: Model.HasManyRelation,
+      modelClass: Alteration,
+      join: {
+        from: "Item.id",
+        to: "Alteration.itemId",
       },
     },
     orders: {
