@@ -20,6 +20,15 @@ export const getRestaurantTables = () => {
     }) as Promise<GetTableResponse>;
 };
 
+export const getRestaurantTableById = (tableId: number) => {
+  return request
+    .get(process.env.NEXT_PUBLIC_BASEURL + "/restaurant/table/" + tableId)
+    .then((res) => res.data)
+    .catch((err) => {
+      throw err.response.data;
+    }) as Promise<Table>;
+};
+
 export const deleteRestaurantTable = (tableId: number) => {
   return request
     .delete(process.env.NEXT_PUBLIC_BASEURL + "/restaurant/table/" + tableId)
@@ -30,9 +39,9 @@ export const deleteRestaurantTable = (tableId: number) => {
 };
 
 export type CreateTableResponse = {
-  name: string;
-  restaurantId: number;
   id: number;
+  restaurantId: number;
+  name: string;
 };
 
 export const createTable = (name: string) => {
@@ -58,5 +67,5 @@ export const checkTable = (restaurantId: number, tableName: string) => {
     .then((res) => res.data)
     .catch((err) => {
       throw err.response.data;
-    }) as Promise<GetTableResponse>;
+    }) as Promise<Table>;
 };

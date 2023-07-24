@@ -64,7 +64,7 @@ export const CategoryCard = ({ category }: { category: Menu }) => {
         <Title px="xl" align="center">
           {category.name}
         </Title>
-        <div>
+        <Group spacing="xs">
           <CreateItem categoryId={category.id} mr="xs" />
           {category.items.length > 1 && (
             <Button
@@ -166,7 +166,7 @@ export const CategoryCard = ({ category }: { category: Menu }) => {
               </Button>
             </Group>
           </Modal>
-        </div>
+        </Group>
       </Flex>
       {category.items.length > 0 && (
         <div className={classes.menuItems}>
