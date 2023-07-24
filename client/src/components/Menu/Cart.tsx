@@ -1,10 +1,25 @@
-import { useMemo } from "react";
-import { List, Paper, Text, Title, createStyles } from "@mantine/core";
+import { useMemo, useState } from "react";
+import {
+  rem,
+  List,
+  Paper,
+  Text,
+  Title,
+  createStyles,
+  Tabs,
+  Flex,
+  Badge,
+  ActionIcon,
+} from "@mantine/core";
 import { MenuItem } from "@/api/menu";
 import { useLocalCart } from "@/hooks";
 import { formatCurrency } from "@/helpers";
-import { GradientButton } from "../Button";
+import { GradientButton, IncrementButton } from "../Button";
 import { createOrder } from "@/api/order";
+import { Table } from "@/api/table";
+import Image from "next/image";
+import ayaya from "@/public/img/ayaya.jpg";
+import { IconTrash } from "@tabler/icons-react";
 
 const useStyles = createStyles((theme) => ({
   foodImageContainer: {
@@ -39,18 +54,26 @@ const useStyles = createStyles((theme) => ({
   orderInfo: {
     padding: theme.spacing.xl,
   },
+  foodImage: {
+    filter: "drop-shadow(0px 0px 3px rgba(0, 0, 0, 0.3))",
+    "& > img": {
+      borderRadius: theme.radius.md,
+    },
+  },
+  item: { cursor: "pointer" },
 }));
 
 export type CartProps = {
   close?: () => void;
   restaurant: { name: string; id: number };
+  table: Table;
   menu: MenuItem[];
 };
 
-export const Cart = ({ close, restaurant, menu }: CartProps) => {
+export const Cart = ({ close, restaurant, table, menu }: CartProps) => {
   const { classes } = useStyles();
 
-  const [cart, { clearCart }] = useLocalCart();
+  const [cart, { setUnitInCart, removeFromCart, clearCart }] = useLocalCart();
 
   const total = useMemo(() => {
     return cart
@@ -67,55 +90,74 @@ export const Cart = ({ close, restaurant, menu }: CartProps) => {
   return (
     <div className={classes.container}>
       <div>
-        <Title align="center">Cart</Title>
+        <Title align="center" size={rem(50)}>
+          Cart
+        </Title>
         <Paper withBorder shadow="md" p="xl" mt="xl">
           <div>
-            <Text align="center" fz="lg">
-              Table{" "}
-              <Text fw={500} span>
-                C24
-              </Text>
-            </Text>
-            <div className={classes.orderInfo}>
-              <Text>
-                Order#{" "}
-                <Text span fw={500}>
-                  15a59db
-                </Text>
-              </Text>
-              <Text>
-                Customer{" "}
-                <Text span fw={500}>
-                  Michael Min
-                </Text>
-              </Text>
-              <Text>
-                Ordered{" "}
-                <Text span fw={500}>
-                  2m ago
-                </Text>
-              </Text>
-            </div>
+            <Title align="center" size="h1" weight={100}>
+              Table:{" "}
+              <Title fw={500} size="h1">
+                {table?.name}
+              </Title>
+            </Title>
+            <div className={classes.orderInfo}>{/* TODO: Order info??? */}</div>
             <div>
-              <List>
-                {cart.map((item) => {
-                  const inCartItem = menu.find(
-                    (menuItem) => menuItem.id === item.itemId
-                  );
-                  if (!inCartItem) {
-                    return;
-                  }
-                  return (
-                    <List.Item key={item.itemId}>
-                      {inCartItem.name}{" "}
-                      <Text span fz="xs">
-                        x{item.units} [
-                        {formatCurrency(inCartItem.priceCents * item.units)}]
-                      </Text>
-                    </List.Item>
-                  );
-                })}
-              </List>
+              {cart.map((item) => {
+                const inCartItem = menu.find(
+                  (menuItem) => menuItem.id === item.itemId
+                );
+                if (!inCartItem) {
+                  return;
+                }
+                return (
+                  <Paper
+                    className={classes.item}
+                    shadow="md"
+                    p="md"
+                    mb="md"
+                    key={inCartItem.id}
+                  >
+                    <Flex justify="space-between">
+                      <div>
+                        <Text fw={700} fz="lg">
+                          {inCartItem.name}{" "}
+                          <Text span fz="xs">
+                            x{item.units} [
+                            {formatCurrency(inCartItem.priceCents * item.units)}
+                            ]
+                          </Text>
+                        </Text>
+                        <Text c="dimmed" fz="md">
+                          {inCartItem.description}
+                        </Text>
+                      </div>
+                      <div className={classes.foodImage}>
+                        <Image src={ayaya} alt="food image" width={75} />
+                      </div>
+                    </Flex>
+                    <Flex columnGap="xs">
+                      <IncrementButton
+                        value={item.units}
+                        onChange={(value) => {
+                          setUnitInCart(inCartItem.id, value);
+                        }}
+                      />
+                      <ActionIcon
+                        variant="light"
+                        radius="lg"
+                        size="lg"
+                        color="gold5"
+                        onClick={() => {
+                          removeFromCart(inCartItem.id);
+                        }}
+                      >
+                        <IconTrash />
+                      </ActionIcon>
+                    </Flex>
+                  </Paper>
+                );
+              })}
             </div>
             <div>
               <Text fz="xl" fw={700} align="center" mt="xl">
@@ -129,8 +171,7 @@ export const Cart = ({ close, restaurant, menu }: CartProps) => {
         <GradientButton
           disabled={cart.length === 0}
           onClick={() => {
-            // TODO: Convert to real table id
-            createOrder(restaurant.id, 1, cart).then(() => {
+            createOrder(restaurant.id, table.id, cart).then(() => {
               clearCart();
               close?.();
             });

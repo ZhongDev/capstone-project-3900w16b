@@ -55,6 +55,24 @@ router.post("/table", auth, async (req, res, next) => {
   }
 });
 
+// controls getting table by Id
+router.get("/table/:tableId", auth, async (req, res, next) => {
+  try {
+    const table = await restaurantService.getRestaurantTable(
+      Number(req.params.tableId)
+    );
+    const tableRest = table?.restaurantId;
+
+    if (tableRest === req.restaurant?.restaurantId) {
+      res.json(table);
+    } else {
+      throw new Unauthorized("You are not the restaurant I am looking for");
+    }
+  } catch (err) {
+    next(err);
+  }
+});
+
 // controls deletion of table
 router.delete("/table/:tableId", auth, async (req, res, next) => {
   try {
