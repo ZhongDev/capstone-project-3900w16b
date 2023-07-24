@@ -30,7 +30,9 @@ export const updateHelpCallStatus = (
   newStatus: HelpCallStatus
 ) => {
   return request
-    .patch(process.env.NEXT_PUBLIC_BASEURL + "/help/" + helpCallId, newStatus)
+    .patch(process.env.NEXT_PUBLIC_BASEURL + "/help/" + helpCallId, {
+      newStatus,
+    })
     .then((res) => res.data)
     .catch((err) => {
       throw err.response.data;

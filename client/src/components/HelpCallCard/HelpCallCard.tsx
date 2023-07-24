@@ -87,18 +87,18 @@ export const HelpCallCard = ({
               style={{
                 maxWidth: isFirst ? 175 : 120,
               }}
-              onClick={open}
+              onClick={() => {
+                updateHelpCallStatus(helpCall.id, "resolved").then(() => {
+                  mutate("/help");
+                  close();
+                });
+              }}
               radius="xl"
               fullWidth={true}
               variant="outline"
             >
               Assisted
             </Button>
-            <Modal
-              opened={opened}
-              onClose={close}
-              title="Mark assistance call as resolved"
-            ></Modal>
           </div>
         </div>
       </Paper>
