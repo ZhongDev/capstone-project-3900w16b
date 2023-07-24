@@ -12,7 +12,7 @@ export const useLocalCart = () => {
   };
 
   const addToCart = (newItem: Item) => {
-    let restaurantId = newItem.restaurantId;
+    const restaurantId = newItem.restaurantId;
     let restCart = localCart[restaurantId];
     let newCart: Cart = {};
 
@@ -49,10 +49,7 @@ export const useLocalCart = () => {
     );
     if (existingItem) {
       if (existingItem.units === 1) {
-        newCart[restaurantId] = localCart[restaurantId].filter(
-          (item) => item.itemId !== itemId
-        );
-        setCart(newCart);
+        removeFromCart(itemId, restaurantId);
       } else {
         existingItem.units -= 1;
         newCart[restaurantId] = [...localCart[restaurantId]];
