@@ -11,7 +11,7 @@ export type CreateHelpCallResponse = {
   id: number;
 };
 
-export const createOrder = (restaurantId: number, tableId: number) =>
+export const createHelpCall = (restaurantId: number, tableId: number) =>
   request
     .post(`${process.env.NEXT_PUBLIC_BASEURL}/help/${restaurantId}/${tableId}`)
     .then((res) => res.data)
