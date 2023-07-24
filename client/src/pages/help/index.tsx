@@ -1,11 +1,18 @@
 import useSWR from "swr";
 import { Sidebar } from "@/components/Sidebar";
-import { getUnresolvedHelpCalls, updateHelpCallStatus } from "@/api/help";
+import {
+  HelpCall,
+  getUnresolvedHelpCalls,
+  updateHelpCallStatus,
+} from "@/api/help";
 import { HelpCallCard } from "@/components/HelpCallCard";
-import { Flex, Loader, Title, createStyles } from "@mantine/core";
+import { Flex, Loader, Title, createStyles, ScrollArea } from "@mantine/core";
 
 const useStyles = createStyles((theme) => ({
   helpSection: {
+    display: "flex",
+    justifyContent: "center",
+    align: "center",
     marginTop: theme.spacing.xl,
   },
 }));
@@ -15,6 +22,9 @@ export default function Help() {
     "/help",
     getUnresolvedHelpCalls
   );
+  const latestHelp: HelpCall | null = helpData ? helpData[0] : null;
+  const otherHelp: HelpCall[] = helpData ? helpData.slice(1) : [];
+  console.log(`Latest is from table ${latestHelp}`);
   const { classes } = useStyles();
 
   return (
@@ -23,15 +33,28 @@ export default function Help() {
         <Flex gap="lg" align="center">
           <Title>Assistance Requests</Title>
         </Flex>
-        <div className={classes.helpSection}>
-          {helpDataIsLoading ? (
-            <Loader />
-          ) : (
-            helpData?.map((help) => {
-              return <HelpCallCard key={help.id} helpCall={help} />;
-            })
-          )}
-        </div>
+        {latestHelp ? (
+          <HelpCallCard
+            key={latestHelp.id}
+            helpCall={latestHelp}
+            isFirst={true}
+          />
+        ) : (
+          <></>
+        )}
+        <ScrollArea>
+          <div className={classes.helpSection}>
+            {helpDataIsLoading ? (
+              <Loader />
+            ) : (
+              otherHelp?.map((help) => {
+                return (
+                  <HelpCallCard key={help.id} helpCall={help} isFirst={false} />
+                );
+              })
+            )}
+          </div>
+        </ScrollArea>
       </Sidebar>
     </>
   );

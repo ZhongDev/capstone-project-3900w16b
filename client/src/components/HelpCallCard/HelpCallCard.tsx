@@ -1,6 +1,7 @@
 import { HelpCall, updateHelpCallStatus } from "@/api/help";
 import { deleteRestaurantTable, getRestaurantTableById } from "@/api/table";
 import {
+  rem,
   Text,
   Flex,
   Paper,
@@ -19,15 +20,29 @@ import { useEffect } from "react";
 import useSWR, { mutate } from "swr";
 
 const useStyles = createStyles((theme) => ({
-  menuCategory: {
+  latestHelp: {
+    height: "25rem",
+  },
+  otherHelp: {
     maxWidth: "50rem",
   },
   menuItems: {
     marginTop: theme.spacing.xl,
   },
+  cardStyle: {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+  },
 }));
 
-export const HelpCallCard = ({ helpCall }: { helpCall: HelpCall }) => {
+export const HelpCallCard = ({
+  helpCall,
+  isFirst,
+}: {
+  helpCall: HelpCall;
+  isFirst: boolean;
+}) => {
   const [opened, { open, close }] = useDisclosure(false);
   const [openedSure, handler] = useDisclosure(false);
   const { classes } = useStyles();
@@ -44,27 +59,48 @@ export const HelpCallCard = ({ helpCall }: { helpCall: HelpCall }) => {
         shadow="sm"
         radius="md"
         p="md"
-        className={classes.menuCategory}
+        className={isFirst ? classes.latestHelp : classes.otherHelp}
       >
-        <Flex align="center" justify="space-between">
+        <div className={classes.cardStyle}>
+          {isFirst ? (
+            <Text align="center" fz={rem(50)}>
+              Latest Request
+            </Text>
+          ) : (
+            <></>
+          )}
           {tableDataIsLoading ? (
             <Loader />
           ) : (
-            <Title px="xl" align="center" weight="1000">
-              {tableName} NEEDS HELP!!!11!!!
+            <Title px="xl" align="center" size={isFirst ? "8rem" : "3rem"}>
+              {tableName}
             </Title>
           )}
-          <Group spacing="xs">
-            <Button onClick={open} radius="xl" variant="outline" mr="xs">
+          <div
+            style={{
+              display: "flex",
+              justifyContent: isFirst ? "flex-end" : "center",
+            }}
+          >
+            <Button
+              size={isFirst ? "xl" : "md"}
+              style={{
+                maxWidth: isFirst ? 175 : 120,
+              }}
+              onClick={open}
+              radius="xl"
+              fullWidth={true}
+              variant="outline"
+            >
               Assisted
             </Button>
             <Modal
               opened={opened}
               onClose={close}
-              title="Do some assistance shit"
+              title="Mark assistance call as resolved"
             ></Modal>
-          </Group>
-        </Flex>
+          </div>
+        </div>
       </Paper>
     </>
   );
