@@ -3,7 +3,7 @@ import { Sidebar } from "@/components/Sidebar";
 import {
   HelpCall,
   getUnresolvedHelpCalls,
-  updateHelpCallStatus,
+  manageTableHelpCall,
 } from "@/api/help";
 import { HelpCallCard } from "@/components/HelpCallCard";
 import {
@@ -30,12 +30,27 @@ export default function Help() {
     "/help",
     getUnresolvedHelpCalls
   );
+
   // Filter by unique tableid
-  const uniqueHelp = helpData?.filter((val, index, self) => {
-    return self.findIndex((v) => v.tableId === val.tableId) === index;
+  let helpManage: manageTableHelpCall[] = [];
+  helpData?.map((val, index, self) => {
+    if (self.findIndex((v) => v.tableId === val.tableId) === index) {
+      helpManage?.push({
+        tableId: val.tableId,
+        numOccurance: 1,
+        helpCall: val,
+      });
+    } else {
+      helpManage[
+        helpManage.findIndex((v) => v.tableId === val.tableId)
+      ].numOccurance += 1;
+    }
   });
-  const latestHelp: HelpCall | null = uniqueHelp ? uniqueHelp[0] : null;
-  const otherHelp: HelpCall[] = uniqueHelp ? uniqueHelp.slice(1) : [];
+  const latestHelp: manageTableHelpCall | null =
+    helpManage.length === 0 ? null : helpManage[0];
+  console.log(latestHelp);
+  const otherHelp: manageTableHelpCall[] =
+    helpManage.length === 0 ? [] : helpManage.slice(1);
 
   return (
     <>
@@ -46,8 +61,9 @@ export default function Help() {
         {latestHelp ? (
           <>
             <HelpCallCard
-              key={latestHelp.id}
-              helpCall={latestHelp}
+              key={latestHelp.helpCall.id}
+              helpCall={latestHelp.helpCall}
+              numOccurance={latestHelp.numOccurance}
               isFirst={true}
             />
           </>
@@ -70,7 +86,12 @@ export default function Help() {
             ) : (
               otherHelp?.map((help) => {
                 return (
-                  <HelpCallCard key={help.id} helpCall={help} isFirst={false} />
+                  <HelpCallCard
+                    key={help.helpCall.id}
+                    helpCall={help.helpCall}
+                    numOccurance={help.numOccurance}
+                    isFirst={false}
+                  />
                 );
               })
             )}

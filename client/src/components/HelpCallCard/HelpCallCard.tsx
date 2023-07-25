@@ -6,23 +6,16 @@ import {
   Flex,
   Paper,
   Button,
-  Modal,
-  Textarea,
-  Group,
-  ButtonProps,
   Title,
   createStyles,
   Loader,
   Badge,
 } from "@mantine/core";
-import { useForm } from "@mantine/form";
-import { useDisclosure } from "@mantine/hooks";
-import { useEffect } from "react";
 import useSWR, { mutate } from "swr";
 
 const useStyles = createStyles((theme) => ({
   latestHelp: {
-    height: "25rem",
+    maxHeight: "28rem",
   },
   otherHelp: {
     maxWidth: "50rem",
@@ -38,13 +31,13 @@ const useStyles = createStyles((theme) => ({
 
 export const HelpCallCard = ({
   helpCall,
+  numOccurance,
   isFirst,
 }: {
   helpCall: HelpCall;
+  numOccurance: number;
   isFirst: boolean;
 }) => {
-  const [opened, { open, close }] = useDisclosure(false);
-  const [openedSure, handler] = useDisclosure(false);
   const { classes } = useStyles();
   const { data: tableData, isLoading: tableDataIsLoading } = useSWR(
     `${helpCall.tableId}`,
@@ -64,6 +57,21 @@ export const HelpCallCard = ({
         className={isFirst ? classes.latestHelp : classes.otherHelp}
       >
         <Flex className={classes.cardStyle}>
+          {numOccurance > 1 ? (
+            <Badge
+              size={isFirst ? "xl" : "xs"}
+              color="red"
+              variant="dot"
+              style={{
+                maxWidth: isFirst ? "15rem" : "10rem",
+                alignSelf: isFirst ? "" : "center",
+              }}
+            >
+              Requested {numOccurance} times
+            </Badge>
+          ) : (
+            <></>
+          )}
           {isFirst ? (
             <Text align="center" fz={rem(50)}>
               Latest Request
@@ -98,7 +106,6 @@ export const HelpCallCard = ({
                 updateHelpCallStatus(helpCall.id, tableId, "resolved").then(
                   () => {
                     mutate("/help");
-                    close();
                   }
                 );
               }}

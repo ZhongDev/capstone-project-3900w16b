@@ -68,3 +68,9 @@ export const getUnresolvedHelpCalls = () => {
       throw err.response.data;
     }) as Promise<HelpCall[]>;
 };
+
+export type manageTableHelpCall = {
+  tableId: number;
+  numOccurance: number;
+  helpCall: HelpCall;
+};
