@@ -30,6 +30,20 @@ export const updateHelpCallStatus = async (
   return HelpCall.query().findOne({ id: helpCallId });
 };
 
+// Change request status given orderId by a table
+export const updateHelpCallStatusTable = async (
+  tableId: number,
+  newStatus: HelpCallStatus
+) => {
+  await HelpCall.query()
+    .patch({
+      status: newStatus,
+    })
+    .where({ tableId: tableId });
+
+  return HelpCall.query().where({ tableId: tableId });
+};
+
 // Find help request with id
 export const getHelpCallById = async (helpCallId: number) => {
   return HelpCall.query().findOne({

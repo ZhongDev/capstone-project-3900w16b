@@ -27,12 +27,16 @@ export type UpdateHelpCallResponse = {
 
 export const updateHelpCallStatus = (
   helpCallId: number,
+  tableId: number | undefined,
   newStatus: HelpCallStatus
 ) => {
   return request
-    .patch(process.env.NEXT_PUBLIC_BASEURL + "/help/" + helpCallId, {
-      newStatus,
-    })
+    .patch(
+      process.env.NEXT_PUBLIC_BASEURL + "/help/" + helpCallId + "/" + tableId,
+      {
+        newStatus,
+      }
+    )
     .then((res) => res.data)
     .catch((err) => {
       throw err.response.data;

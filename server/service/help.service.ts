@@ -13,15 +13,16 @@ export const createHelpCall = async (
 };
 
 export const updateHelpCallStatus = async (
-  restaurantId: number,
   helpCallId: number,
+  restaurantId: number,
+  tableId: number,
   newStatus: HelpCallStatus
 ) => {
   const helpCall = await helpRepo.getHelpCallById(helpCallId);
   if (helpCall?.restaurantId !== restaurantId) {
     throw new NotFound("This assistance request does not exist...");
   }
-  return helpRepo.updateHelpCallStatus(helpCallId, newStatus);
+  return helpRepo.updateHelpCallStatusTable(tableId, newStatus);
 };
 
 export const deleteHelpCall = async (

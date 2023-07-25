@@ -22,13 +22,14 @@ router.post("/:restaurantId/:tableId", async (req, res, next) => {
 });
 
 // Controls updating status of a help call
-router.patch("/:helpCallId", auth, async (req, res, next) => {
+router.patch("/:helpCallId/:tableId", auth, async (req, res, next) => {
   try {
     const updateRequest = schema.UpdateHelpCallRequest.parse(req.body);
     res.json(
       await helpService.updateHelpCallStatus(
-        req.restaurant!.restaurantId,
         Number(req.params.helpCallId),
+        req.restaurant!.restaurantId,
+        Number(req.params.tableId),
         updateRequest.newStatus as HelpCallStatus
       )
     );

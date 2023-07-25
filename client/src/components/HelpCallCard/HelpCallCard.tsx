@@ -13,6 +13,7 @@ import {
   Title,
   createStyles,
   Loader,
+  Badge,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useDisclosure } from "@mantine/hooks";
@@ -30,7 +31,6 @@ const useStyles = createStyles((theme) => ({
     marginTop: theme.spacing.xl,
   },
   cardStyle: {
-    display: "flex",
     flexDirection: "column",
     justifyContent: "center",
   },
@@ -50,6 +50,7 @@ export const HelpCallCard = ({
     `${helpCall.tableId}`,
     getRestaurantTableById
   );
+  const tableId = tableData?.id;
   const tableName = tableData?.name;
 
   return (
@@ -59,9 +60,10 @@ export const HelpCallCard = ({
         shadow="sm"
         radius="md"
         p="md"
+        withBorder={true}
         className={isFirst ? classes.latestHelp : classes.otherHelp}
       >
-        <div className={classes.cardStyle}>
+        <Flex className={classes.cardStyle}>
           {isFirst ? (
             <Text align="center" fz={rem(50)}>
               Latest Request
@@ -72,14 +74,19 @@ export const HelpCallCard = ({
           {tableDataIsLoading ? (
             <Loader />
           ) : (
-            <Title px="xl" align="center" size={isFirst ? "8rem" : "3rem"}>
-              {tableName}
-            </Title>
+            <>
+              <Text fz={isFirst ? "2rem" : "1rem"} align="center">
+                Table:
+              </Text>
+              <Title px="xl" align="center" size={isFirst ? "8rem" : "3rem"}>
+                {tableName}
+              </Title>
+            </>
           )}
-          <div
+          <Flex
             style={{
-              display: "flex",
               justifyContent: isFirst ? "flex-end" : "center",
+              marginTop: "1rem",
             }}
           >
             <Button
@@ -88,10 +95,12 @@ export const HelpCallCard = ({
                 maxWidth: isFirst ? 175 : 120,
               }}
               onClick={() => {
-                updateHelpCallStatus(helpCall.id, "resolved").then(() => {
-                  mutate("/help");
-                  close();
-                });
+                updateHelpCallStatus(helpCall.id, tableId, "resolved").then(
+                  () => {
+                    mutate("/help");
+                    close();
+                  }
+                );
               }}
               radius="xl"
               fullWidth={true}
@@ -99,8 +108,8 @@ export const HelpCallCard = ({
             >
               Assisted
             </Button>
-          </div>
-        </div>
+          </Flex>
+        </Flex>
       </Paper>
     </>
   );

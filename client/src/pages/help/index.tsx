@@ -6,7 +6,14 @@ import {
   updateHelpCallStatus,
 } from "@/api/help";
 import { HelpCallCard } from "@/components/HelpCallCard";
-import { Flex, Loader, Title, createStyles, ScrollArea } from "@mantine/core";
+import {
+  Flex,
+  Loader,
+  Title,
+  createStyles,
+  ScrollArea,
+  Text,
+} from "@mantine/core";
 
 const useStyles = createStyles((theme) => ({
   helpSection: {
@@ -18,32 +25,46 @@ const useStyles = createStyles((theme) => ({
 }));
 
 export default function Help() {
+  const { classes } = useStyles();
   const { data: helpData, isLoading: helpDataIsLoading } = useSWR(
     "/help",
     getUnresolvedHelpCalls
   );
-  const latestHelp: HelpCall | null = helpData ? helpData[0] : null;
-  const otherHelp: HelpCall[] = helpData ? helpData.slice(1) : [];
-  console.log(`Latest is from table ${latestHelp}`);
-  const { classes } = useStyles();
+  // Filter by unique tableid
+  const uniqueHelp = helpData?.filter((val, index, self) => {
+    return self.findIndex((v) => v.tableId === val.tableId) === index;
+  });
+  const latestHelp: HelpCall | null = uniqueHelp ? uniqueHelp[0] : null;
+  const otherHelp: HelpCall[] = uniqueHelp ? uniqueHelp.slice(1) : [];
 
   return (
     <>
       <Sidebar>
         <Flex gap="lg" align="center">
-          <Title>Assistance Requests</Title>
+          <Title style={{ paddingBottom: "1rem" }}>Assistance Requests</Title>
         </Flex>
         {latestHelp ? (
-          <HelpCallCard
-            key={latestHelp.id}
-            helpCall={latestHelp}
-            isFirst={true}
-          />
+          <>
+            <HelpCallCard
+              key={latestHelp.id}
+              helpCall={latestHelp}
+              isFirst={true}
+            />
+          </>
         ) : (
+          <Text size="xl" style={{ paddingTop: "3rem" }}>
+            You have no unresolved requests :)
+          </Text>
+        )}
+        {otherHelp.length === 0 ? (
           <></>
+        ) : (
+          <Text size="xl" style={{ paddingTop: "3rem" }}>
+            Previous Unresolved Requests
+          </Text>
         )}
         <ScrollArea>
-          <div className={classes.helpSection}>
+          <Flex className={classes.helpSection} gap="xs">
             {helpDataIsLoading ? (
               <Loader />
             ) : (
@@ -53,7 +74,7 @@ export default function Help() {
                 );
               })
             )}
-          </div>
+          </Flex>
         </ScrollArea>
       </Sidebar>
     </>
