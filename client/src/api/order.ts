@@ -5,7 +5,6 @@ type OrderStatus = "ordered" | "completed";
 export type CreateOrderBody = {
   itemId: number;
   units: number;
-  device: string;
 }[];
 
 export type CreateOrderResponse = {
@@ -22,12 +21,13 @@ export type CreateOrderResponse = {
 export const createOrder = (
   restaurantId: number,
   tableId: number,
+  device: string,
   orders: CreateOrderBody
 ) =>
   request
     .post(
       `${process.env.NEXT_PUBLIC_BASEURL}/order/${restaurantId}/${tableId}`,
-      orders
+      { items: orders, device }
     )
     .then((res) => res.data)
     .catch((err) => {
@@ -35,17 +35,20 @@ export const createOrder = (
     }) as Promise<CreateOrderResponse>;
 
 export type GetRestaurantOrdersByDeviceIdResponse = {
-  id: number;
+  orderGroupId: number;
   tableId: number;
-  item: {
-    id: number;
-    name: string;
-    image: string | null;
-    priceCents: number;
-  };
   placedOn: string;
   status: OrderStatus;
-  units: number;
+  items: {
+    id: number;
+    item: {
+      id: number;
+      name: string;
+      image: string | null;
+      priceCents: number;
+    };
+    units: number;
+  }[];
 }[];
 
 export const getRestaurantOrdersByDeviceId = (

@@ -1,6 +1,8 @@
+import { useMemo, useState } from "react";
 import useSWR from "swr";
 import {
   Badge,
+  Button,
   Flex,
   List,
   Paper,
@@ -9,14 +11,15 @@ import {
   createStyles,
   rem,
 } from "@mantine/core";
+import Image from "next/image";
 import {
   GetRestaurantOrdersByDeviceIdResponse,
   getRestaurantOrdersByDeviceId,
 } from "@/api/order";
 import { formatCurrency } from "@/helpers";
 import ayaya from "@/public/img/ayaya.jpg";
-import Image from "next/image";
 import { GradientButton } from "../Button";
+import { useDeviceId } from "@/hooks";
 
 const useStyles = createStyles((theme) => ({
   floatingButtonGroup: {
@@ -51,8 +54,9 @@ export type OrderedProps = {
 export const Ordered = ({ close, restaurant }: OrderedProps) => {
   const { classes } = useStyles();
 
+  const deviceId = useDeviceId();
   const { data: orderedData } = useSWR(`/order/${restaurant.id}/${"a"}`, () =>
-    getRestaurantOrdersByDeviceId(restaurant.id, "a")
+    getRestaurantOrdersByDeviceId(restaurant.id, deviceId)
   );
 
   return (
@@ -62,8 +66,11 @@ export const Ordered = ({ close, restaurant }: OrderedProps) => {
           Past Orders
         </Title>
         <List>
-          {orderedData?.map((orderedItem) => (
-            <OrderedItemCard key={orderedItem.id} item={orderedItem} />
+          {orderedData?.map((orderGroup) => (
+            <OrderedItemCard
+              key={orderGroup.orderGroupId}
+              orderGroup={orderGroup}
+            />
           ))}
         </List>
       </div>
@@ -74,24 +81,63 @@ export const Ordered = ({ close, restaurant }: OrderedProps) => {
   );
 };
 
-type OrderedItemCardProps = { item: GetRestaurantOrdersByDeviceIdResponse[0] };
+type OrderedItemCardProps = {
+  orderGroup: GetRestaurantOrdersByDeviceIdResponse[0];
+};
 
-const OrderedItemCard = ({ item }: OrderedItemCardProps) => {
+const OrderedItemCard = ({ orderGroup }: OrderedItemCardProps) => {
   const { classes } = useStyles();
+
+  const [viewDetails, setViewDetails] = useState(false);
+
+  const hasMultipleItems = orderGroup.items.length > 1;
+  const groupTotalPrice = useMemo(
+    () =>
+      orderGroup.items.reduce(
+        (acc, curr) => acc + curr.item.priceCents * curr.units,
+        0
+      ),
+    [orderGroup]
+  );
 
   return (
     <div>
       <Paper p="lg" shadow="lg" mb="sm">
         <Flex justify="space-between">
-          <Flex direction="column" justify="space-between">
+          <Flex direction="column" rowGap="xs">
             <Text fw={700} fz="lg">
-              {item.item.name}
+              {orderGroup.items[0].item.name}
+              {hasMultipleItems
+                ? ` + ${orderGroup.items.length - 1} item(s)`
+                : null}
             </Text>
-            <Text>{new Date(item.placedOn).toLocaleString()}</Text>
+            <Text>{new Date(orderGroup.placedOn).toLocaleString()}</Text>
             <Flex columnGap="xs">
-              <Badge size="xl">{item.units}x</Badge>
-              <Badge size="xl">{item.status}</Badge>
+              <Button
+                onClick={() => setViewDetails(!viewDetails)}
+                radius="xl"
+                compact
+              >
+                {viewDetails ? "Hide" : "View"} Details
+              </Button>
+              <Button radius="xl" compact disabled uppercase>
+                {orderGroup.status}
+              </Button>
             </Flex>
+            {viewDetails && (
+              <Flex mt="xs">
+                <List>
+                  {orderGroup.items.map((item) => {
+                    return (
+                      <List.Item key={item.id}>
+                        {item.item.name} x{item.units} [
+                        {formatCurrency(item.units * item.item.priceCents)}]
+                      </List.Item>
+                    );
+                  })}
+                </List>
+              </Flex>
+            )}
           </Flex>
           <Flex direction="column" justify="space-between" align="flex-end">
             <Image
@@ -100,7 +146,7 @@ const OrderedItemCard = ({ item }: OrderedItemCardProps) => {
               alt="food image"
               width={75}
             />
-            {formatCurrency(item.units * item.item.priceCents)}
+            {formatCurrency(groupTotalPrice)}
           </Flex>
         </Flex>
       </Paper>

@@ -91,7 +91,6 @@ export const OrderItem = ({ itemId, restaurantId, close }: OrderItemProps) => {
           fullWidth
           onClick={() => {
             addToCart({
-              device: "a",
               itemId: itemData.id,
               restaurantId: restaurantId,
               units,

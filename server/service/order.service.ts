@@ -5,10 +5,11 @@ import BadRequest from "../errors/BadRequest";
 export const createOrder = async (
   restaurantId: number,
   tableId: number,
+  device: string | null,
   orders: orderRepo.CreateOrder[]
 ) => {
   try {
-    return await orderRepo.createOrder(restaurantId, tableId, orders);
+    return await orderRepo.createOrder(restaurantId, tableId, device, orders);
   } catch (err) {
     if (err instanceof ForeignKeyViolationError) {
       throw new BadRequest(
@@ -23,24 +24,28 @@ export const getRestaurantOrdersByDeviceId = async (
   restaurantId: number,
   deviceId: string
 ) => {
-  const orders = await orderRepo.getRestaurantOrdersByDeviceId(
+  const orderGroups = await orderRepo.getRestaurantOrdersByDeviceId(
     restaurantId,
     deviceId
   );
-
-  return orders.map((order) => {
+  return orderGroups.map((group) => {
     return {
-      id: order.id,
-      tableId: order.tableId,
-      item: {
-        id: order.item?.id,
-        name: order.item?.name,
-        image: order.item?.image,
-        priceCents: order.item?.priceCents,
-      },
-      placedOn: order.placedOn,
-      status: order.status,
-      units: order.units,
+      orderGroupId: group.id,
+      tableId: group.tableId,
+      placedOn: group.placedOn,
+      status: group.status,
+      items: group.orders?.map((order) => {
+        return {
+          id: order.id,
+          item: {
+            id: order.item?.id,
+            name: order.item?.name,
+            image: order.item?.image,
+            priceCents: order.item?.priceCents,
+          },
+          units: order.units,
+        };
+      }),
     };
   });
 };

@@ -18,7 +18,7 @@ export default class Restaurant extends Model {
       relation: Model.HasManyRelation,
       modelClass: Table,
       join: {
-        from: "Table.id",
+        from: "Restaurant.id",
         to: "Table.restaurantId",
       },
     },
