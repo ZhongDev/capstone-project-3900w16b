@@ -31,7 +31,7 @@ export default function Help() {
     getUnresolvedHelpCalls
   );
 
-  // Filter by unique tableid
+  // Organises requests
   let helpManage: manageTableHelpCall[] = [];
   helpData?.map((val, index, self) => {
     if (self.findIndex((v) => v.tableId === val.tableId) === index) {
@@ -48,7 +48,6 @@ export default function Help() {
   });
   const latestHelp: manageTableHelpCall | null =
     helpManage.length === 0 ? null : helpManage[0];
-  console.log(latestHelp);
   const otherHelp: manageTableHelpCall[] =
     helpManage.length === 0 ? [] : helpManage.slice(1);
 
