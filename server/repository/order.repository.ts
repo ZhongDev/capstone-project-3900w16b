@@ -1,29 +1,31 @@
 import Order from "../models/Order";
+import OrderGroup from "../models/OrderGroup";
 
 export type CreateOrder = {
-  status: "ordered" | "completed";
   itemId: number;
-  placedOn: string;
   units: number;
-  device: string | null;
 };
 
 export const createOrder = (
   restaurantId: number,
   tableId: number,
+  device: string | null,
   orders: CreateOrder[]
 ) => {
   return Order.transaction(async (trx) => {
+    const orderGroup = await OrderGroup.query(trx).insert({
+      restaurantId,
+      tableId,
+      device,
+      placedOn: new Date().toISOString(),
+    });
+
     return Promise.all(
       orders.map((order) => {
         return Order.query(trx).insert({
-          restaurantId,
-          tableId,
           itemId: order.itemId,
-          placedOn: order.placedOn,
-          status: order.status,
+          orderGroupId: orderGroup.id,
           units: order.units,
-          device: order.device,
         });
       })
     );
@@ -34,10 +36,10 @@ export const getRestaurantOrdersByDeviceId = (
   restaurantId: number,
   deviceId: string
 ) => {
-  return Order.query()
+  return OrderGroup.query()
     .where({
       restaurantId,
       device: deviceId,
     })
-    .withGraphFetched("item");
+    .withGraphFetched("orders.item");
 };

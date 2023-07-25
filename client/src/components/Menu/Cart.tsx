@@ -12,7 +12,7 @@ import {
   ActionIcon,
 } from "@mantine/core";
 import { MenuItem } from "@/api/menu";
-import { useLocalCart } from "@/hooks";
+import { useDeviceId, useLocalCart } from "@/hooks";
 import { formatCurrency } from "@/helpers";
 import { GradientButton, IncrementButton } from "../Button";
 import { createOrder } from "@/api/order";
@@ -73,6 +73,7 @@ export type CartProps = {
 export const Cart = ({ close, restaurant, table, menu }: CartProps) => {
   const { classes } = useStyles();
 
+  const deviceId = useDeviceId();
   const [cart, { setUnitInCart, removeFromCart, clearCart }] = useLocalCart();
   let restCart = cart[restaurant.id] ? cart[restaurant.id] : [];
 
@@ -172,12 +173,15 @@ export const Cart = ({ close, restaurant, table, menu }: CartProps) => {
         <GradientButton
           disabled={restCart.length === 0}
           onClick={() => {
-            createOrder(restaurant.id, table.id, cart[restaurant.id]).then(
-              () => {
-                clearCart();
-                close?.();
-              }
-            );
+            createOrder(
+              restaurant.id,
+              table.id,
+              deviceId,
+              cart[restaurant.id]
+            ).then(() => {
+              clearCart();
+              close?.();
+            });
           }}
         >
           Pay with Apple Pay

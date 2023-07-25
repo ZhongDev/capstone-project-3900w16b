@@ -1,37 +1,25 @@
 import { Model } from "objection";
-import Table from "./Table";
-import Restaurant from "./Restaurant";
 import Item from "./Item";
+import OrderGroup from "./OrderGroup";
 
 export default class Order extends Model {
   id!: number;
-  restaurantId!: number;
-  tableId!: number;
+  orderGroupId!: number;
   itemId!: number;
   units!: number;
-  status!: "ordered" | "completed";
-  device!: string | null; // free text to attempt to identify the device that ordered
-  placedOn!: string; // This is a date string
 
   item?: Item;
+  orderGroup?: OrderGroup;
 
   static tableName = "Order";
 
   static relationMappings = () => ({
-    table: {
+    orderGroup: {
       relation: Model.BelongsToOneRelation,
-      modelClass: Table,
+      modelClass: OrderGroup,
       join: {
-        from: "Order.tableId",
-        to: "Table.id",
-      },
-    },
-    restaurant: {
-      relation: Model.BelongsToOneRelation,
-      modelClass: Restaurant,
-      join: {
-        from: "Order.restaurantId",
-        to: "Restaurant.id",
+        from: "Order.orderGroupId",
+        to: "OrderGroup.id",
       },
     },
     item: {
