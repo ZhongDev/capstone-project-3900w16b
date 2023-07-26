@@ -71,6 +71,6 @@ export const getUnresolvedHelpCalls = () => {
 
 export type manageTableHelpCall = {
   tableId: number;
-  numOccurance: number;
+  numOccurrence: number;
   helpCall: HelpCall;
 };

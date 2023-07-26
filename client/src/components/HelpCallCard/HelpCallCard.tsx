@@ -31,11 +31,11 @@ const useStyles = createStyles((theme) => ({
 
 export const HelpCallCard = ({
   helpCall,
-  numOccurance,
+  numOccurrence,
   isFirst,
 }: {
   helpCall: HelpCall;
-  numOccurance: number;
+  numOccurrence: number;
   isFirst: boolean;
 }) => {
   const { classes } = useStyles();
@@ -57,7 +57,7 @@ export const HelpCallCard = ({
         className={isFirst ? classes.latestHelp : classes.otherHelp}
       >
         <Flex className={classes.cardStyle}>
-          {numOccurance > 1 ? (
+          {numOccurrence > 1 ? (
             <Badge
               size={isFirst ? "xl" : "xs"}
               color="red"
@@ -67,7 +67,7 @@ export const HelpCallCard = ({
                 alignSelf: isFirst ? "" : "center",
               }}
             >
-              Requested {numOccurance} times
+              Requested {numOccurrence} times
             </Badge>
           ) : (
             <></>
