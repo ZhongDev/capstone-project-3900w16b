@@ -11,6 +11,8 @@ export default class Item extends Model {
   priceCents!: number;
   description!: string;
   ingredients!: string | null;
+  minPrepMins?: number;
+  maxPrepMins?: number;
 
   category?: Category;
 

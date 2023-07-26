@@ -37,6 +37,7 @@ export const IncrementButton = ({ value, onChange }: IncrementButtonProps) => {
             onChange(value - 1);
           }
         }}
+        disabled={value === 1}
         className={classes.button}
         variant="light"
       >

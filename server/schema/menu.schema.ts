@@ -16,6 +16,8 @@ export const CreateItemRequest = z.object({
     description: z.string(),
     ingredients: z.string().nullable(),
     priceCents: z.number(),
+    minPrepMins: z.number().optional(),
+    maxPrepMins: z.number().optional(),
   }),
 });
 
@@ -25,6 +27,8 @@ export const UpdateItemRequest = z.object({
   ingredients: z.string().nullable().optional(),
   priceCents: z.number().optional(),
   displayOrder: z.number().optional(),
+  minPrepMins: z.number().optional(),
+  maxPrepMins: z.number().optional(),
 });
 
 export const ReorderCategoriesRequest = z.object({

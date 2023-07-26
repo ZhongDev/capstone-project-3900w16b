@@ -42,10 +42,11 @@ const useStyles = createStyles((theme) => ({
 
 export type OrderItemProps = {
   itemId: number;
+  restaurantId: number;
   close?: () => void;
 };
 
-export const OrderItem = ({ itemId, close }: OrderItemProps) => {
+export const OrderItem = ({ itemId, restaurantId, close }: OrderItemProps) => {
   const { classes } = useStyles();
   const [units, setUnits] = useState(1);
 
@@ -89,7 +90,11 @@ export const OrderItem = ({ itemId, close }: OrderItemProps) => {
         <GradientButton
           fullWidth
           onClick={() => {
-            addToCart({ device: "a", itemId: itemData.id, units });
+            addToCart({
+              itemId: itemData.id,
+              restaurantId: restaurantId,
+              units,
+            });
             close?.();
           }}
         >

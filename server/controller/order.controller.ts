@@ -6,16 +6,16 @@ const router = Router();
 
 router.post("/:restaurantId/:tableId", async (req, res, next) => {
   try {
-    const items = CreateOrderRequest.parse(req.body);
+    const { items, device } = CreateOrderRequest.parse(req.body);
     const order = await orderService.createOrder(
       Number(req.params.restaurantId),
       Number(req.params.tableId),
+      device,
       items.map((item) => ({
         itemId: item.itemId,
         units: item.units,
         status: "ordered",
         placedOn: new Date().toISOString(),
-        device: item.device,
       }))
     );
 
