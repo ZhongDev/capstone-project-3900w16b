@@ -33,7 +33,7 @@ export default class OrderAlteration extends Model {
       },
     },
     alterationOptions: {
-      relation: Model.HasManyRelation,
+      relation: Model.BelongsToOneRelation,
       modelClass: AlterationOption,
       join: {
         from: "OrderAlteration.alterationOptionId",

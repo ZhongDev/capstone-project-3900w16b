@@ -1,7 +1,15 @@
 import { raw } from "objection";
 import Item from "../models/Item";
 import Category from "../models/Category";
-import { Item as ItemType, UpdateCategory, UpdateItem } from "../types/menu";
+import {
+  Item as ItemType,
+  ItemAlteration,
+  UpdateAlteration,
+  UpdateCategory,
+  UpdateItem,
+} from "../types/menu";
+import Alteration from "../models/Alteration";
+import AlterationOption from "../models/AlterationOption";
 
 // Creates menu category
 export const createCategory = async (restaurantId: number, name: string) => {
@@ -59,24 +67,49 @@ export const createCategoryItem = async (
   categoryId: number,
   item: ItemType
 ) => {
-  const newItem = await Item.query().insert({
-    categoryId,
-    displayOrder: raw(
-      "COALESCE(?, 0) + 1",
-      Item.query().max("displayOrder").where({ categoryId })
-    ),
-    name: item.name,
-    priceCents: item.priceCents,
-    description: item.description,
-    ingredients: item.ingredients,
-    minPrepMins: item.minPrepMins,
-    maxPrepMins: item.maxPrepMins,
+  const createdItem = await Item.transaction(async (trx) => {
+    const newItem = await Item.query(trx).insert({
+      categoryId,
+      displayOrder: raw(
+        "COALESCE(?, 0) + 1",
+        Item.query().max("displayOrder").where({ categoryId })
+      ),
+      name: item.name,
+      priceCents: item.priceCents,
+      description: item.description,
+      ingredients: item.ingredients,
+      minPrepMins: item.minPrepMins,
+      maxPrepMins: item.maxPrepMins,
+    });
+
+    if (item.alterations) {
+      await Promise.all(
+        item.alterations.map(async (alteration) => {
+          const itemAlteration = await Alteration.query(trx).insert({
+            itemId: newItem.id,
+            optionName: alteration.optionName,
+            maxChoices: alteration.maxChoices,
+          });
+          return Promise.all(
+            alteration.options.map((alterationOption) => {
+              return AlterationOption.query(trx).insert({
+                alterationId: itemAlteration.id,
+                choice: alterationOption,
+              });
+            })
+          );
+        })
+      );
+    }
+
+    return newItem;
   });
-  return Item.query().findOne({ id: newItem.id });
+
+  return getItem(createdItem.id);
 };
 
 export const getItem = async (itemId: number) => {
-  return Item.query().findById(itemId);
+  return Item.query().findById(itemId).withGraphFetched("alterations.options");
 };
 
 // Get a given item's restaurant
@@ -103,7 +136,58 @@ export const updateCategoryItem = async (
       maxPrepMins: updateItem.maxPrepMins,
     })
     .where({ id });
-  return Item.query().findOne({ id });
+  return getItem(id);
+};
+
+export const createAlteration = async (
+  itemId: number,
+  alteration: ItemAlteration
+) => {
+  await Alteration.transaction(async (trx) => {
+    const newAlteration = await Alteration.query(trx).insert({
+      itemId,
+      maxChoices: alteration.maxChoices,
+      optionName: alteration.optionName,
+    });
+    await Promise.all(
+      alteration.options.map((option) => {
+        return AlterationOption.query(trx).insert({
+          alterationId: newAlteration.id,
+          choice: option,
+        });
+      })
+    );
+  });
+
+  return getItem(itemId);
+};
+
+export const getAlteration = async (alterationId: number) => {
+  return Alteration.query()
+    .findById(alterationId)
+    .withGraphFetched("item.category.restaurant");
+};
+
+export const updateAlteration = async (
+  alterationId: number,
+  { maxChoices, optionName }: UpdateAlteration
+) => {
+  await Alteration.query()
+    .patch({
+      maxChoices,
+      optionName,
+    })
+    .where({ id: alterationId });
+
+  return Alteration.query().findById(alterationId);
+};
+
+export const deleteAlteration = async (alterationId: number) => {
+  return Alteration.query()
+    .where({
+      id: alterationId,
+    })
+    .del();
 };
 
 // Delete an item on the menu
@@ -116,7 +200,7 @@ export const getMenu = (restaurantId: number) => {
   return Category.query()
     .select(["category.id", "category.displayOrder", "category.name"])
     .where({ restaurantId })
-    .withGraphJoined("items")
+    .withGraphJoined("items.alterations.options")
     .orderBy("category.displayOrder")
     .orderBy("items.displayOrder");
 };

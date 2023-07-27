@@ -1,7 +1,13 @@
 import NotFound from "../errors/NotFound";
 import * as menuRepo from "../repository/menu.repository";
 import * as restaurantRepo from "../repository/restaurant.repository";
-import { Item, UpdateCategory, UpdateItem } from "../types/menu";
+import {
+  Item,
+  ItemAlteration,
+  UpdateAlteration,
+  UpdateCategory,
+  UpdateItem,
+} from "../types/menu";
 
 // Calls functions from menu repository with restaurantId for authorisation
 
@@ -71,6 +77,41 @@ export const deleteCategoryItem = async (
     throw new NotFound("This item does not exist...");
   }
   return menuRepo.deleteCategoryItem(itemId);
+};
+
+export const createAlteration = async (
+  restaurantId: number,
+  itemId: number,
+  alteration: ItemAlteration
+) => {
+  const restaurant = await menuRepo.getCategoryItemRestaurant(itemId);
+  if (restaurant?.id !== restaurantId) {
+    throw new NotFound("This item does not exist...");
+  }
+  return menuRepo.createAlteration(itemId, alteration);
+};
+
+export const updateAlteration = async (
+  restaurantId: number,
+  alterationId: number,
+  updatedFields: UpdateAlteration
+) => {
+  const alteration = await menuRepo.getAlteration(alterationId);
+  if (alteration?.item?.category?.restaurant?.id !== restaurantId) {
+    throw new NotFound("This item does not exist...");
+  }
+  return menuRepo.updateAlteration(alterationId, updatedFields);
+};
+
+export const deleteAlteration = async (
+  restaurantId: number,
+  alterationId: number
+) => {
+  const alteration = await menuRepo.getAlteration(alterationId);
+  if (alteration?.item?.category?.restaurant?.id !== restaurantId) {
+    throw new NotFound("This item does not exist...");
+  }
+  return menuRepo.deleteAlteration(alterationId);
 };
 
 // Get menu

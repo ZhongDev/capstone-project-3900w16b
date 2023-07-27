@@ -1,4 +1,5 @@
-import { Model } from "objection";
+import { Model, RelationMappingsThunk } from "objection";
+import AlterationOption from "./AlterationOption";
 import Item from "./Item";
 
 export default class Alteration extends Model {
@@ -8,16 +9,26 @@ export default class Alteration extends Model {
   maxChoices!: number;
 
   item?: Item;
+  options?: AlterationOption[];
 
   static tableName = "Alteration";
 
-  static relationMappings = () => ({
+  static relationMappings: RelationMappingsThunk = () => ({
+    options: {
+      relation: Model.HasManyRelation,
+      modelClass: AlterationOption,
+      join: {
+        from: "AlterationOption.alterationId",
+        to: "Alteration.id",
+      },
+      modify: (builder) => builder.select("choice", "id", "alterationId"),
+    },
     item: {
-      relation: Model.HasOneRelation,
+      relation: Model.BelongsToOneRelation,
       modelClass: Item,
       join: {
-        from: "Order.itemId",
-        to: "Alteration.id",
+        from: "Item.id",
+        to: "Alteration.itemId",
       },
     },
   });

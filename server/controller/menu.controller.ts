@@ -2,6 +2,7 @@ import { Router } from "express";
 import * as menuService from "../service/menu.service";
 import * as schema from "../schema/menu.schema";
 import auth from "./middleware/auth";
+import NotFound from "../errors/NotFound";
 
 const router = Router();
 
@@ -97,6 +98,58 @@ router.post("/item", auth, async (req, res, next) => {
       newItem.item
     );
     res.json(categoryItem);
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.post("/alteration", auth, async (req, res, next) => {
+  try {
+    const { itemId, maxChoices, optionName, options } =
+      schema.CreateAlterationRequest.parse(req.body);
+    res.json(
+      await menuService.createAlteration(req.restaurant!.restaurantId, itemId, {
+        maxChoices,
+        optionName,
+        options,
+      })
+    );
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.delete("/alteration/:alterationId", auth, async (req, res, next) => {
+  try {
+    const alterationId = Number(req.params.alterationId);
+    if (isNaN(alterationId)) {
+      throw new NotFound("Alteration not found");
+    }
+    res.json(
+      await menuService.deleteAlteration(
+        req.restaurant!.restaurantId,
+        alterationId
+      )
+    );
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.patch("/alteration/:alterationId", auth, async (req, res, next) => {
+  try {
+    const alterationId = Number(req.params.alterationId);
+    if (isNaN(alterationId)) {
+      throw new NotFound("Alteration not found");
+    }
+    const alterationUpdate = schema.UpdateAlterationRequest.parse(req.body);
+    res.json(
+      await menuService.updateAlteration(
+        req.restaurant!.restaurantId,
+        alterationId,
+        alterationUpdate
+      )
+    );
   } catch (err) {
     next(err);
   }
