@@ -23,17 +23,23 @@ export type AlterationModalProps = {
   onSave: (alteration: Alteration) => void;
   opened: boolean;
   close: () => void;
+  initialOptionName?: string;
+  initialMaxChoices?: number;
+  initialChoices?: string[];
 };
 
 export const AlterationModal = ({
   onSave,
   opened,
   close,
+  initialMaxChoices = 1,
+  initialOptionName = "",
+  initialChoices,
 }: AlterationModalProps) => {
   const form = useForm<{ optionName: string; maxChoices: number }>({
     initialValues: {
-      optionName: "",
-      maxChoices: 1,
+      optionName: initialOptionName,
+      maxChoices: initialMaxChoices,
     },
     validate: {
       optionName: (value) => (value ? null : "Invalid name"),
@@ -41,7 +47,7 @@ export const AlterationModal = ({
     },
   });
 
-  const [choices, setChoices] = useState<string[]>([]);
+  const [choices, setChoices] = useState<string[]>(initialChoices ?? []);
   const [newChoice, setNewChoice] = useState<string | null>(null);
 
   const optionInputId = useId();

@@ -17,7 +17,7 @@ import { useState } from "react";
 import { mutate } from "swr";
 import { Alteration, AlterationModal } from "./AlterationModal";
 import { createItem } from "@/api/menu";
-import { IconTrashX } from "@tabler/icons-react";
+import { IconTrashX, IconPencil } from "@tabler/icons-react";
 
 const useStyles = createStyles((theme) => ({
   estTimeGroup: {
@@ -158,23 +158,16 @@ export const CreateItemModal = ({
             {alterations.length ? (
               alterations.map((alteration, i) => {
                 return (
-                  <Flex key={i}>
-                    <ActionIcon
-                      onClick={() =>
-                        setAlterations(
-                          alterations.filter((_, index) => i !== index)
-                        )
-                      }
-                    >
-                      <IconTrashX size="1.125rem" color="red" />
-                    </ActionIcon>
-                    <Text>
-                      {alteration.optionName}{" "}
-                      <Text c="dimmed" span>
-                        [{alteration.options.length} option(s)]
-                      </Text>
-                    </Text>
-                  </Flex>
+                  <OptionsEntry
+                    key={i}
+                    onDelete={() =>
+                      setAlterations(
+                        alterations.filter((_, index) => i !== index)
+                      )
+                    }
+                    name={alteration.optionName}
+                    options={alteration.options.length}
+                  />
                 );
               })
             ) : (
@@ -207,5 +200,36 @@ export const CreateItemModal = ({
         }
       />
     </>
+  );
+};
+
+export type OptionsEntryProps = {
+  name: string;
+  options: number;
+  onDelete?: () => void;
+  onSave?: (newOption: { name: string; options: number }) => void;
+};
+
+export const OptionsEntry = ({
+  name,
+  options,
+  onDelete,
+  onSave,
+}: OptionsEntryProps) => {
+  return (
+    <Flex>
+      <ActionIcon onClick={onDelete}>
+        <IconTrashX size="1.125rem" color="red" />
+      </ActionIcon>
+      <ActionIcon onClick={onDelete}>
+        <IconPencil size="1.125rem" color="blue" />
+      </ActionIcon>
+      <Text>
+        {name}{" "}
+        <Text c="dimmed" span>
+          [{options} option(s)]
+        </Text>
+      </Text>
+    </Flex>
   );
 };
