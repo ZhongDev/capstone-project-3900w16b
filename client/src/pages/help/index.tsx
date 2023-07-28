@@ -1,6 +1,6 @@
 import useSWR from "swr";
 import { Sidebar } from "@/components/Sidebar";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import {
   HelpCall,
   getUnresolvedHelpCalls,
@@ -25,30 +25,22 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-// const audio = new Audio(
-//   "https://interactive-examples.mdn.mozilla.net/media/cc0-audio/t-rex-roar.mp3"
-// );
-
-// let firstRun = true;
-
 export default function Help() {
   const { classes } = useStyles();
   const { data: helpData, isLoading: helpDataIsLoading } = useSWR(
     "/help",
     getUnresolvedHelpCalls
   );
-  // const [audio, setAudio] = useState(null);
-  // useEffect(() => {
-  //   setAudio(
-  //     new Audio(
-  //       "https://interactive-examples.mdn.mozilla.net/media/cc0-audio/t-rex-roar.mp3"
-  //     )
-  //   );
-  //   // only run once on the first render on the client
-  // }, []);
+
+  const [requesti, setRequesti] = useState(0);
+  const [loaded, setLoaded] = useState(false);
+  const [audio, setAudio] = useState(
+    typeof Audio !== "undefined" && new Audio("/public/audio/Notif.ogg")
+  );
 
   // Organises requests
   let helpManage: manageTableHelpCall[] = [];
+
   helpData?.map((val, index, self) => {
     if (self.findIndex((v) => v.tableId === val.tableId) === index) {
       helpManage?.push({
@@ -61,13 +53,15 @@ export default function Help() {
         helpManage.findIndex((v) => v.tableId === val.tableId)
       ].numOccurrence += 1;
     }
-    // if (!firstRun) {
-    //   audio.play();
-    // }
   });
-  // useEffect(() => {
-  //   audio.play();
-  // }, [helpManage]);
+
+  if (loaded) {
+    if (helpManage.length > requesti) {
+      audio.play();
+    }
+  } else {
+    setLoaded(true);
+  }
   const latestHelp: manageTableHelpCall | null =
     helpManage.length === 0 ? null : helpManage[0];
   const otherHelp: manageTableHelpCall[] =
