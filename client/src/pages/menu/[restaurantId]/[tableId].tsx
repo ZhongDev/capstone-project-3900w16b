@@ -189,7 +189,6 @@ export default function RestaurantMenu() {
               type="submit"
               onClick={() => {
                 createHelpCall(restaurantId, tableId).then(() => {
-                  mutate("/help");
                   handler.close();
                 });
               }}

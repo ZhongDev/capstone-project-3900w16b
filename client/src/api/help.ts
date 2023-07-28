@@ -25,18 +25,14 @@ export type UpdateHelpCallResponse = {
   newStatus: string;
 };
 
-export const updateHelpCallStatus = (
-  helpCallId: number,
+export const updateHelpCallStatusTable = (
   tableId: number | undefined,
   newStatus: HelpCallStatus
 ) => {
   return request
-    .patch(
-      process.env.NEXT_PUBLIC_BASEURL + "/help/" + helpCallId + "/" + tableId,
-      {
-        newStatus,
-      }
-    )
+    .patch(process.env.NEXT_PUBLIC_BASEURL + "/help/" + tableId, {
+      newStatus,
+    })
     .then((res) => res.data)
     .catch((err) => {
       throw err.response.data;
@@ -53,11 +49,9 @@ export const deleteHelpCall = (helpCallId: number) => {
     }) as Promise<void>;
 };
 
-export type HelpCall = {
-  id: number;
+export type tableHelpCall = {
   tableId: number;
-  status: HelpCallStatus;
-  placedOn: string;
+  numOccurrence: number;
 };
 
 export const getUnresolvedHelpCalls = () => {
@@ -66,11 +60,5 @@ export const getUnresolvedHelpCalls = () => {
     .then((res) => res.data)
     .catch((err) => {
       throw err.response.data;
-    }) as Promise<HelpCall[]>;
-};
-
-export type manageTableHelpCall = {
-  tableId: number;
-  numOccurrence: number;
-  helpCall: HelpCall;
+    }) as Promise<tableHelpCall[]>;
 };

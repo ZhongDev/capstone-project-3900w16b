@@ -1,11 +1,7 @@
 import useSWR from "swr";
 import { Sidebar } from "@/components/Sidebar";
 import { useState } from "react";
-import {
-  HelpCall,
-  getUnresolvedHelpCalls,
-  manageTableHelpCall,
-} from "@/api/help";
+import { getUnresolvedHelpCalls } from "@/api/help";
 import { HelpCallCard } from "@/components/HelpCallCard";
 import {
   Flex,
@@ -29,31 +25,16 @@ export default function Help() {
   const { classes } = useStyles();
   const { data: helpData, isLoading: helpDataIsLoading } = useSWR(
     "/help",
-    getUnresolvedHelpCalls
+    getUnresolvedHelpCalls,
+    { refreshInterval: 1000 }
   );
+  const helpManage = helpData ? helpData : [];
 
   const [requesti, setRequesti] = useState(0);
   const [loaded, setLoaded] = useState(false);
   const [audio, setAudio] = useState(
     typeof Audio !== "undefined" && new Audio("/public/audio/Notif.ogg")
   );
-
-  // Organises requests
-  let helpManage: manageTableHelpCall[] = [];
-
-  helpData?.map((val, index, self) => {
-    if (self.findIndex((v) => v.tableId === val.tableId) === index) {
-      helpManage?.push({
-        tableId: val.tableId,
-        numOccurrence: 1,
-        helpCall: val,
-      });
-    } else {
-      helpManage[
-        helpManage.findIndex((v) => v.tableId === val.tableId)
-      ].numOccurrence += 1;
-    }
-  });
 
   if (loaded) {
     if (helpManage.length > requesti) {
@@ -62,10 +43,8 @@ export default function Help() {
   } else {
     setLoaded(true);
   }
-  const latestHelp: manageTableHelpCall | null =
-    helpManage.length === 0 ? null : helpManage[0];
-  const otherHelp: manageTableHelpCall[] =
-    helpManage.length === 0 ? [] : helpManage.slice(1);
+  const latestHelp = helpManage.length === 0 ? null : helpManage[0];
+  const otherHelp = helpManage.length === 0 ? [] : helpManage.slice(1);
 
   return (
     <>
@@ -76,8 +55,8 @@ export default function Help() {
         {latestHelp ? (
           <>
             <HelpCallCard
-              key={latestHelp.helpCall.id}
-              helpCall={latestHelp.helpCall}
+              key={latestHelp.tableId}
+              tableId={latestHelp.tableId}
               numOccurrence={latestHelp.numOccurrence}
               isFirst={true}
             />
@@ -102,8 +81,8 @@ export default function Help() {
               otherHelp?.map((help) => {
                 return (
                   <HelpCallCard
-                    key={help.helpCall.id}
-                    helpCall={help.helpCall}
+                    key={help.tableId}
+                    tableId={help.tableId}
                     numOccurrence={help.numOccurrence}
                     isFirst={false}
                   />

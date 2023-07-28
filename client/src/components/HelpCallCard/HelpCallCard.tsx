@@ -1,5 +1,5 @@
-import { HelpCall, updateHelpCallStatus } from "@/api/help";
-import { deleteRestaurantTable, getRestaurantTableById } from "@/api/table";
+import { updateHelpCallStatusTable } from "@/api/help";
+import { getRestaurantTableById } from "@/api/table";
 import {
   rem,
   Text,
@@ -30,20 +30,19 @@ const useStyles = createStyles((theme) => ({
 }));
 
 export const HelpCallCard = ({
-  helpCall,
+  tableId,
   numOccurrence,
   isFirst,
 }: {
-  helpCall: HelpCall;
+  tableId: number;
   numOccurrence: number;
   isFirst: boolean;
 }) => {
   const { classes } = useStyles();
   const { data: tableData, isLoading: tableDataIsLoading } = useSWR(
-    `${helpCall.tableId}`,
+    `${tableId}`,
     getRestaurantTableById
   );
-  const tableId = tableData?.id;
   const tableName = tableData?.name;
 
   return (
@@ -103,11 +102,9 @@ export const HelpCallCard = ({
                 maxWidth: isFirst ? 175 : 120,
               }}
               onClick={() => {
-                updateHelpCallStatus(helpCall.id, tableId, "resolved").then(
-                  () => {
-                    mutate("/help");
-                  }
-                );
+                updateHelpCallStatusTable(tableId, "resolved").then(() => {
+                  mutate("/help");
+                });
               }}
               radius="xl"
               fullWidth={true}

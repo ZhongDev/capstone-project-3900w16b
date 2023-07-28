@@ -1,5 +1,6 @@
 import NotFound from "../errors/NotFound";
 import { HelpCallStatus } from "../models/HelpCall";
+import { manageTableHelpCall } from "../types/help";
 import * as helpRepo from "../repository/help.repository";
 import * as restaurantRepo from "../repository/restaurant.repository";
 
@@ -14,15 +15,16 @@ export const createHelpCall = async (
 };
 
 // update help call status to desired status
-export const updateHelpCallStatus = async (
-  helpCallId: number,
+export const updateHelpCallStatusTable = async (
   restaurantId: number,
   tableId: number,
   newStatus: HelpCallStatus
 ) => {
-  const helpCall = await helpRepo.getHelpCallById(helpCallId);
-  if (helpCall?.restaurantId !== restaurantId) {
-    throw new NotFound("This assistance request does not exist...");
+  const table = await restaurantRepo.getRestaurantTableById(tableId);
+  if (table?.restaurantId !== restaurantId) {
+    throw new NotFound(
+      "This request's table isn't in the correct restaurant..."
+    );
   }
   return helpRepo.updateHelpCallStatusTable(tableId, newStatus);
 };
@@ -45,5 +47,21 @@ export const getAllUnresolvedHelpCalls = async (restaurantId: number) => {
   if (!restaurant) {
     throw new NotFound("Restaurant does not exist.");
   }
-  return await helpRepo.getUnresolvedHelpCalls(restaurantId);
+  // TODO: stop running n^2 stuff on load and just make a numOccurances in Help
+  const helpManage: manageTableHelpCall[] = [];
+  const helpData = await helpRepo.getUnresolvedHelpCalls(restaurantId);
+  helpData?.map((val, index, self) => {
+    if (self.findIndex((v) => v.tableId === val.tableId) === index) {
+      helpManage?.push({
+        tableId: val.tableId,
+        numOccurrence: 1,
+      });
+    } else {
+      helpManage[
+        helpManage.findIndex((v) => v.tableId === val.tableId)
+      ].numOccurrence += 1;
+    }
+  });
+
+  return helpManage;
 };
