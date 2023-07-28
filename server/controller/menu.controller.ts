@@ -63,6 +63,7 @@ router.delete("/category/:categoryId", auth, async (req, res, next) => {
   }
 });
 
+// Get item based off id
 router.get("/item/:itemId", async (req, res, next) => {
   try {
     const item = await menuService.getMenuItem(Number(req.params.itemId));
@@ -72,6 +73,7 @@ router.get("/item/:itemId", async (req, res, next) => {
   }
 });
 
+// Reordering items
 router.post("/item/displayOrder", auth, async (req, res, next) => {
   try {
     const { itemOrder, categoryId } = schema.ReorderItemsRequest.parse(

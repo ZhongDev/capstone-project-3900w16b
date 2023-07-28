@@ -75,7 +75,10 @@ export const Cart = ({ close, restaurant, table, menu }: CartProps) => {
 
   const deviceId = useDeviceId();
   const [cart, { setUnitInCart, removeFromCart, clearCart }] = useLocalCart();
-  let restCart = cart[restaurant.id] ? cart[restaurant.id] : [];
+  const restCart = useMemo(
+    () => (cart[restaurant.id] ? cart[restaurant.id] : []),
+    [cart, restaurant.id]
+  );
 
   const total = useMemo(() => {
     return restCart
@@ -87,7 +90,7 @@ export const Cart = ({ close, restaurant, table, menu }: CartProps) => {
         return itemData.priceCents * inCartItem.units;
       })
       .reduce((acc, curr) => acc + curr, 0);
-  }, [cart, menu]);
+  }, [menu, restCart]);
 
   return (
     <div className={classes.container}>

@@ -36,6 +36,17 @@ export const Sidebar = ({ children }: { children: React.ReactNode }) => {
             </Title>
           </Link>
           <Navbar.Section className={classes.section} px="xl">
+            <Link href="/help">
+              <GradientButton
+                variant={router.pathname === "/help" ? "filled" : "outline"}
+                size="md"
+                fullWidth
+              >
+                Assistance List
+              </GradientButton>
+            </Link>
+          </Navbar.Section>
+          <Navbar.Section className={classes.section} px="xl">
             <Link href="/menu">
               <GradientButton
                 variant={router.pathname === "/menu" ? "filled" : "outline"}
