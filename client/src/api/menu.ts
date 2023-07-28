@@ -205,3 +205,32 @@ export const deleteMenuItem = (itemId: number) => {
       throw err.response.data;
     }) as Promise<void>;
 };
+
+export const deleteAlteration = (alterationId: number) => {
+  return request
+    .delete(
+      process.env.NEXT_PUBLIC_BASEURL + "/menu/alteration/" + alterationId
+    )
+    .then((res) => res.data)
+    .catch((err) => {
+      throw err.response.data;
+    }) as Promise<void>;
+};
+
+export type CreateAlterationRequest = {
+  maxChoices: number;
+  optionName: string;
+  itemId: number;
+  options: string[];
+};
+
+export type CreateAlterationResponse = MenuItem;
+
+export const createAlteration = (newAlteration: CreateAlterationRequest) => {
+  return request
+    .post(process.env.NEXT_PUBLIC_BASEURL + "/menu/alteration", newAlteration)
+    .then((res) => res.data)
+    .catch((err) => {
+      throw err.response.data;
+    }) as Promise<CreateAlterationResponse>;
+};
