@@ -163,9 +163,25 @@ export const createAlteration = async (
 };
 
 export const getAlteration = async (alterationId: number) => {
-  return Alteration.query()
+  return Alteration.query().findById(alterationId).withGraphFetched("options");
+};
+
+export const getAlterationRestaurant = async (alterationId: number) => {
+  const alteration = await Alteration.query()
     .findById(alterationId)
     .withGraphFetched("item.category.restaurant");
+
+  return alteration?.item?.category?.restaurant;
+};
+
+export const getAlterationOptionRestaurant = async (
+  alterationOptionId: number
+) => {
+  const alterationOption = await AlterationOption.query()
+    .findById(alterationOptionId)
+    .withGraphFetched("alteration.item.category.restaurant");
+
+  return alterationOption?.alteration?.item?.category?.restaurant;
 };
 
 export const updateAlteration = async (
@@ -188,6 +204,32 @@ export const deleteAlteration = async (alterationId: number) => {
       id: alterationId,
     })
     .del();
+};
+
+export const createAlterationOption = async (
+  alterationId: number,
+  choice: string
+) => {
+  return AlterationOption.query().insert({
+    alterationId,
+    choice,
+  });
+};
+
+export const updateAlterationOption = async (
+  alterationId: number,
+  choice: string
+) => {
+  return AlterationOption.query()
+    .patch({
+      choice,
+    })
+    .where({ id: alterationId })
+    .returning("*");
+};
+
+export const deleteAlterationOption = async (alterationOptionId: number) => {
+  return AlterationOption.query().where({ id: alterationOptionId }).del();
 };
 
 // Delete an item on the menu

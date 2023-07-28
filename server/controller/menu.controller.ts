@@ -103,6 +103,70 @@ router.post("/item", auth, async (req, res, next) => {
   }
 });
 
+router.post("/alterationOption", auth, async (req, res, next) => {
+  try {
+    const { alterationId, choice } = schema.CreateAlterationOptionRequest.parse(
+      req.body
+    );
+    const alteration = await menuService.createAlterationOption(
+      req.restaurant!.restaurantId,
+      alterationId,
+      choice
+    );
+    res.json(alteration);
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.patch(
+  "/alterationOption/:alterationOptionId",
+  auth,
+  async (req, res, next) => {
+    try {
+      const alterationOptionId = Number(req.params.alterationOptionId);
+
+      if (isNaN(alterationOptionId)) {
+        throw new NotFound("Alteration option not found.");
+      }
+
+      const { choice } = schema.UpdateAlterationOptionRequest.parse(req.body);
+      const alteration = await menuService.updateAlterationOption(
+        req.restaurant!.restaurantId,
+        alterationOptionId,
+        choice
+      );
+
+      res.json(alteration);
+    } catch (err) {
+      next(err);
+    }
+  }
+);
+
+router.delete(
+  "/alterationOption/:alterationOptionId",
+  auth,
+  async (req, res, next) => {
+    try {
+      const alterationOptionId = Number(req.params.alterationOptionId);
+
+      if (isNaN(alterationOptionId)) {
+        throw new NotFound("Alteration option not found.");
+      }
+
+      res.json(
+        await menuService.deleteAlterationOption(
+          req.restaurant!.restaurantId,
+          alterationOptionId
+        )
+      );
+    } catch (err) {
+      next(err);
+    }
+  }
+);
+
 router.post("/alteration", auth, async (req, res, next) => {
   try {
     const { itemId, maxChoices, optionName, options } =

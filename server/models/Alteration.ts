@@ -21,6 +21,7 @@ export default class Alteration extends Model {
         from: "AlterationOption.alterationId",
         to: "Alteration.id",
       },
+      // Do not change this
       modify: (builder) => builder.select("choice", "id", "alterationId"),
     },
     item: {

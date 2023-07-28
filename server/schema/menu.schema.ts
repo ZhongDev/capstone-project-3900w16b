@@ -37,6 +37,15 @@ export const CreateAlterationRequest = z.object({
   options: z.array(z.string()),
 });
 
+export const CreateAlterationOptionRequest = z.object({
+  alterationId: z.number(),
+  choice: z.string(),
+});
+
+export const UpdateAlterationOptionRequest = z.object({
+  choice: z.string(),
+});
+
 export const UpdateAlterationRequest = z.object({
   maxChoices: z.number().int().optional(),
   optionName: z.string().optional(),
