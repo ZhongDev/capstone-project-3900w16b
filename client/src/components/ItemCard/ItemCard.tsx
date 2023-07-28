@@ -11,6 +11,8 @@ import {
   ButtonProps,
   createStyles,
   ActionIcon,
+  Card,
+  List,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useDisclosure } from "@mantine/hooks";
@@ -233,6 +235,36 @@ export const ItemCard = ({ item }: { item: MenuItem }) => {
           </Group>
         </Flex>
       </Flex>
+      <Card>
+        <Text fw={500}>Available alterations</Text>
+        {item.alterations.length ? (
+          <List>
+            {item.alterations.map((alteration) => {
+              return (
+                <List.Item key={alteration.id}>
+                  <Text>
+                    {alteration.optionName}{" "}
+                    <Text c="dimmed" fs="italic" span>
+                      [max {alteration.maxChoices} choice(s)]
+                    </Text>
+                  </Text>
+                  <List listStyleType="square">
+                    {alteration.options.map((option) => {
+                      return (
+                        <List.Item key={option.id}>{option.choice}</List.Item>
+                      );
+                    })}
+                  </List>
+                </List.Item>
+              );
+            })}
+          </List>
+        ) : (
+          <Text c="dimmed" fs="italic">
+            No alterations set
+          </Text>
+        )}
+      </Card>
     </Paper>
   );
 };

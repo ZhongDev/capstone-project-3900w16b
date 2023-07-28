@@ -12,6 +12,16 @@ export type GetMenuResponse = {
   menu: Menu[];
 };
 
+export type Alteration = {
+  id: number;
+  optionName: string;
+  maxChoices: number;
+  options: {
+    choice: string;
+    id: number;
+  }[];
+};
+
 export type MenuItem = {
   id: number;
   categoryId: number;
@@ -23,6 +33,7 @@ export type MenuItem = {
   ingredients: string | null;
   minPrepMins: number;
   maxPrepMins: number;
+  alterations: Alteration[];
 };
 
 export const getMenu = () => {

@@ -9,6 +9,7 @@ import {
   ButtonProps,
   createStyles,
   Flex,
+  ActionIcon,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useDisclosure } from "@mantine/hooks";
@@ -16,6 +17,7 @@ import { useState } from "react";
 import { mutate } from "swr";
 import { Alteration, AlterationModal } from "./AlterationModal";
 import { createItem } from "@/api/menu";
+import { IconTrashX } from "@tabler/icons-react";
 
 const useStyles = createStyles((theme) => ({
   estTimeGroup: {
@@ -157,6 +159,15 @@ export const CreateItemModal = ({
               alterations.map((alteration, i) => {
                 return (
                   <Flex key={i}>
+                    <ActionIcon
+                      onClick={() =>
+                        setAlterations(
+                          alterations.filter((_, index) => i !== index)
+                        )
+                      }
+                    >
+                      <IconTrashX size="1.125rem" color="red" />
+                    </ActionIcon>
                     <Text>
                       {alteration.optionName}{" "}
                       <Text c="dimmed" span>
