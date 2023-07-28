@@ -70,6 +70,7 @@ export default function RestaurantMenu() {
   return (
     <>
       <Drawer
+        padding={0}
         withCloseButton={false}
         size="90%"
         position="bottom"
