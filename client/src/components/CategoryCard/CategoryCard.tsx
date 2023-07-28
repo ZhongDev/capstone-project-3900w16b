@@ -18,7 +18,7 @@ import {
 import { useDisclosure } from "@mantine/hooks";
 import { useState } from "react";
 import { mutate } from "swr";
-import { CreateItem, ItemCard, Items, ReorderItemCard } from "../ItemCard";
+import { CreateItemModal, Items, ReorderItemCard } from "../ItemCard";
 
 const useStyles = createStyles((theme) => ({
   menuCategory: {
@@ -65,7 +65,7 @@ export const CategoryCard = ({ category }: { category: Menu }) => {
           {category.name}
         </Title>
         <Group spacing="xs">
-          <CreateItem categoryId={category.id} mr="xs" />
+          <CreateItemModal categoryId={category.id} mr="xs" />
           {category.items.length > 1 && (
             <Button
               onClick={() => {

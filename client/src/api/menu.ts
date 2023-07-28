@@ -134,6 +134,11 @@ export const createItem = (
     priceCents: number;
     minPrepMins: number;
     maxPrepMins: number;
+    alterations?: {
+      optionName: string;
+      maxChoices: number;
+      options: string[];
+    }[];
   }
 ) => {
   return request

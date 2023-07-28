@@ -1,12 +1,4 @@
 import {
-  MenuItem,
-  createItem,
-  deleteMenuItem,
-  updateMenuItem,
-} from "@/api/menu";
-import { formatCurrency } from "@/helpers";
-import {
-  rem,
   Text,
   Flex,
   Paper,
@@ -22,9 +14,16 @@ import {
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useDisclosure } from "@mantine/hooks";
-import { IconTrashX, IconCheck, IconTrash } from "@tabler/icons-react";
 import { useEffect, useState, useId } from "react";
 import { mutate } from "swr";
+import { Alteration, AlterationModal } from "./AlterationModal";
+import {
+  MenuItem,
+  createItem,
+  deleteMenuItem,
+  updateMenuItem,
+} from "@/api/menu";
+import { formatCurrency } from "@/helpers";
 
 const useStyles = createStyles((theme) => ({
   estTimeGroup: {
@@ -87,6 +86,8 @@ export const ItemCard = ({ item }: { item: MenuItem }) => {
 
   useEffect(populateForm, [
     item.description,
+    item.maxPrepMins,
+    item.minPrepMins,
     item.name,
     item.priceCents,
     setValues,
@@ -233,179 +234,5 @@ export const ItemCard = ({ item }: { item: MenuItem }) => {
         </Flex>
       </Flex>
     </Paper>
-  );
-};
-
-export const CreateItem = ({
-  categoryId,
-  ...props
-}: {
-  categoryId: number;
-} & ButtonProps) => {
-  const { classes } = useStyles();
-  const [opened, { open, close }] = useDisclosure(false);
-
-  const itemForm = useForm({
-    initialValues: {
-      name: "",
-      description: "",
-      ingredients: null,
-      priceCents: 0,
-      minPrepMins: 0,
-      maxPrepMins: 0,
-    },
-    validate: {
-      priceCents: (value) => (value < 0 ? "Price cannot be less than 0" : null),
-      minPrepMins: (value) =>
-        value < 0 ? "Prep time cannot be less than 0" : null,
-      maxPrepMins: (value) =>
-        value < 0 ? "Prep time cannot be less than 0" : null,
-    },
-  });
-
-  return (
-    <>
-      <Button onClick={open} radius="xl" variant="outline" {...props}>
-        Add Item
-      </Button>
-      <Modal opened={opened} onClose={close} title="Add a new item">
-        <form
-          onSubmit={itemForm.onSubmit((values) => {
-            createItem(categoryId, {
-              ...values,
-              priceCents: values.priceCents * 100,
-            }).then(() => {
-              mutate("/menu");
-              itemForm.reset();
-              close();
-            });
-          })}
-        >
-          <TextInput
-            radius="lg"
-            variant="filled"
-            required
-            data-autofocus
-            mb="sm"
-            placeholder="Item name*"
-            {...itemForm.getInputProps("name")}
-          />
-          <NumberInput
-            radius="lg"
-            variant="filled"
-            required
-            data-autofocus
-            mb="sm"
-            placeholder="Price"
-            precision={2}
-            step={0.1}
-            parser={(value) => value.replace(/\$\s?|(,*)/g, "")}
-            formatter={(value) =>
-              !Number.isNaN(parseFloat(value))
-                ? `$${value}`.replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")
-                : "$ "
-            }
-            {...itemForm.getInputProps("priceCents")}
-          />
-          <Textarea
-            radius="lg"
-            variant="filled"
-            required
-            mb="sm"
-            placeholder="Item description*"
-            withAsterisk
-            {...itemForm.getInputProps("description")}
-          />
-          <div>
-            <Text fz="xs">Estimated preparation time (minutes):</Text>
-            <Group className={classes.estTimeGroup} grow>
-              <NumberInput
-                radius="lg"
-                variant="filled"
-                mb="xs"
-                description="Min"
-                {...itemForm.getInputProps("minPrepMins")}
-              />
-              <NumberInput
-                radius="lg"
-                variant="filled"
-                mb="xs"
-                description="Max"
-                {...itemForm.getInputProps("maxPrepMins")}
-              />
-            </Group>
-          </div>
-          <div>
-            <Text mt="xl" fz="xs">
-              Item options:
-            </Text>
-            <AlterationModal />
-          </div>
-          <Group position="right">
-            <Button
-              variant="subtle"
-              onClick={() => {
-                itemForm.reset();
-                close();
-              }}
-            >
-              Cancel
-            </Button>
-            <Button type="submit">Create Item</Button>
-          </Group>
-        </form>
-      </Modal>
-    </>
-  );
-};
-
-const AlterationModal = () => {
-  const [opened, { open, close }] = useDisclosure(false);
-  const [choices, setChoices] = useState([]);
-  const [newChoice, setNewChoice] = useState<string | null>(null);
-
-  const optionInputId = useId();
-  const maxChoiceInputId = useId();
-
-  return (
-    <>
-      <Modal opened={opened} onClose={close}>
-        <label htmlFor={optionInputId}>
-          <Text>Option name</Text>
-        </label>
-        <TextInput id={optionInputId} placeholder="Option" />
-        <label htmlFor={maxChoiceInputId}>
-          <Text>Max choices</Text>
-        </label>
-        <NumberInput id={maxChoiceInputId} defaultValue={1} />
-        <Text>Choices</Text>
-        {typeof newChoice === "string" ? (
-          <Flex align="center" columnGap="xs">
-            <TextInput
-              value={newChoice}
-              onChange={(e) => setNewChoice(e.currentTarget.value)}
-            />
-            <ActionIcon onClick={() => {}}>
-              <IconCheck size="1.125rem" color="green" />
-            </ActionIcon>
-            <ActionIcon onClick={() => setNewChoice(null)}>
-              <IconTrashX size="1.125rem" color="red" />
-            </ActionIcon>
-          </Flex>
-        ) : (
-          <Button
-            variant="outline"
-            size="xs"
-            radius="xl"
-            onClick={() => setNewChoice("")}
-          >
-            New Choice
-          </Button>
-        )}
-      </Modal>
-      <Button mt="xs" onClick={open} variant="outline">
-        Add option
-      </Button>
-    </>
   );
 };
