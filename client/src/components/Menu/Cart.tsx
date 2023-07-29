@@ -9,6 +9,7 @@ import {
   Flex,
   ActionIcon,
   Modal,
+  Button,
 } from "@mantine/core";
 import { MenuItem, getMenuItemPrep } from "@/api/menu";
 import { useDeviceId, useLocalCart } from "@/hooks";
@@ -207,14 +208,28 @@ export const Cart = ({ close, restaurant, table, menu }: CartProps) => {
             handler.close();
             close?.();
           }}
-          title="Estimated time your food will arrive"
+          withCloseButton={false}
         >
-          <Text align="center" size="3rem">
-            {estTime}+
-          </Text>
-          <Text align="center" size="xl">
-            Mins
-          </Text>
+          <Flex direction="column">
+            <Text align="center" size="xl">
+              Estimated time your food will arrive:
+            </Text>
+            <Text align="center" size="5rem">
+              {estTime}+
+            </Text>
+            <Text align="center" size="3rem" style={{ paddingBottom: "1rem" }}>
+              Mins
+            </Text>
+            <Button
+              onClick={() => {
+                clearCart();
+                handler.close();
+                close?.();
+              }}
+            >
+              Confirm
+            </Button>
+          </Flex>
         </Modal>
       </div>
     </div>
