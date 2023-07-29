@@ -1,6 +1,7 @@
-import { Model } from "objection";
+import { Model, RelationMappings } from "objection";
 import Category from "./Category";
 import Order from "./Order";
+import Alteration from "./Alteration";
 
 export default class Item extends Model {
   id!: number;
@@ -15,10 +16,11 @@ export default class Item extends Model {
   maxPrepMins?: number;
 
   category?: Category;
+  alterations?: Alteration[];
 
   static tableName = "Item";
 
-  static relationMappings = {
+  static relationMappings: RelationMappings = {
     category: {
       relation: Model.BelongsToOneRelation,
       modelClass: Category,
@@ -26,6 +28,16 @@ export default class Item extends Model {
         from: "Item.categoryId",
         to: "Category.id",
       },
+    },
+    alterations: {
+      relation: Model.HasManyRelation,
+      modelClass: Alteration,
+      join: {
+        from: "Item.id",
+        to: "Alteration.itemId",
+      },
+      modify: (builder) =>
+        builder.select("id", "optionName", "maxChoices", "itemId"),
     },
     orders: {
       relation: Model.HasManyRelation,
