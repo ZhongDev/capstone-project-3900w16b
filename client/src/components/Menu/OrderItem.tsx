@@ -15,7 +15,7 @@ const useStyles = createStyles((theme) => ({
     position: "relative",
   },
   itemInformation: {
-    padding: theme.spacing.xl,
+    padding: theme.spacing.md,
   },
   floatingButtonGroup: {
     bottom: "0px",

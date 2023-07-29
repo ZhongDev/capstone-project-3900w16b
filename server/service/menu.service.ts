@@ -1,7 +1,14 @@
 import NotFound from "../errors/NotFound";
+import Alteration from "../models/Alteration";
 import * as menuRepo from "../repository/menu.repository";
 import * as restaurantRepo from "../repository/restaurant.repository";
-import { Item, UpdateCategory, UpdateItem } from "../types/menu";
+import {
+  Item,
+  ItemAlteration,
+  UpdateAlteration,
+  UpdateCategory,
+  UpdateItem,
+} from "../types/menu";
 
 // Calls functions from menu repository with restaurantId for authorisation
 
@@ -71,6 +78,94 @@ export const deleteCategoryItem = async (
     throw new NotFound("This item does not exist...");
   }
   return menuRepo.deleteCategoryItem(itemId);
+};
+
+export const createAlteration = async (
+  restaurantId: number,
+  itemId: number,
+  alteration: ItemAlteration
+) => {
+  const restaurant = await menuRepo.getCategoryItemRestaurant(itemId);
+  if (restaurant?.id !== restaurantId) {
+    throw new NotFound("This item does not exist...");
+  }
+  return menuRepo.createAlteration(itemId, alteration);
+};
+
+export const updateAlteration = async (
+  restaurantId: number,
+  alterationId: number,
+  updatedFields: UpdateAlteration
+) => {
+  const alterationRestaurant = await menuRepo.getAlterationRestaurant(
+    alterationId
+  );
+  if (alterationRestaurant?.id !== restaurantId) {
+    throw new NotFound("This item does not exist...");
+  }
+  return menuRepo.updateAlteration(alterationId, updatedFields);
+};
+
+export const deleteAlteration = async (
+  restaurantId: number,
+  alterationId: number
+) => {
+  const alterationRestaurant = await menuRepo.getAlterationRestaurant(
+    alterationId
+  );
+  if (alterationRestaurant?.id !== restaurantId) {
+    throw new NotFound("This item does not exist...");
+  }
+  return menuRepo.deleteAlteration(alterationId);
+};
+
+export const createAlterationOption = async (
+  restaurantId: number,
+  alterationId: number,
+  choice: string
+) => {
+  const alterationRestaurant = await menuRepo.getAlterationRestaurant(
+    alterationId
+  );
+  if (alterationRestaurant?.id !== restaurantId) {
+    throw new NotFound("This item does not exist...");
+  }
+  const option = await menuRepo.createAlterationOption(alterationId, choice);
+  return (await menuRepo.getAlteration(option.alterationId)) as Alteration;
+};
+
+export const updateAlterationOption = async (
+  restaurantId: number,
+  alterationOptionId: number,
+  choice: string
+) => {
+  const alterationRestaurant = await menuRepo.getAlterationOptionRestaurant(
+    alterationOptionId
+  );
+
+  if (alterationRestaurant?.id !== restaurantId) {
+    throw new NotFound("This option does not exist...");
+  }
+
+  const [updatedAlterationOption] = await menuRepo.updateAlterationOption(
+    alterationOptionId,
+    choice
+  );
+  return (await menuRepo.getAlteration(
+    updatedAlterationOption.alterationId
+  )) as Alteration;
+};
+
+export const deleteAlterationOption = async (
+  restaurantId: number,
+  alterationOptionId: number
+) => {
+  const alterationOptionRestaurant =
+    await menuRepo.getAlterationOptionRestaurant(alterationOptionId);
+  if (alterationOptionRestaurant?.id !== restaurantId) {
+    throw new NotFound("This option does not exist...");
+  }
+  return menuRepo.deleteAlterationOption(alterationOptionId);
 };
 
 // Get menu

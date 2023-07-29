@@ -95,6 +95,7 @@ export default function RestaurantMenu() {
         <title> Order from {menuData?.restaurant.name} </title>
       </Head>
       <Drawer
+        padding={0}
         withCloseButton={false}
         size="90%"
         position="bottom"
