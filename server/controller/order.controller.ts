@@ -1,6 +1,7 @@
 import { CreateOrderRequest } from "../schema/order.schema";
 import * as orderService from "../service/order.service";
 import { Router } from "express";
+import auth from "./middleware/auth";
 
 const router = Router();
 
@@ -32,6 +33,22 @@ router.get("/:restaurantId/:deviceId", async (req, res, next) => {
         Number(req.params.restaurantId),
         req.params.deviceId
       )
+    );
+  } catch (err) {
+    next(err);
+  }
+});
+
+// Controls get of orders
+router.get("/orders", auth, async (req, res, next) => {
+  try {
+    console.log("testttttttttttttttttttttt");
+    const tables = await orderService.getOrdersByRestaurantId(
+      req.restaurant!.restaurantId
+    );
+    console.log(tables[0]);
+    res.json(
+      await orderService.getOrdersByRestaurantId(req.restaurant!.restaurantId)
     );
   } catch (err) {
     next(err);
