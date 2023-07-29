@@ -3,6 +3,7 @@ import { Sidebar } from "@/components/Sidebar";
 import { useEffect, useState } from "react";
 import { getUnresolvedHelpCalls } from "@/api/help";
 import { HelpCallCard } from "@/components/HelpCallCard";
+import Head from "next/head";
 import {
   Flex,
   Loader,
@@ -45,9 +46,11 @@ export default function Help() {
 
   return (
     <>
+      <Head>
+        <title> Assistance Requests </title>
+      </Head>
       <Sidebar>
         <Flex gap="lg" align="center">
-          <Button onClick={() => audio?.play()}>Play audio</Button>
           <Title style={{ paddingBottom: "1rem" }}>Assistance Requests</Title>
         </Flex>
         {latestHelp ? (
