@@ -89,7 +89,13 @@ export const CreateItemModal = ({
           onSubmit={itemForm.onSubmit((values) => {
             createItem(categoryId, {
               ...values,
-              alterations,
+              alterations: alterations.map((alteration) => {
+                return {
+                  maxChoices: alteration.maxChoices,
+                  optionName: alteration.optionName,
+                  options: alteration.options.map((option) => option.choice),
+                };
+              }),
               priceCents: values.priceCents * 100,
             }).then(() => {
               mutate("/menu");
@@ -206,7 +212,7 @@ export const CreateItemModal = ({
 
 export type OptionsEntryProps = {
   name: string;
-  options: string[];
+  options: { choice: string; id?: number }[];
   maxChoices: number;
   onDelete: () => void;
   onSave?: (newAlteration: Alteration) => void;

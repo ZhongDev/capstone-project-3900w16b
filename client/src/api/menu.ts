@@ -234,3 +234,68 @@ export const createAlteration = (newAlteration: CreateAlterationRequest) => {
       throw err.response.data;
     }) as Promise<CreateAlterationResponse>;
 };
+
+export type UpdateAlterationResponse = {
+  id: number;
+  optionName: string;
+  maxChoices: number;
+};
+
+export type UpdateAlterationRequest = {
+  id: number;
+  optionName: string;
+  maxChoices: number;
+};
+
+export const updateAlteration = (
+  updatedAlteration: UpdateAlterationRequest
+) => {
+  return request
+    .patch(
+      process.env.NEXT_PUBLIC_BASEURL +
+        "/menu/alteration/" +
+        updatedAlteration.id,
+      {
+        maxChoices: updatedAlteration.maxChoices,
+        optionName: updatedAlteration.optionName,
+      }
+    )
+    .then((res) => res.data)
+    .catch((err) => {
+      throw err.response.data;
+    }) as Promise<UpdateAlterationResponse>;
+};
+
+export type CreateAlterationOptionRequest = {
+  alterationId: number;
+  choice: string;
+};
+
+export type CreateAlterationOptionRespose = Alteration;
+
+export const createAlterationOption = (
+  newAlterationOption: CreateAlterationOptionRequest
+) => {
+  return request
+    .post(process.env.NEXT_PUBLIC_BASEURL + "/menu/alterationOption/", {
+      alterationId: newAlterationOption.alterationId,
+      choice: newAlterationOption.choice,
+    })
+    .then((res) => res.data)
+    .catch((err) => {
+      throw err.response.data;
+    }) as Promise<CreateAlterationOptionRespose>;
+};
+
+export const deleteAlterationOption = (alterationOptionId: number) => {
+  return request
+    .delete(
+      process.env.NEXT_PUBLIC_BASEURL +
+        "/menu/alterationOption/" +
+        alterationOptionId
+    )
+    .then((res) => res.data)
+    .catch((err) => {
+      throw err.response.data;
+    }) as Promise<number>;
+};

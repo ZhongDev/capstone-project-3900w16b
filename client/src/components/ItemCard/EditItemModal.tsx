@@ -21,6 +21,9 @@ import {
   updateMenuItem,
   deleteAlteration,
   createAlteration,
+  updateAlteration,
+  createAlterationOption,
+  deleteAlterationOption,
 } from "@/api/menu";
 import { OptionsEntry } from "./CreateItemModal";
 
@@ -68,8 +71,6 @@ export const EditItemModal = ({
     open();
     closeAlterationDisclosure();
   };
-
-  const formId = useId();
 
   const { mutate } = useSWRConfig();
 
@@ -136,7 +137,14 @@ export const EditItemModal = ({
               // Ideally we should have a bulk endpoint, but for assignment this is fine.
               Promise.all([
                 ...newAlterations.map((newAlteration) =>
-                  createAlteration({ ...newAlteration, itemId: item.id })
+                  createAlteration({
+                    optionName: newAlteration.optionName,
+                    maxChoices: newAlteration.maxChoices,
+                    options: newAlteration.options.map(
+                      (option) => option.choice
+                    ),
+                    itemId: item.id,
+                  })
                 ),
                 ...deletedAlterationIds.map((alterationId) =>
                   deleteAlteration(alterationId)
@@ -207,7 +215,7 @@ export const EditItemModal = ({
             <Text fz="xs">Item options:</Text>
             {alterations.length > 0 || newAlterations.length > 0 ? (
               <>
-                {alterations.map((alteration) => {
+                {alterations.map((alteration, i) => {
                   return (
                     <OptionsEntry
                       key={alteration.id}
@@ -221,9 +229,38 @@ export const EditItemModal = ({
                         ]);
                       }}
                       name={alteration.optionName}
-                      options={alteration.options.map((a) => a.choice)}
-                      onSave={(newAlteration) => {
-                        console.log(newAlteration);
+                      options={alteration.options}
+                      onSave={(edittedAlteration) => {
+                        const needCreating = edittedAlteration.options.filter(
+                          (option) => {
+                            return option.id === undefined;
+                          }
+                        );
+
+                        const needDeleting = alteration.options.filter(
+                          (originalAlterationOption) =>
+                            !edittedAlteration.options.find(
+                              (option) =>
+                                option.id === originalAlterationOption.id
+                            )
+                        );
+
+                        Promise.allSettled([
+                          ...needCreating.map((option) =>
+                            createAlterationOption({
+                              alterationId: alteration.id,
+                              choice: option.choice,
+                            })
+                          ),
+                          ...needDeleting.map((option) =>
+                            deleteAlterationOption(option.id)
+                          ),
+                          updateAlteration({
+                            id: alteration.id,
+                            maxChoices: edittedAlteration.maxChoices,
+                            optionName: edittedAlteration.optionName,
+                          }),
+                        ]).then(() => mutate("/menu"));
                       }}
                       maxChoices={alteration.maxChoices}
                     />

@@ -16,7 +16,7 @@ import { useState, useId, useEffect } from "react";
 export type Alteration = {
   optionName: string;
   maxChoices: number;
-  options: string[];
+  options: { choice: string; id?: number }[];
 };
 
 export type AlterationModalProps = {
@@ -25,7 +25,7 @@ export type AlterationModalProps = {
   close: () => void;
   initialOptionName?: string;
   initialMaxChoices?: number;
-  initialChoices?: string[];
+  initialChoices?: Alteration["options"];
 };
 
 export const AlterationModal = ({
@@ -47,7 +47,9 @@ export const AlterationModal = ({
     },
   });
 
-  const [choices, setChoices] = useState<string[]>(initialChoices ?? []);
+  const [choices, setChoices] = useState<Alteration["options"]>(
+    initialChoices ?? []
+  );
   const [newChoice, setNewChoice] = useState<string | null>(null);
 
   useEffect(() => {
@@ -64,7 +66,6 @@ export const AlterationModal = ({
 
   const optionInputId = useId();
   const maxChoiceInputId = useId();
-  const formId = useId();
 
   const clearAndClose = () => {
     setChoices(initialChoices ?? []);
@@ -127,7 +128,7 @@ export const AlterationModal = ({
                       >
                         <IconTrashX size="1.125rem" color="red" />
                       </ActionIcon>
-                      <Text>{choice}</Text>
+                      <Text>{choice.choice}</Text>
                     </Flex>
                   );
                 })}
@@ -143,7 +144,7 @@ export const AlterationModal = ({
               />
               <ActionIcon
                 onClick={() => {
-                  setChoices([...choices, newChoice]);
+                  setChoices([...choices, { choice: newChoice }]);
                   setNewChoice(null);
                 }}
               >
