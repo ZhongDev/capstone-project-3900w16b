@@ -19,7 +19,6 @@ import { MenuTab } from "@/components/Menu";
 import { OrderItem, Cart, Ordered } from "@/components/Menu";
 import { getRestaurantTableById } from "@/api/table";
 import { createHelpCall } from "@/api/help";
-import Head from "next/head";
 import { mutate } from "swr";
 
 const useStyles = createStyles((theme) => ({
@@ -91,9 +90,6 @@ export default function RestaurantMenu() {
 
   return (
     <>
-      <Head>
-        <title> Order from {menuData?.restaurant.name} </title>
-      </Head>
       <Drawer
         padding={0}
         withCloseButton={false}
@@ -174,6 +170,7 @@ export default function RestaurantMenu() {
         <Modal
           opened={openedSure}
           onClose={handler.close}
+          // title="Request assistance?"
           withCloseButton={false}
           centered
         >
