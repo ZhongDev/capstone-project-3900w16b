@@ -1,25 +1,26 @@
 import { useMemo, useState } from "react";
+import { useRouter } from "next/router";
 import {
   rem,
-  List,
   Paper,
   Text,
   Title,
   createStyles,
-  Tabs,
   Flex,
-  Badge,
   ActionIcon,
+  Modal,
 } from "@mantine/core";
-import { MenuItem } from "@/api/menu";
+import { MenuItem, getMenuItemPrep } from "@/api/menu";
 import { useDeviceId, useLocalCart } from "@/hooks";
 import { formatCurrency } from "@/helpers";
 import { GradientButton, IncrementButton } from "../Button";
-import { createOrder } from "@/api/order";
+import { createOrder, getEstTimeByOrderGroupId } from "@/api/order";
 import { Table } from "@/api/table";
 import Image from "next/image";
 import ayaya from "@/public/img/ayaya.jpg";
 import { IconTrash } from "@tabler/icons-react";
+import { useDisclosure } from "@mantine/hooks";
+import useSWR from "swr";
 
 const useStyles = createStyles((theme) => ({
   foodImageContainer: {
@@ -71,10 +72,13 @@ export type CartProps = {
 };
 
 export const Cart = ({ close, restaurant, table, menu }: CartProps) => {
+  const router = useRouter();
   const { classes } = useStyles();
 
   const deviceId = useDeviceId();
   const [cart, { setUnitInCart, removeFromCart, clearCart }] = useLocalCart();
+  const [opened, handler] = useDisclosure(false);
+  const [estTime, setEstTime] = useState<number>(0);
   const restCart = useMemo(
     () => (cart[restaurant.id] ? cart[restaurant.id] : []),
     [cart, restaurant.id]
@@ -181,14 +185,37 @@ export const Cart = ({ close, restaurant, table, menu }: CartProps) => {
               table.id,
               deviceId,
               cart[restaurant.id]
-            ).then(() => {
-              clearCart();
-              close?.();
+            ).then((res) => {
+              handler.open();
+              console.log(
+                `"RESTAURANT ID: ${restaurant.id} ORDERGROUP ID: ${res[0].orderGroupId}"`
+              );
+              getEstTimeByOrderGroupId(restaurant.id, res[0].orderGroupId).then(
+                (res) => {
+                  res ? setEstTime(res) : null;
+                }
+              );
             });
           }}
         >
           Pay with Apple Pay
         </GradientButton>
+        <Modal
+          opened={opened}
+          onClose={() => {
+            clearCart();
+            handler.close();
+            close?.();
+          }}
+          title="Estimated time your food will arrive"
+        >
+          <Text align="center" size="3rem">
+            {estTime}+
+          </Text>
+          <Text align="center" size="xl">
+            Mins
+          </Text>
+        </Modal>
       </div>
     </div>
   );

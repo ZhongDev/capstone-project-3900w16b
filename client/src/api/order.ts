@@ -57,3 +57,16 @@ export const getRestaurantOrdersByDeviceId = (
     .catch((err) => {
       throw err.response.data;
     }) as Promise<GetRestaurantOrdersByDeviceIdResponse>;
+
+export const getEstTimeByOrderGroupId = (
+  restaurantId: number,
+  orderGroupId: number
+) =>
+  request
+    .get(
+      `${process.env.NEXT_PUBLIC_BASEURL}/order/${restaurantId}/est/${orderGroupId}`
+    )
+    .then((res) => res.data)
+    .catch((err) => {
+      throw err.response.data;
+    }) as Promise<number>;
