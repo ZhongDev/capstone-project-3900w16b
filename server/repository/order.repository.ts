@@ -51,3 +51,24 @@ export const getRestaurantOrderGroups = (restaurantId: number) => {
     })
     .withGraphFetched("orders.item");
 };
+
+export const changeOrderStatusToComplete = async (orderGroupId: number) => {
+  await OrderGroup.query()
+    .patch({ status: "completed" })
+    .where({ id: orderGroupId });
+  return OrderGroup.query().findOne({ id: orderGroupId });
+};
+
+export const changeOrderStatusToOrdered = async (orderGroupId: number) => {
+  await OrderGroup.query()
+    .patch({ status: "ordered" })
+    .where({ id: orderGroupId });
+  return OrderGroup.query().findOne({ id: orderGroupId });
+};
+
+export const changeOrderStatusToPrepared = async (orderGroupId: number) => {
+  await OrderGroup.query()
+    .patch({ status: "prepared" })
+    .where({ id: orderGroupId });
+  return OrderGroup.query().findOne({ id: orderGroupId });
+};

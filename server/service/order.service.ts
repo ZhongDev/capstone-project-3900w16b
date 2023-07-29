@@ -72,3 +72,18 @@ export const getOrdersByRestaurantId = async (restaurantId: number) => {
     };
   });
 };
+
+export const changeOrderToComplete = async (orderGroupId: number) => {
+  const status = await orderRepo.changeOrderStatusToComplete(orderGroupId);
+  return status;
+};
+
+export const changeOrderToOrdered = async (orderGroupId: number) => {
+  const status = await orderRepo.changeOrderStatusToOrdered(orderGroupId);
+  return status;
+};
+
+export const changeOrderToPrepared = async (orderGroupId: number) => {
+  const status = await orderRepo.changeOrderStatusToPrepared(orderGroupId);
+  return status;
+};

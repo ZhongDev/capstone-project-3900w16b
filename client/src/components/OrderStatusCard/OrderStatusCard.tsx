@@ -1,5 +1,17 @@
-import { Table, createTable, deleteRestaurantTable } from "@/api/table";
-import { getOrders, GetOrdersResponse } from "@/api/order_status";
+import {
+  Table,
+  createTable,
+  deleteRestaurantTable,
+  getTableNameById,
+  getRestaurantTableById,
+} from "@/api/table";
+import {
+  getOrders,
+  GetOrdersResponse,
+  orderStatusToComplete,
+  orderStatusToOrdered,
+  orderStatusToPrepared,
+} from "@/api/order_status";
 import {
   Paper,
   Flex,
@@ -13,10 +25,12 @@ import {
   List,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import QRCode from "qrcode.react";
+
 import { useState } from "react";
 import { mutate } from "swr";
-import { OrderedProps } from "../Menu";
+import useSWR from "swr";
+
+//import { OrderedProps } from "../Menu";
 
 const useStyles = createStyles((theme) => ({
   menuCategory: {
@@ -32,10 +46,16 @@ type OrdersProp = {
 
 export const OrderStatusCard = ({ orders }: OrdersProp) => {
   const { classes } = useStyles();
+  const { data: OrdersData } = useSWR("order_status_card", getOrders);
   const [opened, { open, close }] = useDisclosure(false);
   const [openedSure, handler] = useDisclosure(false);
   const [viewDetails, setViewDetails] = useState(false);
-
+  const [viewStatus, setViewStatus] = useState(orders.status);
+  const [tableName, setTableName] = useState("");
+  getTableNameById(orders.tableId).then((a) => {
+    console.log(a);
+    setTableName(a);
+  });
   return (
     <Paper
       mb="sm"
@@ -45,9 +65,10 @@ export const OrderStatusCard = ({ orders }: OrdersProp) => {
       className={classes.menuCategory}
     >
       <Flex align="center" justify="space-between">
-        <Title px="xl" align="center">
-          {orders.orderGroupId}
+        <Title order={3} align="center">
+          {tableName}
         </Title>
+        <Text>Hi</Text>
         <Flex columnGap="xs">
           <Flex mt="xs">
             <List>
@@ -63,41 +84,57 @@ export const OrderStatusCard = ({ orders }: OrdersProp) => {
         </Flex>
 
         <Group spacing="xs">
-          <Button onClick={open} radius="xl" variant="outline" mr="xs">
-            Order Status
+          <Button onClick={open} radius="xl" mr="xs">
+            {viewStatus[0].toUpperCase() + viewStatus.slice(1).toLowerCase()}
           </Button>
 
           <Button radius="xl" variant="outline" mr="xs" onClick={handler.open}>
-            Delete
+            Edit Status
           </Button>
           <Modal
             opened={openedSure}
             onClose={handler.close}
-            title="Are you sure?"
+            title="Change Order Status To:"
           >
-            <Group position="right">
+            <Group position="center">
               <Button
-                variant="subtle"
                 onClick={() => {
+                  orderStatusToOrdered(orders.orderGroupId).then(() => {
+                    // mutate("/order/orders");
+                    setViewStatus("ordered");
+                  });
                   handler.close();
                 }}
               >
-                Cancel
+                Ordered
               </Button>
               <Button
                 onClick={() => {
-                  deleteRestaurantTable(orders.id).then(() => {
-                    mutate("/restaurant/table");
-                    close();
+                  orderStatusToPrepared(orders.orderGroupId).then(() => {
+                    // mutate("/order/orders");
+                    setViewStatus("prepared");
                   });
+                  handler.close();
                 }}
               >
-                Yes
+                Prepared
+              </Button>
+              <Button
+                onClick={() => {
+                  orderStatusToComplete(orders.orderGroupId).then(() => {
+                    // mutate("/order/orders");
+                    setViewStatus("completed");
+                  });
+                  handler.close();
+                }}
+              >
+                Complete
               </Button>
             </Group>
           </Modal>
         </Group>
       </Flex>
+      <Text>Hi</Text>
     </Paper>
   );
 };

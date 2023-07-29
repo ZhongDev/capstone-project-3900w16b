@@ -1,6 +1,6 @@
 import request from "./request";
 
-type OrderStatus = "ordered" | "completed";
+type OrderStatus = "ordered" | "prepared" | "completed";
 
 export type GetOrdersResponse = {
   orderGroupId: number;
@@ -26,11 +26,33 @@ export const getOrders = () => {
     }) as Promise<GetOrdersResponse>;
 };
 
-export const changeOrderStatus = (orderGroupId: number) => {
+export const orderStatusToComplete = (orderGroupId: number) => {
   return request
-    .post(process.env.NEXT_PUBLIC_BASEURL + "/order/orderStatus", {
-      orderGroupId,
-    })
+    .post(
+      `${process.env.NEXT_PUBLIC_BASEURL}/order/statusComplete/${orderGroupId}`
+    )
+    .then((res) => res.data)
+    .catch((err) => {
+      throw err.response.data;
+    }) as Promise<GetOrdersResponse>;
+};
+
+export const orderStatusToOrdered = (orderGroupId: number) => {
+  return request
+    .post(
+      `${process.env.NEXT_PUBLIC_BASEURL}/order/statusOrdered/${orderGroupId}`
+    )
+    .then((res) => res.data)
+    .catch((err) => {
+      throw err.response.data;
+    }) as Promise<GetOrdersResponse>;
+};
+
+export const orderStatusToPrepared = (orderGroupId: number) => {
+  return request
+    .post(
+      `${process.env.NEXT_PUBLIC_BASEURL}/order/statusPrepared/${orderGroupId}`
+    )
     .then((res) => res.data)
     .catch((err) => {
       throw err.response.data;

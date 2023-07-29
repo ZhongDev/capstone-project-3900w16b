@@ -1,6 +1,6 @@
 import request from "./request";
 
-type OrderStatus = "ordered" | "completed";
+type OrderStatus = "ordered" | "prepared" | "completed";
 
 export type CreateOrderBody = {
   itemId: number;

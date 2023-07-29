@@ -18,7 +18,7 @@ export default function OrderManagement() {
     data: OrdersData,
     error: OrdersDataError,
     isLoading: OrdersDataIsLoading,
-  } = useSWR("/order/orders", getOrders);
+  } = useSWR("/order_status", getOrders);
 
   type OrdersProp = {
     orders: GetOrdersResponse[0];

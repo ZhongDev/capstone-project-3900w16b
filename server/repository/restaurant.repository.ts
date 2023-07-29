@@ -52,6 +52,12 @@ export const getRestaurantTableById = (tableId: number) => {
   });
 };
 
+// export const getRestaurantTableNameById = (tableId: number) => {
+//   return Table.query().findOne({
+//     id: tableId,
+//   });
+// };
+
 export const getRestaurantTableByTableName = (
   restaurantId: number,
   tableName: string
