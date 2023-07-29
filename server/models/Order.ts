@@ -1,6 +1,7 @@
 import { Model } from "objection";
 import Item from "./Item";
 import OrderGroup from "./OrderGroup";
+import OrderAlteration from "./OrderAlteration";
 
 export default class Order extends Model {
   id!: number;
@@ -10,6 +11,7 @@ export default class Order extends Model {
 
   item?: Item;
   orderGroup?: OrderGroup;
+  orderAlterations?: OrderAlteration[];
 
   static tableName = "Order";
 
@@ -28,6 +30,14 @@ export default class Order extends Model {
       join: {
         from: "Order.itemId",
         to: "Item.id",
+      },
+    },
+    orderAlterations: {
+      relation: Model.HasManyRelation,
+      modelClass: OrderAlteration,
+      join: {
+        from: "Order.id",
+        to: "OrderAlteration.orderId",
       },
     },
   });

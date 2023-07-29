@@ -8,13 +8,9 @@ export type CreateOrderBody = {
 }[];
 
 export type CreateOrderResponse = {
-  restaurantId: number;
-  tableId: number;
   itemId: number;
-  placedOn: string;
-  status: OrderStatus;
+  orderGroupId: number;
   units: number;
-  device: string;
   id: number;
 }[];
 

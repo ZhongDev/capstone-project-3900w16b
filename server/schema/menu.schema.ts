@@ -18,7 +18,37 @@ export const CreateItemRequest = z.object({
     priceCents: z.number(),
     minPrepMins: z.number().optional(),
     maxPrepMins: z.number().optional(),
+    alterations: z
+      .array(
+        z.object({
+          optionName: z.string(),
+          maxChoices: z.number().int(),
+          options: z.array(z.string()),
+        })
+      )
+      .optional(),
   }),
+});
+
+export const CreateAlterationRequest = z.object({
+  itemId: z.number(),
+  maxChoices: z.number().int(),
+  optionName: z.string(),
+  options: z.array(z.string()),
+});
+
+export const CreateAlterationOptionRequest = z.object({
+  alterationId: z.number(),
+  choice: z.string(),
+});
+
+export const UpdateAlterationOptionRequest = z.object({
+  choice: z.string(),
+});
+
+export const UpdateAlterationRequest = z.object({
+  maxChoices: z.number().int().optional(),
+  optionName: z.string().optional(),
 });
 
 export const UpdateItemRequest = z.object({

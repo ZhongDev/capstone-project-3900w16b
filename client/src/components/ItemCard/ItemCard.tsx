@@ -18,11 +18,12 @@ import {
   Group,
   ButtonProps,
   createStyles,
+  ActionIcon,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useDisclosure } from "@mantine/hooks";
-import { it } from "node:test";
-import { useEffect } from "react";
+import { IconTrashX, IconCheck, IconTrash } from "@tabler/icons-react";
+import { useEffect, useState, useId } from "react";
 import { mutate } from "swr";
 
 const useStyles = createStyles((theme) => ({
@@ -204,7 +205,7 @@ export const ItemCard = ({ item }: { item: MenuItem }) => {
             <Modal
               opened={openedSure}
               onClose={handler.close}
-              title="Are you sure?"
+              title="Are you sure you want to delete this item?"
             >
               <Group position="right">
                 <Button
@@ -315,23 +316,31 @@ export const CreateItem = ({
             withAsterisk
             {...itemForm.getInputProps("description")}
           />
-          <Text fz="xs">Estimated preparation time (minutes):</Text>
-          <Group className={classes.estTimeGroup} grow>
-            <NumberInput
-              radius="lg"
-              variant="filled"
-              mb="xs"
-              description="Min"
-              {...itemForm.getInputProps("minPrepMins")}
-            />
-            <NumberInput
-              radius="lg"
-              variant="filled"
-              mb="xs"
-              description="Max"
-              {...itemForm.getInputProps("maxPrepMins")}
-            />
-          </Group>
+          <div>
+            <Text fz="xs">Estimated preparation time (minutes):</Text>
+            <Group className={classes.estTimeGroup} grow>
+              <NumberInput
+                radius="lg"
+                variant="filled"
+                mb="xs"
+                description="Min"
+                {...itemForm.getInputProps("minPrepMins")}
+              />
+              <NumberInput
+                radius="lg"
+                variant="filled"
+                mb="xs"
+                description="Max"
+                {...itemForm.getInputProps("maxPrepMins")}
+              />
+            </Group>
+          </div>
+          <div>
+            <Text mt="xl" fz="xs">
+              Item options:
+            </Text>
+            <AlterationModal />
+          </div>
           <Group position="right">
             <Button
               variant="subtle"
@@ -346,6 +355,57 @@ export const CreateItem = ({
           </Group>
         </form>
       </Modal>
+    </>
+  );
+};
+
+const AlterationModal = () => {
+  const [opened, { open, close }] = useDisclosure(false);
+  const [choices, setChoices] = useState([]);
+  const [newChoice, setNewChoice] = useState<string | null>(null);
+
+  const optionInputId = useId();
+  const maxChoiceInputId = useId();
+
+  return (
+    <>
+      <Modal opened={opened} onClose={close}>
+        <label htmlFor={optionInputId}>
+          <Text>Option name</Text>
+        </label>
+        <TextInput id={optionInputId} placeholder="Option" />
+        <label htmlFor={maxChoiceInputId}>
+          <Text>Max choices</Text>
+        </label>
+        <NumberInput id={maxChoiceInputId} defaultValue={1} />
+        <Text>Choices</Text>
+        {typeof newChoice === "string" ? (
+          <Flex align="center" columnGap="xs">
+            <TextInput
+              value={newChoice}
+              onChange={(e) => setNewChoice(e.currentTarget.value)}
+            />
+            <ActionIcon onClick={() => {}}>
+              <IconCheck size="1.125rem" color="green" />
+            </ActionIcon>
+            <ActionIcon onClick={() => setNewChoice(null)}>
+              <IconTrashX size="1.125rem" color="red" />
+            </ActionIcon>
+          </Flex>
+        ) : (
+          <Button
+            variant="outline"
+            size="xs"
+            radius="xl"
+            onClick={() => setNewChoice("")}
+          >
+            New Choice
+          </Button>
+        )}
+      </Modal>
+      <Button mt="xs" onClick={open} variant="outline">
+        Add option
+      </Button>
     </>
   );
 };

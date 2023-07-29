@@ -2,6 +2,7 @@ import { useState } from "react";
 import useSWR from "swr";
 import { Title, Loader, createStyles, Flex, Button } from "@mantine/core";
 import { Sidebar } from "@/components/Sidebar";
+import Head from "next/head";
 import {
   Categories,
   CreateCategory,
@@ -21,32 +22,37 @@ export default function MenuManagement() {
   const [reordering, setReordering] = useState(false);
 
   return (
-    <Sidebar>
-      <Flex gap="lg" align="center">
-        <Title>Categories</Title>
-        <CreateCategory disabled={reordering} />
-        {!reordering && (
-          <Button
-            radius="xl"
-            variant="outline"
-            onClick={() => setReordering(!reordering)}
-          >
-            Reorder
-          </Button>
-        )}
-      </Flex>
-      <div className={classes.menuSection}>
-        {menuData ? (
-          reordering ? (
-            <ReorderCategories
-              close={() => setReordering(false)}
-              menu={menuData.menu}
-            />
-          ) : (
-            <Categories menu={menuData.menu} />
-          )
-        ) : null}
-      </div>
-    </Sidebar>
+    <>
+      <Head>
+        <title> Edit Menu </title>
+      </Head>
+      <Sidebar>
+        <Flex gap="lg" align="center">
+          <Title>Categories</Title>
+          <CreateCategory disabled={reordering} />
+          {!reordering && (
+            <Button
+              radius="xl"
+              variant="outline"
+              onClick={() => setReordering(!reordering)}
+            >
+              Reorder
+            </Button>
+          )}
+        </Flex>
+        <div className={classes.menuSection}>
+          {menuData ? (
+            reordering ? (
+              <ReorderCategories
+                close={() => setReordering(false)}
+                menu={menuData.menu}
+              />
+            ) : (
+              <Categories menu={menuData.menu} />
+            )
+          ) : null}
+        </div>
+      </Sidebar>
+    </>
   );
 }
