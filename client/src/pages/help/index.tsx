@@ -51,7 +51,6 @@ export default function Help() {
       </Head>
       <Sidebar>
         <Flex gap="lg" align="center">
-          <Button onClick={() => audio?.play()}>Play audio</Button>
           <Title style={{ paddingBottom: "1rem" }}>Assistance Requests</Title>
         </Flex>
         {latestHelp ? (
