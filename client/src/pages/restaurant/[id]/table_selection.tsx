@@ -9,7 +9,6 @@ import {
   TextInput,
 } from "@mantine/core";
 import { useRouter } from "next/router";
-import Head from "next/head";
 import { checkTable } from "@/api/table";
 
 const useStyles = createStyles((theme) => ({
@@ -76,9 +75,6 @@ export default function HomePage() {
 
   return (
     <>
-      <Head>
-        <title> Select Table</title>
-      </Head>
       <Header height={100}>
         <div className={classes.header}>
           <Title className={classes.title} color="gold.5" ta="center">
