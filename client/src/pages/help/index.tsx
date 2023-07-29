@@ -1,6 +1,6 @@
 import useSWR from "swr";
 import { Sidebar } from "@/components/Sidebar";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { getUnresolvedHelpCalls } from "@/api/help";
 import { HelpCallCard } from "@/components/HelpCallCard";
 import {
@@ -30,19 +30,16 @@ export default function Help() {
   );
   const helpManage = helpData ? helpData : [];
 
-  const [requesti, setRequesti] = useState(0);
   const [loaded, setLoaded] = useState(false);
-  const [audio, setAudio] = useState(
-    typeof Audio !== "undefined" && new Audio("/public/audio/Notif.ogg")
-  );
+  const [audio, setAudio] = useState<HTMLAudioElement | null>(null);
 
-  if (loaded) {
-    if (helpManage.length > requesti) {
-      audio.play();
-    }
-  } else {
-    setLoaded(true);
-  }
+  useEffect(() => {
+    setAudio(new Audio("/audio/Notif.ogg"));
+  }, []);
+
+  audio?.play();
+
+  // } else
   const latestHelp = helpManage.length === 0 ? null : helpManage[0];
   const otherHelp = helpManage.length === 0 ? [] : helpManage.slice(1);
 
