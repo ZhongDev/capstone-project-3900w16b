@@ -165,8 +165,9 @@ export const CreateItemModal = ({
                         alterations.filter((_, index) => i !== index)
                       )
                     }
+                    options={alteration.options}
+                    maxChoices={alteration.maxChoices}
                     name={alteration.optionName}
-                    options={alteration.options.length}
                   />
                 );
               })
@@ -205,31 +206,46 @@ export const CreateItemModal = ({
 
 export type OptionsEntryProps = {
   name: string;
-  options: number;
-  onDelete?: () => void;
-  onSave?: (newOption: { name: string; options: number }) => void;
+  options: string[];
+  maxChoices: number;
+  onDelete: () => void;
+  onSave?: (newAlteration: Alteration) => void;
 };
 
 export const OptionsEntry = ({
   name,
   options,
-  onDelete,
+  maxChoices,
   onSave,
+  onDelete,
 }: OptionsEntryProps) => {
+  const [editModalOpened, { open: openEditModal, close: closeEditModal }] =
+    useDisclosure(false);
+
   return (
-    <Flex>
-      <ActionIcon onClick={onDelete}>
-        <IconTrashX size="1.125rem" color="red" />
-      </ActionIcon>
-      <ActionIcon onClick={onDelete}>
-        <IconPencil size="1.125rem" color="blue" />
-      </ActionIcon>
-      <Text>
-        {name}{" "}
-        <Text c="dimmed" span>
-          [{options} option(s)]
+    <>
+      <AlterationModal
+        close={closeEditModal}
+        opened={editModalOpened}
+        onSave={onSave}
+        initialMaxChoices={maxChoices}
+        initialOptionName={name}
+        initialChoices={options}
+      />
+      <Flex>
+        <ActionIcon onClick={onDelete}>
+          <IconTrashX size="1.125rem" color="red" />
+        </ActionIcon>
+        <ActionIcon onClick={openEditModal}>
+          <IconPencil size="1.125rem" color="blue" />
+        </ActionIcon>
+        <Text>
+          {name}{" "}
+          <Text c="dimmed" span>
+            [{options.length} option(s)]
+          </Text>
         </Text>
-      </Text>
-    </Flex>
+      </Flex>
+    </>
   );
 };

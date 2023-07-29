@@ -58,6 +58,19 @@ export const EditItemModal = ({
     alterationOpened,
     { open: openAlterationDisclosure, close: closeAlterationDisclosure },
   ] = useDisclosure(false);
+
+  const openAlterationModal = () => {
+    parentClose();
+    openAlterationDisclosure();
+  };
+
+  const closeAlterationModal = () => {
+    open();
+    closeAlterationDisclosure();
+  };
+
+  const formId = useId();
+
   const { mutate } = useSWRConfig();
 
   useEffect(() => {
@@ -95,19 +108,9 @@ export const EditItemModal = ({
       description: item.description,
       ingredients: null,
       priceCents: item.priceCents / 100,
-      minPrepMins: item.minPrepMins,
-      maxPrepMins: item.maxPrepMins,
+      minPrepMins: item.minPrepMins ?? 0,
+      maxPrepMins: item.maxPrepMins ?? 0,
     });
-  };
-
-  const openAlterationModal = () => {
-    parentClose();
-    openAlterationDisclosure();
-  };
-
-  const closeAlterationModal = () => {
-    open();
-    closeAlterationDisclosure();
   };
 
   return (
@@ -218,7 +221,11 @@ export const EditItemModal = ({
                         ]);
                       }}
                       name={alteration.optionName}
-                      options={alteration.options.length}
+                      options={alteration.options.map((a) => a.choice)}
+                      onSave={(newAlteration) => {
+                        console.log(newAlteration);
+                      }}
+                      maxChoices={alteration.maxChoices}
                     />
                   );
                 })}
@@ -232,7 +239,13 @@ export const EditItemModal = ({
                         );
                       }}
                       name={newAlteration.optionName}
-                      options={newAlteration.options.length}
+                      options={newAlteration.options}
+                      onSave={(updatedAlteration) => {
+                        const updatedAlterations = [...newAlterations];
+                        updatedAlterations[0] = updatedAlteration;
+                        setNewAlterations(updatedAlterations);
+                      }}
+                      maxChoices={newAlteration.maxChoices}
                     />
                   );
                 })}

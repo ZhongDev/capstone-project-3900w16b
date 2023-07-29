@@ -11,7 +11,7 @@ import {
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { IconTrashX, IconCheck } from "@tabler/icons-react";
-import { useState, useId } from "react";
+import { useState, useId, useEffect } from "react";
 
 export type Alteration = {
   optionName: string;
@@ -20,7 +20,7 @@ export type Alteration = {
 };
 
 export type AlterationModalProps = {
-  onSave: (alteration: Alteration) => void;
+  onSave?: (alteration: Alteration) => void;
   opened: boolean;
   close: () => void;
   initialOptionName?: string;
@@ -50,29 +50,47 @@ export const AlterationModal = ({
   const [choices, setChoices] = useState<string[]>(initialChoices ?? []);
   const [newChoice, setNewChoice] = useState<string | null>(null);
 
+  useEffect(() => {
+    setChoices(initialChoices ?? []);
+  }, [initialChoices]);
+
+  const { setValues } = form;
+  useEffect(() => {
+    setValues({
+      maxChoices: initialMaxChoices,
+      optionName: initialOptionName,
+    });
+  }, [setValues, initialMaxChoices, initialOptionName]);
+
   const optionInputId = useId();
   const maxChoiceInputId = useId();
+  const formId = useId();
 
   const clearAndClose = () => {
-    setChoices([]);
+    setChoices(initialChoices ?? []);
     setNewChoice(null);
     form.reset();
     close();
   };
 
+  const handleSubmit = () => {
+    const validatedForm = form.validate();
+    if (validatedForm.hasErrors) {
+      form.setErrors(validatedForm.errors);
+    } else {
+      onSave?.({
+        optionName: form.values.optionName,
+        maxChoices: form.values.maxChoices,
+        options: choices,
+      });
+      clearAndClose();
+    }
+  };
+
   return (
     <>
       <Modal shadow="xl" size="sm" opened={opened} onClose={clearAndClose}>
-        <form
-          onSubmit={form.onSubmit((values) => {
-            onSave({
-              optionName: values.optionName,
-              maxChoices: values.maxChoices,
-              options: choices,
-            });
-            clearAndClose();
-          })}
-        >
+        <form onSubmit={(e) => e.preventDefault()}>
           <Paper>
             <label htmlFor={optionInputId}>
               <Text>Option name</Text>
@@ -154,7 +172,7 @@ export const AlterationModal = ({
             >
               Cancel
             </Button>
-            <Button type="submit" disabled={choices.length === 0}>
+            <Button onClick={handleSubmit} disabled={choices.length === 0}>
               Save
             </Button>
           </Group>

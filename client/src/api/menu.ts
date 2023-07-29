@@ -31,8 +31,8 @@ export type MenuItem = {
   priceCents: number;
   description: string;
   ingredients: string | null;
-  minPrepMins: number;
-  maxPrepMins: number;
+  minPrepMins: number | null;
+  maxPrepMins: number | null;
   alterations: Alteration[];
 };
 
