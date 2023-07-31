@@ -142,7 +142,7 @@ export const CategoryCard = ({ category }: { category: Menu }) => {
           <Modal
             opened={openedSure}
             onClose={handler.close}
-            title="Are you sure?"
+            title="Are you sure you want to delete this category?"
           >
             <Group position="right">
               <Button

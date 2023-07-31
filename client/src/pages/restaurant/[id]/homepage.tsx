@@ -10,6 +10,7 @@ import {
 import Image from "next/image";
 import PlateHolderImg from "@/public/img/pikachu_food.jpg";
 import { useRouter } from "next/router";
+import Head from "next/head";
 
 const useStyles = createStyles((theme) => ({
   header: {
@@ -55,6 +56,9 @@ export default function HomePage() {
 
   return (
     <>
+      <Head>
+        <title> Check In</title>
+      </Head>
       <Header height={100}>
         <div className={classes.header}>
           <Title className={classes.title} color="gold.5" ta="center">

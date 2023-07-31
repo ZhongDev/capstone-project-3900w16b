@@ -41,7 +41,7 @@ export const updateCategory = async (
   return Category.query().findOne({ id: categoryId });
 };
 
-// Get Category
+// Get Categories of a restaurant
 export const getCategories = (restaurantId: number) => {
   return Category.query()
     .where({

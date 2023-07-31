@@ -15,3 +15,9 @@ Prepare for Sprint 1 Demo, did retrospective and submitted
 
 Week 6:
 Worked on more menu backend
+
+Week 7: 
+Worked on some menu frontend, mainly updating and deletion.
+
+Week 8:
+Working on the assistance request section of the project.
