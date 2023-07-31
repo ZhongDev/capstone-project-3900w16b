@@ -78,8 +78,10 @@ export const Cart = ({ close, restaurant, table, menu }: CartProps) => {
 
   const deviceId = useDeviceId();
   const [cart, { setUnitInCart, removeFromCart, clearCart }] = useLocalCart();
-  const [opened, handler] = useDisclosure(false);
+
   const [estTime, setEstTime] = useState<number>(0);
+  const [ordered, setOrdered] = useState(false);
+
   const restCart = useMemo(
     () => (cart[restaurant.id] ? cart[restaurant.id] : []),
     [cart, restaurant.id]
@@ -97,7 +99,7 @@ export const Cart = ({ close, restaurant, table, menu }: CartProps) => {
       .reduce((acc, curr) => acc + curr, 0);
   }, [menu, restCart]);
 
-  return (
+  return !ordered ? (
     <div className={classes.container}>
       <div>
         <Title align="center" size={rem(50)}>
@@ -187,10 +189,7 @@ export const Cart = ({ close, restaurant, table, menu }: CartProps) => {
               deviceId,
               cart[restaurant.id]
             ).then((res) => {
-              handler.open();
-              console.log(
-                `"RESTAURANT ID: ${restaurant.id} ORDERGROUP ID: ${res[0].orderGroupId}"`
-              );
+              setOrdered(true);
               getEstTimeByOrderGroupId(restaurant.id, res[0].orderGroupId).then(
                 (res) => {
                   res ? setEstTime(res) : null;
@@ -201,37 +200,31 @@ export const Cart = ({ close, restaurant, table, menu }: CartProps) => {
         >
           Pay with Apple Pay
         </GradientButton>
-        <Modal
-          opened={opened}
-          onClose={() => {
-            clearCart();
-            handler.close();
-            close?.();
-          }}
-          withCloseButton={false}
-        >
-          <Flex direction="column">
-            <Text align="center" size="xl">
-              Estimated time your food will arrive:
-            </Text>
-            <Text align="center" size="5rem">
-              {estTime}+
-            </Text>
-            <Text align="center" size="3rem" style={{ paddingBottom: "1rem" }}>
-              Mins
-            </Text>
-            <Button
-              onClick={() => {
-                clearCart();
-                handler.close();
-                close?.();
-              }}
-            >
-              Confirm
-            </Button>
-          </Flex>
-        </Modal>
       </div>
     </div>
+  ) : (
+    <>
+      <div className={classes.container}>
+        <Paper withBorder shadow="md" p="xl" mt="xl">
+          <Title align="center">Your food will arrive in around:</Title>
+          <Text align="center" size="4.5rem">
+            {estTime}+
+          </Text>
+          <Text align="center" size="2rem">
+            Mins
+          </Text>
+        </Paper>
+        <div className={classes.floatingButtonGroup}>
+          <GradientButton
+            onClick={() => {
+              clearCart();
+              close?.();
+            }}
+          >
+            Confirm
+          </GradientButton>
+        </div>
+      </div>
+    </>
   );
 };
