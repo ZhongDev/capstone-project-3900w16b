@@ -1,6 +1,6 @@
 import { Router } from "express";
 import * as helpService from "../service/help.service";
-import HelpCall, { HelpCallStatus } from "../models/HelpCall";
+import { HelpCallStatus } from "../models/HelpCall";
 import * as schema from "../schema/help.schema";
 import auth from "./middleware/auth";
 

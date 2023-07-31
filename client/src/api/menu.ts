@@ -12,6 +12,16 @@ export type GetMenuResponse = {
   menu: Menu[];
 };
 
+export type Alteration = {
+  id: number;
+  optionName: string;
+  maxChoices: number;
+  options: {
+    choice: string;
+    id: number;
+  }[];
+};
+
 export type MenuItem = {
   id: number;
   categoryId: number;
@@ -21,8 +31,9 @@ export type MenuItem = {
   priceCents: number;
   description: string;
   ingredients: string | null;
-  minPrepMins: number;
-  maxPrepMins: number;
+  minPrepMins: number | null;
+  maxPrepMins: number | null;
+  alterations: Alteration[];
 };
 
 export const getMenu = () => {
@@ -134,6 +145,11 @@ export const createItem = (
     priceCents: number;
     minPrepMins: number;
     maxPrepMins: number;
+    alterations?: {
+      optionName: string;
+      maxChoices: number;
+      options: string[];
+    }[];
   }
 ) => {
   return request
@@ -204,4 +220,98 @@ export const deleteMenuItem = (itemId: number) => {
     .catch((err) => {
       throw err.response.data;
     }) as Promise<void>;
+};
+
+export const deleteAlteration = (alterationId: number) => {
+  return request
+    .delete(
+      process.env.NEXT_PUBLIC_BASEURL + "/menu/alteration/" + alterationId
+    )
+    .then((res) => res.data)
+    .catch((err) => {
+      throw err.response.data;
+    }) as Promise<void>;
+};
+
+export type CreateAlterationRequest = {
+  maxChoices: number;
+  optionName: string;
+  itemId: number;
+  options: string[];
+};
+
+export type CreateAlterationResponse = MenuItem;
+
+export const createAlteration = (newAlteration: CreateAlterationRequest) => {
+  return request
+    .post(process.env.NEXT_PUBLIC_BASEURL + "/menu/alteration", newAlteration)
+    .then((res) => res.data)
+    .catch((err) => {
+      throw err.response.data;
+    }) as Promise<CreateAlterationResponse>;
+};
+
+export type UpdateAlterationResponse = {
+  id: number;
+  optionName: string;
+  maxChoices: number;
+};
+
+export type UpdateAlterationRequest = {
+  id: number;
+  optionName: string;
+  maxChoices: number;
+};
+
+export const updateAlteration = (
+  updatedAlteration: UpdateAlterationRequest
+) => {
+  return request
+    .patch(
+      process.env.NEXT_PUBLIC_BASEURL +
+        "/menu/alteration/" +
+        updatedAlteration.id,
+      {
+        maxChoices: updatedAlteration.maxChoices,
+        optionName: updatedAlteration.optionName,
+      }
+    )
+    .then((res) => res.data)
+    .catch((err) => {
+      throw err.response.data;
+    }) as Promise<UpdateAlterationResponse>;
+};
+
+export type CreateAlterationOptionRequest = {
+  alterationId: number;
+  choice: string;
+};
+
+export type CreateAlterationOptionRespose = Alteration;
+
+export const createAlterationOption = (
+  newAlterationOption: CreateAlterationOptionRequest
+) => {
+  return request
+    .post(process.env.NEXT_PUBLIC_BASEURL + "/menu/alterationOption/", {
+      alterationId: newAlterationOption.alterationId,
+      choice: newAlterationOption.choice,
+    })
+    .then((res) => res.data)
+    .catch((err) => {
+      throw err.response.data;
+    }) as Promise<CreateAlterationOptionRespose>;
+};
+
+export const deleteAlterationOption = (alterationOptionId: number) => {
+  return request
+    .delete(
+      process.env.NEXT_PUBLIC_BASEURL +
+        "/menu/alterationOption/" +
+        alterationOptionId
+    )
+    .then((res) => res.data)
+    .catch((err) => {
+      throw err.response.data;
+    }) as Promise<number>;
 };
