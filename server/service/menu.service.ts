@@ -12,7 +12,7 @@ import {
 
 // Calls functions from menu repository with restaurantId for authorisation
 
-// Creates a menu catgeory
+// Creates a menu category
 export const createCategory = async (restaurantId: number, name: string) => {
   return menuRepo.createCategory(restaurantId, name);
 };

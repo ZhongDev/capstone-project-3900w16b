@@ -8,8 +8,8 @@ export type CreateOrderBody = {
 }[];
 
 export type CreateOrderResponse = {
-  orderGroupId: number;
   itemId: number;
+  orderGroupId: number
   units: number;
   id: number;
 }[];

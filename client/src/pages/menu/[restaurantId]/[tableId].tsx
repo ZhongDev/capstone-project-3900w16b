@@ -1,14 +1,26 @@
 import { useMemo, useState } from "react";
 import { useRouter } from "next/router";
 import useSWR from "swr";
-import { Title, createStyles, Loader, Drawer, ActionIcon } from "@mantine/core";
-import { useDisclosure } from "@mantine/hooks";
-import { IconHistory } from "@tabler/icons-react";
+import {
+  Title,
+  createStyles,
+  Loader,
+  Drawer,
+  ActionIcon,
+  Button,
+  Modal,
+  Group,
+} from "@mantine/core";
+import { useDisclosure, useMediaQuery } from "@mantine/hooks";
+import { IconHistory, IconBellRingingFilled } from "@tabler/icons-react";
 import { getMenuByRestaurantId } from "@/api/menu";
 import { GradientButton } from "@/components/Button";
 import { MenuTab } from "@/components/Menu";
 import { OrderItem, Cart, Ordered } from "@/components/Menu";
 import { getRestaurantTableById } from "@/api/table";
+import { createHelpCall } from "@/api/help";
+import Head from "next/head";
+import { mutate } from "swr";
 
 const useStyles = createStyles((theme) => ({
   menuContainer: {
@@ -25,6 +37,15 @@ const useStyles = createStyles((theme) => ({
     justifyContent: "center",
     alignItems: "center",
     gap: theme.spacing.md,
+  },
+  confirmButtons: {
+    paddingTop: "2rem",
+    paddingBottom: ".5rem",
+  },
+  confirmTitle: {
+    paddingTop: ".75rem",
+    fontWeight: 600,
+    textAlign: "center",
   },
 }));
 
@@ -43,6 +64,7 @@ export default function RestaurantMenu() {
   const tableId = Number(router.query.tableId);
   const [view, setView] = useState<View>(null);
   const [opened, { open, close }] = useDisclosure(false);
+  const [openedSure, handler] = useDisclosure(false);
   const { classes } = useStyles();
 
   const { data: tableData, isLoading: tableDataIsLoading } = useSWR(
@@ -69,7 +91,11 @@ export default function RestaurantMenu() {
 
   return (
     <>
+      <Head>
+        <title> Order from {menuData?.restaurant.name} </title>
+      </Head>
       <Drawer
+        padding={0}
         withCloseButton={false}
         size="90%"
         position="bottom"
@@ -136,6 +162,45 @@ export default function RestaurantMenu() {
         >
           View Cart
         </GradientButton>
+        <ActionIcon
+          onClick={handler.open}
+          variant="light"
+          radius="lg"
+          size="xl"
+          color="gold5"
+        >
+          <IconBellRingingFilled size="5rem" />
+        </ActionIcon>
+        <Modal
+          opened={openedSure}
+          onClose={handler.close}
+          withCloseButton={false}
+          centered
+        >
+          <Title className={classes.confirmTitle}>Request assistance?</Title>
+          <Group position="center" className={classes.confirmButtons}>
+            <Button
+              size="lg"
+              variant="subtle"
+              onClick={() => {
+                handler.close();
+              }}
+            >
+              Cancel
+            </Button>
+            <Button
+              size="lg"
+              type="submit"
+              onClick={() => {
+                createHelpCall(restaurantId, tableId).then(() => {
+                  handler.close();
+                });
+              }}
+            >
+              Call
+            </Button>
+          </Group>
+        </Modal>
       </div>
     </>
   );
