@@ -1,4 +1,4 @@
-import { Cart, Item } from "@/types/localstorage";
+import { Cart, InCartAlteration, Item } from "@/types/localstorage";
 import { useState } from "react";
 
 export const useLocalCart = () => {
@@ -91,4 +91,63 @@ export const useLocalCart = () => {
       clearCart,
     },
   ] as const;
+};
+
+const isEqualAlterations = (
+  alterations1: InCartAlteration[],
+  alterations2: InCartAlteration[]
+) => {
+  if (alterations1.length !== alterations2.length) {
+    return false;
+  }
+
+  const alterations1Id = alterations1
+    .map((alteration) => alteration.alterationId)
+    .sort((a, b) => a - b);
+
+  const alterations2Id = alterations2
+    .map((alteration) => alteration.alterationId)
+    .sort((a, b) => a - b);
+
+  const isAlterationIdsEqual = sortedArrayIsEqual(
+    alterations1Id,
+    alterations2Id
+  );
+  if (!isAlterationIdsEqual) {
+    return false;
+  }
+
+  for (let i = 0; i < alterations1Id.length; i++) {
+    const alterations1SelectedOptions = [
+      ...alterations1[i].selectedOptions,
+    ].sort((a, b) => a - b);
+
+    const alterations2SelectedOptions = [
+      ...alterations2[i].selectedOptions,
+    ].sort((a, b) => a - b);
+
+    const hasSameOptions = sortedArrayIsEqual(
+      alterations1SelectedOptions,
+      alterations2SelectedOptions
+    );
+
+    if (!hasSameOptions) {
+      return false;
+    }
+  }
+
+  return true;
+};
+
+const sortedArrayIsEqual = (array1: any[], array2: any[]) => {
+  if (array1.length !== array2.length) {
+    return false;
+  }
+  for (let i = 0; i < array1.length; i++) {
+    if (array1[i] !== array2[i]) {
+      return false;
+    }
+  }
+
+  return true;
 };

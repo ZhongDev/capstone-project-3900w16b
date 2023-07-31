@@ -56,7 +56,7 @@ export type OrderItemProps = {
 export const OrderItem = ({ itemId, restaurantId, close }: OrderItemProps) => {
   const { classes } = useStyles();
   const [units, setUnits] = useState(1);
-  const [alterations, setAlterations] = useState<Map<number, Set<number>>>(
+  const [alterations, setAlterations] = useState<Map<number, number[]>>(
     new Map()
   );
 
@@ -110,11 +110,16 @@ export const OrderItem = ({ itemId, restaurantId, close }: OrderItemProps) => {
           fullWidth
           onClick={() => {
             console.log(alterations);
-            return;
             addToCart({
               itemId: itemData.id,
               restaurantId: restaurantId,
               units,
+              alterations: [...alterations.entries()].map(
+                ([alterationId, selectedOptions]) => ({
+                  alterationId,
+                  selectedOptions,
+                })
+              ),
             });
             close?.();
           }}
@@ -128,7 +133,7 @@ export const OrderItem = ({ itemId, restaurantId, close }: OrderItemProps) => {
 
 type AlterationSelectorProps = {
   alteration: Alteration;
-  onChange?: (choices: Set<number>) => void;
+  onChange?: (choices: number[]) => void;
 };
 
 const AlterationSelector = ({
@@ -163,7 +168,7 @@ const AlterationSelector = ({
 
               const newChoices = new Set(choices);
               setChoices(newChoices);
-              onChange?.(newChoices);
+              onChange?.([...newChoices]);
             }}
           />
         );

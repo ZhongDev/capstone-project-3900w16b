@@ -61,5 +61,7 @@ export const getRestaurantOrdersByDeviceId = (
       device: deviceId,
     })
     .orderBy("placedOn", "desc")
-    .withGraphFetched("orders.item");
+    .withGraphFetched(
+      "orders.[item, orderAlterations.[alteration, alterationOption]]"
+    );
 };
