@@ -9,7 +9,7 @@ export type CreateOrderBody = {
 
 export type CreateOrderResponse = {
   itemId: number;
-  orderGroupId: number;
+  orderGroupId: number
   units: number;
   id: number;
 }[];
