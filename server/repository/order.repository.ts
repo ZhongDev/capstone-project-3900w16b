@@ -1,10 +1,15 @@
 import { raw } from "objection";
 import Order from "../models/Order";
+import OrderAlteration from "../models/OrderAlteration";
 import OrderGroup from "../models/OrderGroup";
 
 export type CreateOrder = {
   itemId: number;
   units: number;
+  alterations?: {
+    alterationId: number;
+    selectedOptions: number[];
+  }[];
 };
 
 export const createOrder = (
@@ -22,12 +27,26 @@ export const createOrder = (
     });
 
     return Promise.all(
-      orders.map((order) => {
-        return Order.query(trx).insert({
+      orders.map(async (order) => {
+        const createdOrder = await Order.query(trx).insert({
           itemId: order.itemId,
           orderGroupId: orderGroup.id,
           units: order.units,
         });
+        if (order.alterations) {
+          await Promise.all(
+            order.alterations?.flatMap((alteration) => {
+              return alteration.selectedOptions.map((selectedOptionId) => {
+                return OrderAlteration.query(trx).insert({
+                  orderId: createdOrder.id,
+                  alterationId: alteration.alterationId,
+                  alterationOptionId: selectedOptionId,
+                });
+              });
+            })
+          );
+        }
+        return createdOrder;
       })
     );
   });
@@ -60,7 +79,10 @@ export const getRestaurantOrdersByDeviceId = (
       restaurantId,
       device: deviceId,
     })
-    .withGraphFetched("orders.item");
+    .orderBy("placedOn", "desc")
+    .withGraphFetched(
+      "orders.[item, orderAlterations.[alteration, alterationOption]]"
+    );
 };
 
 export const getRestaurantUncompletedOrders = (restaurantId: number) => {

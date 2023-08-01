@@ -44,6 +44,10 @@ export type GetRestaurantOrdersByDeviceIdResponse = {
       priceCents: number;
     };
     units: number;
+    alterations: {
+      alterationName: string;
+      alterationOptions: string[];
+    }[];
   }[];
 }[];
 
