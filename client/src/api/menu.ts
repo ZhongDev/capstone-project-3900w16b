@@ -304,7 +304,7 @@ export const deleteAlterationOption = (alterationOptionId: number) => {
 export const uploadItemImage = (itemId: number, image: File) => {
   const form = new FormData();
   form.append("image", image);
-  form.append("itemId", itemId);
+  form.append("itemId", itemId.toString());
   return request
     .post(process.env.NEXT_PUBLIC_BASEURL + "/menu/itemImage", form)
     .then((res) => res.data)

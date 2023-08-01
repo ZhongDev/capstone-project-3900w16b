@@ -136,11 +136,15 @@ const OrderedItemCard = ({ orderGroup }: OrderedItemCardProps) => {
                         {item.item.name} x{item.units} [
                         {formatCurrency(item.units * item.item.priceCents)}]
                         <List>
-                          {item.alterations.map((alteration) => {
-                            return (
-                              <List.Item key={alteration.alterationName}>
-                                {alteration.alterationOptions}
-                              </List.Item>
+                          {item.alterations.map((alteration, i) => {
+                            return alteration.alterationOptions.map(
+                              (optionText) => {
+                                return (
+                                  <List.Item key={optionText}>
+                                    {optionText}
+                                  </List.Item>
+                                );
+                              }
                             );
                           })}
                         </List>
