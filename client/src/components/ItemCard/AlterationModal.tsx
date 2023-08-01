@@ -115,7 +115,7 @@ export const AlterationModal = ({
             />
           </Paper>
           <Paper mt="md">
-            <Text>Choices</Text>
+            <Text mb="xs">Choices</Text>
             {choices.length ? (
               <Paper my="xs">
                 {choices.map((choice, i) => {

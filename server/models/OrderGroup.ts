@@ -8,7 +8,7 @@ export default class OrderGroup extends Model {
   id!: number;
   restaurantId!: number;
   tableId!: number;
-  status!: "ordered" | "completed";
+  status!: "ordered" | "prepared" | "completed";
   device!: string | null; // free text to attempt to identify the device that ordered
   placedOn!: string; // This is a date string
 

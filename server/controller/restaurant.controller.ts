@@ -61,8 +61,19 @@ router.get("/table/:tableId", async (req, res, next) => {
     const table = await restaurantService.getRestaurantTable(
       Number(req.params.tableId)
     );
-
     res.json(table);
+  } catch (err) {
+    next(err);
+  }
+});
+
+// controls getting tableName by Id
+router.get("/tableName/:tableId", async (req, res, next) => {
+  try {
+    const name = await restaurantService.getRestaurantTableName(
+      Number(req.params.tableId)
+    );
+    res.json(name);
   } catch (err) {
     next(err);
   }
