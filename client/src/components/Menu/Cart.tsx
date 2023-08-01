@@ -8,8 +8,7 @@ import {
   createStyles,
   Flex,
   ActionIcon,
-  Modal,
-  Button,
+  List,
 } from "@mantine/core";
 import { Alteration, MenuItem, getMenuItemPrep } from "@/api/menu";
 import { useDeviceId, useLocalCart } from "@/hooks";
@@ -18,10 +17,7 @@ import { GradientButton, IncrementButton } from "../Button";
 import { createOrder, getEstTimeByOrderGroupId } from "@/api/order";
 import { Table } from "@/api/table";
 import Image from "next/image";
-import ayaya from "@/public/img/ayaya.jpg";
 import { IconTrash } from "@tabler/icons-react";
-import { useDisclosure } from "@mantine/hooks";
-import useSWR from "swr";
 
 const useStyles = createStyles((theme) => ({
   foodImageContainer: {
@@ -169,11 +165,23 @@ export const Cart = ({ close, restaurant, table, menu }: CartProps) => {
                           );
                         })}
                       </div>
-                      <div className={classes.foodImage}>
-                        <Image src={ayaya} alt="food image" width={75} />
-                      </div>
+                      {inCartItem.image && (
+                        <div className={classes.foodImage}>
+                          <Image
+                            src={
+                              process.env.NEXT_PUBLIC_BASEURL +
+                              "/public/" +
+                              inCartItem.image
+                            }
+                            alt="food image"
+                            width={75}
+                            height={75}
+                            style={{ objectFit: "cover" }}
+                          />
+                        </div>
+                      )}
                     </Flex>
-                    <Flex columnGap="xs">
+                    <Flex mt="xs" columnGap="xs">
                       <IncrementButton
                         value={item.units}
                         onChange={(value) => {

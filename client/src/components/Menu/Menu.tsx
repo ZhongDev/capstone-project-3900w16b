@@ -1,6 +1,5 @@
 import { Menu } from "@/api/menu";
 import { Tabs, createStyles, Text, Paper, Flex } from "@mantine/core";
-import ayaya from "@/public/img/ayaya.jpg";
 import Image from "next/image";
 
 const useStyles = createStyles((theme) => ({
@@ -95,9 +94,21 @@ export const MenuItemsCards = ({ category, onClick }: MenuItemsProps) => {
                     {item.description}
                   </Text>
                 </div>
-                <div className={classes.foodImage}>
-                  <Image src={ayaya} alt="food image" width={100} />
-                </div>
+                {item.image && (
+                  <div className={classes.foodImage}>
+                    <Image
+                      src={
+                        process.env.NEXT_PUBLIC_BASEURL +
+                        "/public/" +
+                        item.image
+                      }
+                      alt="food image"
+                      width={100}
+                      height={100}
+                      style={{ objectFit: "cover" }}
+                    />
+                  </div>
+                )}
               </Flex>
             </Paper>
           );

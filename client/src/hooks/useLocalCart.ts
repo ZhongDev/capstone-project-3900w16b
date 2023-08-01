@@ -13,7 +13,7 @@ export const useLocalCart = () => {
 
   const addToCart = (newItem: Item) => {
     const restaurantId = newItem.restaurantId;
-    let restCart = localCart[restaurantId];
+    let restCart = localCart[restaurantId] ?? [];
     let newCart: Cart = {};
 
     const existingItem = getExistingCartItem(restCart, newItem);

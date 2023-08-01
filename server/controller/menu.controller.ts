@@ -3,6 +3,9 @@ import * as menuService from "../service/menu.service";
 import * as schema from "../schema/menu.schema";
 import auth from "./middleware/auth";
 import NotFound from "../errors/NotFound";
+import multer from "multer";
+import BadRequest from "../errors/BadRequest";
+const upload = multer({ dest: "public/" });
 
 const router = Router();
 
@@ -114,6 +117,31 @@ router.post("/item", auth, async (req, res, next) => {
     next(err);
   }
 });
+
+router.post(
+  "/itemImage",
+  auth,
+  upload.single("image"),
+  async (req, res, next) => {
+    try {
+      const { itemId } = schema.UpdateItemImageRequest.parse(req.body);
+      if (!req.file) {
+        throw new BadRequest("Missing image.");
+      }
+      const newItem = await menuService.updateCategoryItem(
+        req.restaurant!.restaurantId,
+        Number(itemId),
+        {
+          image: req.file.filename,
+          imageMimeType: req.file.mimetype,
+        }
+      );
+      res.json(newItem);
+    } catch (err) {
+      next(err);
+    }
+  }
+);
 
 router.post("/alterationOption", auth, async (req, res, next) => {
   try {
