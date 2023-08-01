@@ -176,7 +176,9 @@ export default function RestaurantMenu() {
           withCloseButton={false}
           centered
         >
-          <Title className={classes.confirmTitle}>Request assistance?</Title>
+          <Title className={classes.confirmTitle}>
+            Request assistance/bill?
+          </Title>
           <Group position="center" className={classes.confirmButtons}>
             <Button
               size="lg"
