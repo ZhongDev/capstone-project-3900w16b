@@ -168,7 +168,7 @@ export const Cart = ({ close, restaurant, table, menu }: CartProps) => {
                       <IncrementButton
                         value={item.units}
                         onChange={(value) => {
-                          setUnitInCart(inCartItem.id, restaurant.id, value);
+                          setUnitInCart(item, restaurant.id, value);
                         }}
                       />
                       <ActionIcon
@@ -177,7 +177,7 @@ export const Cart = ({ close, restaurant, table, menu }: CartProps) => {
                         size="lg"
                         color="gold5"
                         onClick={() => {
-                          removeFromCart(inCartItem.id, restaurant.id);
+                          removeFromCart(item, restaurant.id);
                         }}
                       >
                         <IconTrash />

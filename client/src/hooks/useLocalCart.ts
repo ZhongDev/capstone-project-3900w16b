@@ -16,9 +16,8 @@ export const useLocalCart = () => {
     let restCart = localCart[restaurantId];
     let newCart: Cart = {};
 
-    const existingItem = restCart?.find(
-      (item) => item.itemId === newItem.itemId
-    );
+    const existingItem = getExistingCartItem(restCart, newItem);
+
     if (existingItem) {
       existingItem.units += newItem.units;
       newCart[restaurantId] = [...localCart[restaurantId]];
@@ -29,27 +28,24 @@ export const useLocalCart = () => {
     }
   };
 
-  const removeFromCart = (itemId: number, restaurantId: number) => {
-    const existingItem = localCart[restaurantId]?.find(
-      (item) => item.itemId === itemId
-    );
+  const removeFromCart = (item: Item, restaurantId: number) => {
+    const existingItem = getExistingCartItem(localCart[restaurantId], item);
     if (existingItem) {
       let newCart: Cart = {};
       newCart[restaurantId] = localCart[restaurantId].filter(
-        (item) => item.itemId !== itemId
+        (item) => item !== existingItem
       );
       setCart(newCart);
     }
   };
 
-  const removeOneFromCart = (itemId: number, restaurantId: number) => {
+  const removeOneFromCart = (item: Item, restaurantId: number) => {
     let newCart: Cart = {};
-    const existingItem = localCart[restaurantId]?.find(
-      (item) => item.itemId === itemId
-    );
+
+    const existingItem = getExistingCartItem(localCart[restaurantId], item);
     if (existingItem) {
       if (existingItem.units === 1) {
-        removeFromCart(itemId, restaurantId);
+        removeFromCart(existingItem, restaurantId);
       } else {
         existingItem.units -= 1;
         newCart[restaurantId] = [...localCart[restaurantId]];
@@ -58,13 +54,9 @@ export const useLocalCart = () => {
     }
   };
 
-  const setUnitInCart = (
-    itemId: number,
-    restaurantId: number,
-    units: number
-  ) => {
-    const existingItemIndex = localCart[restaurantId]?.findIndex(
-      (item) => item.itemId === itemId
+  const setUnitInCart = (item: Item, restaurantId: number, units: number) => {
+    const existingItemIndex = localCart[restaurantId]?.findIndex((cartItem) =>
+      itemIsEqual(item, cartItem)
     );
 
     if (existingItemIndex > -1) {
@@ -91,6 +83,22 @@ export const useLocalCart = () => {
       clearCart,
     },
   ] as const;
+};
+
+const itemIsEqual = (item1: Item, item2: Item) => {
+  if (item1.itemId !== item2.itemId) {
+    return false;
+  }
+
+  if (item1.restaurantId !== item2.restaurantId) {
+    return false;
+  }
+
+  if (!isEqualAlterations(item1.alterations ?? [], item2.alterations ?? [])) {
+    return false;
+  }
+
+  return true;
 };
 
 const isEqualAlterations = (
@@ -151,3 +159,6 @@ const sortedArrayIsEqual = (array1: any[], array2: any[]) => {
 
   return true;
 };
+
+const getExistingCartItem = (items: Item[], item: Item) =>
+  items.find((cartItem) => itemIsEqual(item, cartItem));
