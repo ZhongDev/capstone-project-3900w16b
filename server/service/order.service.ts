@@ -91,8 +91,6 @@ export const getEstTimeByOrderGroupId = async (
     recentOrders.length,
     numTables
   );
-  // (1 / 3) * (1 / (0.5 + 0.5 * numTables)) +
-  // (2 / 3) * (1 + 0.5 * recentOrders.length);
 
   let minSum = 0;
   let maxSum = 0;
