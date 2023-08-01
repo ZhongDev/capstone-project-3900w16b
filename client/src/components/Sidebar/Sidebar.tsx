@@ -69,13 +69,28 @@ export const Sidebar = ({ children }: { children: React.ReactNode }) => {
             </Link>
           </Navbar.Section>
           <Navbar.Section className={classes.section} px="xl">
-            <Link href="/summary">
+            <Link href="/order_status">
               <GradientButton
-                variant={router.pathname === "/summary" ? "filled" : "outline"}
+                variant={
+                  router.pathname === "/order_status" ? "filled" : "outline"
+                }
                 size="md"
                 fullWidth
               >
-                Order Summaries
+                Order Status
+              </GradientButton>
+            </Link>
+          </Navbar.Section>
+          <Navbar.Section className={classes.section} px="xl">
+            <Link href="/order_completed">
+              <GradientButton
+                variant={
+                  router.pathname === "/order_completed" ? "filled" : "outline"
+                }
+                size="md"
+                fullWidth
+              >
+                Orders Completed
               </GradientButton>
             </Link>
           </Navbar.Section>
