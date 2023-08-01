@@ -245,10 +245,12 @@ export const getRestaurantOrders = async (
     });
     return acc;
   }, {});
-
-  const mostPopularItemId = Object.keys(itemDict).reduce((a, b) => {
-    return itemDict[a] > itemDict[b] ? a : b;
-  });
+  const mostPopularItemId =
+    Object.keys(itemDict).length !== 0
+      ? Object.keys(itemDict).reduce((a, b) => {
+          return itemDict[a] > itemDict[b] ? a : b;
+        })
+      : "";
 
   const mostPopularItem = await menuRepo.getItem(Number(mostPopularItemId));
   const mostPopularItemName = mostPopularItem?.name;
