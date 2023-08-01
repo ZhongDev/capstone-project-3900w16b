@@ -98,20 +98,6 @@ router.get("/orders", auth, async (req, res, next) => {
   }
 });
 
-// Controls get of orders
-router.get("/orders", auth, async (req, res, next) => {
-  try {
-    const tables = await orderService.getOrdersByRestaurantId(
-      req.restaurant!.restaurantId
-    );
-    res.json(
-      await orderService.getOrdersByRestaurantId(req.restaurant!.restaurantId)
-    );
-  } catch (err) {
-    next(err);
-  }
-});
-
 router.get(
   "/:restaurantId/orderGroup/:orderGroupId",
   async (req, res, next) => {
