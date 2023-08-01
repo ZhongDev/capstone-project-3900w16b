@@ -97,9 +97,9 @@ export default function TableManagement() {
             <Paper shadow="md" mt="xs" px="xl" py="md" radius="md">
               {statData?.data.length !== 0 ? (
                 <Flex direction="column" align="center">
-                  <Title style={{ paddingBottom: "1rem" }}>
+                  <Text size="xl" fw={700} style={{ paddingBottom: "1rem" }}>
                     {statData?.from} - {statData?.to}
-                  </Title>
+                  </Text>
 
                   <Text size="xl">
                     Total Revenue: ${statData?.totalRevenue.toLocaleString()}
@@ -112,7 +112,9 @@ export default function TableManagement() {
                   </Text>
                 </Flex>
               ) : (
-                <Title>Select dates to see restaurant stats!</Title>
+                <Text size="xl" fw={700}>
+                  Select dates to see restaurant stats!
+                </Text>
               )}
             </Paper>
           </Flex>
