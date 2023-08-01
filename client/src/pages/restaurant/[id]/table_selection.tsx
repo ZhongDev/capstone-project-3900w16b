@@ -128,15 +128,6 @@ export default function HomePage() {
             variant="outline"
             radius="xl"
             size="lg"
-            onClick={() => router.reload()}
-          >
-            Scan QR
-          </Button>
-          <Button
-            className={classes.button}
-            variant="outline"
-            radius="xl"
-            size="lg"
             onClick={() => router.push(`../${router.query.id}/homepage`)}
           >
             Cancel

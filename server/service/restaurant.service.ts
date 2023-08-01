@@ -69,6 +69,11 @@ export const getRestaurantTable = async (tableId: number) => {
   return restaurantRepo.getRestaurantTableById(tableId);
 };
 
+export const getRestaurantTableName = async (tableId: number) => {
+  const table = await restaurantRepo.getRestaurantTableById(tableId);
+  return table?.name;
+};
+
 export const login = async (email: string, password: string) => {
   const restaurant = await restaurantRepo.getRestaurantByEmail(email);
   if (!restaurant) {
