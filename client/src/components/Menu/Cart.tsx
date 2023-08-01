@@ -8,8 +8,7 @@ import {
   createStyles,
   Flex,
   ActionIcon,
-  Modal,
-  Button,
+  List,
 } from "@mantine/core";
 import { Alteration, MenuItem, getMenuItemPrep } from "@/api/menu";
 import { useDeviceId, useLocalCart } from "@/hooks";
@@ -20,8 +19,6 @@ import { Table } from "@/api/table";
 import Image from "next/image";
 import ayaya from "@/public/img/ayaya.jpg";
 import { IconTrash } from "@tabler/icons-react";
-import { useDisclosure } from "@mantine/hooks";
-import useSWR from "swr";
 
 const useStyles = createStyles((theme) => ({
   foodImageContainer: {
@@ -251,26 +248,6 @@ export const Cart = ({ close, restaurant, table, menu }: CartProps) => {
         </div>
       </div>
     </>
-  );
-};
-
-type InCartAlterationListProps = { optionName: string; choices: string[] };
-
-const InCartAlterationList = ({
-  optionName,
-  choices,
-}: InCartAlterationListProps) => {
-  const { classes } = useStyles();
-
-  return (
-    <div className={classes.alterationsList}>
-      <Text fz="sm">{optionName}</Text>
-      <List withPadding size="sm">
-        {choices.map((choice, i) => {
-          return <List.Item key={i}>{choice}</List.Item>;
-        })}
-      </List>
-    </div>
   );
 };
 
