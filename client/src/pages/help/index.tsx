@@ -32,7 +32,6 @@ export default function Help() {
   const helpManage = helpData ? helpData : [];
 
   const [audio, setAudio] = useState<HTMLAudioElement | null>(null);
-  const [prevHelpManageLength, setPreHelpManageLength] = useState(0);
   const [prevOccurrences, setPrevOccurrences] = useState(0);
   const [initialLoad, setInitialLoad] = useState(true);
 
@@ -40,11 +39,18 @@ export default function Help() {
     setAudio(new Audio("/audio/Notif.ogg"));
   }, []);
 
-  if (prevHelpManageLength < helpManage.length && !initialLoad) {
+  const totalOccurrences = helpManage.reduce((acc, call) => {
+    return acc + call.numOccurrence;
+  }, 0);
+
+  if (prevOccurrences < totalOccurrences && !initialLoad) {
     audio?.play();
-    setPreHelpManageLength(helpManage.length);
+    setPrevOccurrences(totalOccurrences);
   } else if (initialLoad) {
+    setPrevOccurrences(totalOccurrences);
     setInitialLoad(false);
+  } else if (prevOccurrences > totalOccurrences) {
+    setPrevOccurrences(totalOccurrences);
   }
 
   const latestHelp = helpManage.length === 0 ? null : helpManage[0];

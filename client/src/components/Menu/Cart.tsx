@@ -231,7 +231,7 @@ export const Cart = ({ close, restaurant, table, menu }: CartProps) => {
             });
           }}
         >
-          Send Order to kitchen
+          Send Order To Kitchen
         </GradientButton>
       </div>
     </div>
