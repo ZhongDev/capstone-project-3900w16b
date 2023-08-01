@@ -104,7 +104,7 @@ export const getEstTimeByOrderGroupId = async (
       });
     }) ?? []
   );
-  let estTime =
+  const estTime =
     Math.round((minSum + busyConstant * (maxSum - minSum)) * 10) / 10;
 
   return estTime;
