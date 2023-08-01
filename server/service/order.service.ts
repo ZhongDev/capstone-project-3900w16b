@@ -120,47 +120,49 @@ export const getRestaurantOrders = async (
 ) => {
   const newFrom = new Date(from).toISOString();
   // "To" in repo is not inclusive, so need to add a day
-  const newTo = new Date(to);
-  newTo.setDate(newTo.getDate() + 1);
-  const newerTo = newTo.toISOString();
+  const newDate = new Date(to);
+  newDate.setDate(newDate.getDate() + 1);
+  const newTo = newDate.toISOString();
 
   const orderData = await orderRepo.getRestaurantOrders(
     restaurantId,
     newFrom,
-    newerTo
+    newTo
   );
 
-  let dayRevenue = 0;
-  let currDay: string | null = null;
-  // map each cart
-  const revenue: number[] = [];
-  orderData.forEach((orderGroup) => {
-    // date of cart
-    const orderGroupDate = new Date(orderGroup.placedOn).toDateString();
-    console.log(orderGroupDate);
-    // total price of cart
-    const totalRevenueOrderGroup = orderGroup.orders?.reduce((acc2, order) => {
-      const xd = order.item?.priceCents ? order.item?.priceCents : 0;
-      return acc2 + xd;
-    }, 0);
-    const revenueOrderGroup = totalRevenueOrderGroup
-      ? totalRevenueOrderGroup
-      : 0;
-    console.log("CURRENT DAY: " + currDay + " ORDER DAY: " + orderGroupDate);
-    if (currDay === null) {
-      // console.log("trigger");
-      currDay = orderGroupDate;
-      dayRevenue = revenueOrderGroup;
-    } else if (orderGroupDate === currDay) {
-      dayRevenue += revenueOrderGroup;
-    } else {
-      const thing = dayRevenue;
-      revenue.push(thing);
-      dayRevenue = 0;
-      currDay = orderGroupDate;
-      console.log("PUSHED: " + thing);
-    }
-  });
+  const orderDataByDay = orderData.reduce();
+
+  // let dayRevenue = 0;
+  // let currDay: string | null = null;
+  // // map each cart
+  // const revenue: number[] = [];
+  // orderData.forEach((orderGroup) => {
+  //   // date of cart
+  //   const orderGroupDate = new Date(orderGroup.placedOn).toDateString();
+  //   console.log(orderGroupDate);
+  //   // total price of cart
+  //   const totalRevenueOrderGroup = orderGroup.orders?.reduce((acc2, order) => {
+  //     const xd = order.item?.priceCents ? order.item?.priceCents : 0;
+  //     return acc2 + xd;
+  //   }, 0);
+  //   const revenueOrderGroup = totalRevenueOrderGroup
+  //     ? totalRevenueOrderGroup
+  //     : 0;
+  //   console.log("CURRENT DAY: " + currDay + " ORDER DAY: " + orderGroupDate);
+  //   if (currDay === null) {
+  //     // console.log("trigger");
+  //     currDay = orderGroupDate;
+  //     dayRevenue = revenueOrderGroup;
+  //   } else if (orderGroupDate === currDay) {
+  //     dayRevenue += revenueOrderGroup;
+  //   } else {
+  //     const thing = dayRevenue;
+  //     revenue.push(thing);
+  //     dayRevenue = 0;
+  //     currDay = orderGroupDate;
+  //     console.log("PUSHED: " + thing);
+  //   }
+  // });
 
   const totalRevenue = revenue.reduce((acc, day) => acc + day, 0);
   const numOrders = orderData.map((orderGroup) => orderGroup.orders?.length);
