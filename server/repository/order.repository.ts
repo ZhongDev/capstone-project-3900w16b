@@ -69,3 +69,15 @@ export const getRestaurantUncompletedOrders = (restaurantId: number) => {
     .where({ status: "ordered" })
     .withGraphFetched("orders");
 };
+
+export const getRestaurantOrders = async (
+  restaurantId: number,
+  from: string,
+  to: string
+) => {
+  return OrderGroup.query()
+    .where({ restaurantId })
+    .whereBetween("placedOn", [from, to])
+    .withGraphFetched("orders.item");
+  // .withGraphFetched("itemId");
+};

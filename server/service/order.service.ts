@@ -5,6 +5,9 @@ import * as menuRepo from "../repository/menu.repository";
 import BadRequest from "../errors/BadRequest";
 import NotFound from "../errors/NotFound";
 
+import * as orderType from "../types/order";
+import OrderGroup from "../models/OrderGroup";
+
 export const createOrder = async (
   restaurantId: number,
   tableId: number,
@@ -108,4 +111,60 @@ export const getEstTimeByOrderGroupId = async (
     Math.round((minSum + busyConstant * (maxSum - minSum)) * 10) / 10;
 
   return estTime;
+};
+
+export const getRestaurantOrders = async (
+  restaurantId: number,
+  from: string,
+  to: string
+) => {
+  const newFrom = new Date(from).toISOString();
+  // "To" in repo is not inclusive, so need to add a day
+  const newTo = new Date(to);
+  newTo.setDate(newTo.getDate() + 1);
+  const newerTo = newTo.toISOString();
+
+  const orderData = await orderRepo.getRestaurantOrders(
+    restaurantId,
+    newFrom,
+    newerTo
+  );
+
+  let dayRevenue = 0;
+  let currDay: string | null = null;
+  // map each cart
+  const revenue: number[] = [];
+  orderData.forEach((orderGroup) => {
+    // date of cart
+    const orderGroupDate = new Date(orderGroup.placedOn).toDateString();
+    console.log(orderGroupDate);
+    // total price of cart
+    const totalRevenueOrderGroup = orderGroup.orders?.reduce((acc2, order) => {
+      const xd = order.item?.priceCents ? order.item?.priceCents : 0;
+      return acc2 + xd;
+    }, 0);
+    const revenueOrderGroup = totalRevenueOrderGroup
+      ? totalRevenueOrderGroup
+      : 0;
+    console.log("CURRENT DAY: " + currDay + " ORDER DAY: " + orderGroupDate);
+    if (currDay === null) {
+      // console.log("trigger");
+      currDay = orderGroupDate;
+      dayRevenue = revenueOrderGroup;
+    } else if (orderGroupDate === currDay) {
+      dayRevenue += revenueOrderGroup;
+    } else {
+      const thing = dayRevenue;
+      revenue.push(thing);
+      dayRevenue = 0;
+      currDay = orderGroupDate;
+      console.log("PUSHED: " + thing);
+    }
+  });
+
+  const totalRevenue = revenue.reduce((acc, day) => acc + day, 0);
+  const numOrders = orderData.map((orderGroup) => orderGroup.orders?.length);
+
+  // const orderResponse: orderType.RestaurantStats = {};
+  return revenue;
 };
