@@ -39,4 +39,41 @@ router.get("/:restaurantId/:deviceId", async (req, res, next) => {
   }
 });
 
+router.get(
+  "/:restaurantId/orderGroup/:orderGroupId",
+  async (req, res, next) => {
+    try {
+      res.json(
+        await orderService.getOrderGroupById(Number(req.params.orderGroupId))
+      );
+    } catch (err) {
+      next(err);
+    }
+  }
+);
+
+router.get("/:restaurantId/orders/:orderGroupId", async (req, res, next) => {
+  try {
+    res.json(
+      await orderService.getOrdersByOrderGroupId(
+        Number(req.params.orderGroupId)
+      )
+    );
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.get("/:restaurantId/est/:orderGroupId", async (req, res, next) => {
+  try {
+    res.json(
+      await orderService.getEstTimeByOrderGroupId(
+        Number(req.params.restaurantId),
+        Number(req.params.orderGroupId)
+      )
+    );
+  } catch (err) {
+    next(err);
+  }
+});
 export default router;

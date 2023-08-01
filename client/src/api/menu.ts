@@ -176,6 +176,22 @@ export const getMenuItem = (itemId: number) => {
     }) as Promise<MenuItem>;
 };
 
+export type GetItemPrepTimeResponse = {
+  minPrepTime: number;
+  maxPrepTime: number;
+};
+
+export const getMenuItemPrep = (itemId: number) => {
+  return request
+    .get(process.env.NEXT_PUBLIC_BASEURL + "/menu/item/prep/" + itemId, {
+      withCredentials: false,
+    })
+    .then((res) => res.data)
+    .catch((err) => {
+      throw err.response.data;
+    }) as Promise<GetItemPrepTimeResponse>;
+};
+
 export type UpdateItemResponse = MenuItem;
 
 export const updateMenuItem = (

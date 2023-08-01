@@ -1,3 +1,4 @@
+import { raw } from "objection";
 import Order from "../models/Order";
 import OrderAlteration from "../models/OrderAlteration";
 import OrderGroup from "../models/OrderGroup";
@@ -51,6 +52,24 @@ export const createOrder = (
   });
 };
 
+export const getOrderGroupById = async (orderGroupId: number) => {
+  return OrderGroup.query()
+    .findOne({
+      id: orderGroupId,
+    })
+    .withGraphFetched("orders");
+};
+
+export const getOrdersByOrderGroupId = (orderGroupId: number) => {
+  return Order.query()
+    .where({
+      orderGroupId,
+    })
+    .then((a) => {
+      return a;
+    });
+};
+
 export const getRestaurantOrdersByDeviceId = (
   restaurantId: number,
   deviceId: string
@@ -64,4 +83,11 @@ export const getRestaurantOrdersByDeviceId = (
     .withGraphFetched(
       "orders.[item, orderAlterations.[alteration, alterationOption]]"
     );
+};
+
+export const getRestaurantUncompletedOrders = (restaurantId: number) => {
+  return OrderGroup.query()
+    .where({ restaurantId })
+    .where({ status: "ordered" })
+    .withGraphFetched("orders");
 };
