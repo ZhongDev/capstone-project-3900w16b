@@ -1,12 +1,14 @@
-import { Title, Loader, createStyles, Flex } from "@mantine/core";
+import { Title, Loader, createStyles, Flex, Text } from "@mantine/core";
 import useSWR from "swr";
 import { Sidebar } from "@/components/Sidebar";
 import { getRestaurantTables } from "@/api/table";
 import Head from "next/head";
 import { CreateTable, TableCard } from "@/components/TableCard";
 import { Group } from "@mantine/core";
-import { useState } from "react";
-// import { DatePicker } from "@mantine/dates";
+import { useEffect, useState } from "react";
+import { getDaySummary } from "@/api/order";
+import { DatePicker } from "@mantine/dates";
+import { getMe } from "@/api/auth";
 
 const useStyles = createStyles((theme) => ({
   menuSection: {
@@ -16,7 +18,19 @@ const useStyles = createStyles((theme) => ({
 
 export default function TableManagement() {
   const { classes } = useStyles();
+  const { data, error, isLoading } = useSWR("/me", getMe);
   const [dates, setDates] = useState<[Date | null, Date | null]>([null, null]);
+  const [shit, setShit] = useState("");
+  useEffect(() => {
+    getDaySummary(
+      data?.restaurantId,
+      dates[0]?.toString(),
+      dates[1]?.toString()
+    ).then((res) => {
+      setShit(JSON.stringify(res));
+    });
+  }, [dates]);
+
   const {
     data: tableData,
     error: tableDataError,
@@ -39,6 +53,7 @@ export default function TableManagement() {
             value={dates}
             onChange={setDates}
           />
+          <Text>{shit}</Text>
         </Group>
       </Sidebar>
     </>

@@ -94,7 +94,11 @@ export const getEstTimeByOrderGroupId = (
       throw err.response.data;
     }) as Promise<number>;
 
-export const getDaySummary = (restaurantId: number, from: string, to: string) =>
+export const getDaySummary = (
+  restaurantId: number | undefined,
+  from: string | undefined,
+  to: string | undefined
+) =>
   request
     .get(
       `${process.env.NEXT_PUBLIC_BASEURL}/order/${restaurantId}/summary/${from}/${to}`
