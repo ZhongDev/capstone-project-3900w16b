@@ -1,21 +1,20 @@
 import { useMemo, useState } from "react";
+import { useRouter } from "next/router";
 import {
   rem,
-  List,
   Paper,
   Text,
   Title,
   createStyles,
-  Tabs,
   Flex,
-  Badge,
   ActionIcon,
+  List,
 } from "@mantine/core";
-import { MenuItem } from "@/api/menu";
+import { Alteration, MenuItem, getMenuItemPrep } from "@/api/menu";
 import { useDeviceId, useLocalCart } from "@/hooks";
 import { formatCurrency } from "@/helpers";
 import { GradientButton, IncrementButton } from "../Button";
-import { createOrder } from "@/api/order";
+import { createOrder, getEstTimeByOrderGroupId } from "@/api/order";
 import { Table } from "@/api/table";
 import Image from "next/image";
 import ayaya from "@/public/img/ayaya.jpg";
@@ -61,6 +60,9 @@ const useStyles = createStyles((theme) => ({
     },
   },
   item: { cursor: "pointer" },
+  alterationsList: {
+    marginBottom: theme.spacing.xs,
+  },
 }));
 
 export type CartProps = {
@@ -71,10 +73,15 @@ export type CartProps = {
 };
 
 export const Cart = ({ close, restaurant, table, menu }: CartProps) => {
+  const router = useRouter();
   const { classes } = useStyles();
 
   const deviceId = useDeviceId();
   const [cart, { setUnitInCart, removeFromCart, clearCart }] = useLocalCart();
+
+  const [estTime, setEstTime] = useState<number>(0);
+  const [ordered, setOrdered] = useState(false);
+
   const restCart = useMemo(
     () => (cart[restaurant.id] ? cart[restaurant.id] : []),
     [cart, restaurant.id]
@@ -92,7 +99,7 @@ export const Cart = ({ close, restaurant, table, menu }: CartProps) => {
       .reduce((acc, curr) => acc + curr, 0);
   }, [menu, restCart]);
 
-  return (
+  return !ordered ? (
     <div className={classes.container}>
       <div>
         <Title align="center" size={rem(50)}>
@@ -133,9 +140,31 @@ export const Cart = ({ close, restaurant, table, menu }: CartProps) => {
                             ]
                           </Text>
                         </Text>
-                        <Text c="dimmed" fz="md">
-                          {inCartItem.description}
-                        </Text>
+                        {item.alterations?.map((alteration) => {
+                          const itemAlteration = inCartItem.alterations.find(
+                            (itemAlteration) =>
+                              itemAlteration.id === alteration.alterationId
+                          );
+                          if (!itemAlteration) {
+                            return null;
+                          }
+                          return (
+                            <InCartAlterationList
+                              key={alteration.alterationId}
+                              optionName={itemAlteration.optionName}
+                              choices={
+                                alteration.selectedOptions
+                                  .map((selectedOption) => {
+                                    return itemAlteration.options.find(
+                                      (alterationChoice) =>
+                                        alterationChoice.id === selectedOption
+                                    )?.choice;
+                                  })
+                                  .filter(Boolean) as string[]
+                              }
+                            />
+                          );
+                        })}
                       </div>
                       <div className={classes.foodImage}>
                         <Image src={ayaya} alt="food image" width={75} />
@@ -145,7 +174,7 @@ export const Cart = ({ close, restaurant, table, menu }: CartProps) => {
                       <IncrementButton
                         value={item.units}
                         onChange={(value) => {
-                          setUnitInCart(inCartItem.id, restaurant.id, value);
+                          setUnitInCart(item, restaurant.id, value);
                         }}
                       />
                       <ActionIcon
@@ -154,7 +183,7 @@ export const Cart = ({ close, restaurant, table, menu }: CartProps) => {
                         size="lg"
                         color="gold5"
                         onClick={() => {
-                          removeFromCart(inCartItem.id, restaurant.id);
+                          removeFromCart(item, restaurant.id);
                         }}
                       >
                         <IconTrash />
@@ -181,15 +210,63 @@ export const Cart = ({ close, restaurant, table, menu }: CartProps) => {
               table.id,
               deviceId,
               cart[restaurant.id]
-            ).then(() => {
-              clearCart();
-              close?.();
+            ).then((res) => {
+              setOrdered(true);
+              getEstTimeByOrderGroupId(restaurant.id, res[0].orderGroupId).then(
+                (res) => {
+                  res ? setEstTime(res) : null;
+                }
+              );
             });
           }}
         >
           Pay with Apple Pay
         </GradientButton>
       </div>
+    </div>
+  ) : (
+    <>
+      <div className={classes.container}>
+        <Paper withBorder shadow="md" p="xl" mt="xl">
+          <Title align="center">Your food will arrive in around:</Title>
+          <Text align="center" size="4.5rem">
+            {estTime}+
+          </Text>
+          <Text align="center" size="2rem">
+            Mins
+          </Text>
+        </Paper>
+        <div className={classes.floatingButtonGroup}>
+          <GradientButton
+            onClick={() => {
+              clearCart();
+              close?.();
+            }}
+          >
+            Confirm
+          </GradientButton>
+        </div>
+      </div>
+    </>
+  );
+};
+
+type InCartAlterationListProps = { optionName: string; choices: string[] };
+
+const InCartAlterationList = ({
+  optionName,
+  choices,
+}: InCartAlterationListProps) => {
+  const { classes } = useStyles();
+
+  return (
+    <div className={classes.alterationsList}>
+      <Text fz="sm">{optionName}</Text>
+      <List withPadding size="sm">
+        {choices.map((choice, i) => {
+          return <List.Item key={i}>{choice}</List.Item>;
+        })}
+      </List>
     </div>
   );
 };

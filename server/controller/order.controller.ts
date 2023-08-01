@@ -14,6 +14,7 @@ router.post("/:restaurantId/:tableId", async (req, res, next) => {
       items.map((item) => ({
         itemId: item.itemId,
         units: item.units,
+        alterations: item.alterations,
         status: "ordered",
         placedOn: new Date().toISOString(),
       }))
@@ -38,4 +39,41 @@ router.get("/:restaurantId/:deviceId", async (req, res, next) => {
   }
 });
 
+router.get(
+  "/:restaurantId/orderGroup/:orderGroupId",
+  async (req, res, next) => {
+    try {
+      res.json(
+        await orderService.getOrderGroupById(Number(req.params.orderGroupId))
+      );
+    } catch (err) {
+      next(err);
+    }
+  }
+);
+
+router.get("/:restaurantId/orders/:orderGroupId", async (req, res, next) => {
+  try {
+    res.json(
+      await orderService.getOrdersByOrderGroupId(
+        Number(req.params.orderGroupId)
+      )
+    );
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.get("/:restaurantId/est/:orderGroupId", async (req, res, next) => {
+  try {
+    res.json(
+      await orderService.getEstTimeByOrderGroupId(
+        Number(req.params.restaurantId),
+        Number(req.params.orderGroupId)
+      )
+    );
+  } catch (err) {
+    next(err);
+  }
+});
 export default router;

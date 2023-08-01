@@ -73,6 +73,16 @@ router.get("/item/:itemId", async (req, res, next) => {
   }
 });
 
+// Get item preptime based off id
+router.get("/item/prep/:itemId", async (req, res, next) => {
+  try {
+    const item = await menuService.getMenuItemPrep(Number(req.params.itemId));
+    res.json(item);
+  } catch (err) {
+    next(err);
+  }
+});
+
 // Reordering items
 router.post("/item/displayOrder", auth, async (req, res, next) => {
   try {

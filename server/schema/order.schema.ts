@@ -6,6 +6,14 @@ export const CreateOrderRequest = z.object({
     z.object({
       itemId: z.number(),
       units: z.number().gte(1),
+      alterations: z
+        .array(
+          z.object({
+            alterationId: z.number(),
+            selectedOptions: z.array(z.number()),
+          })
+        )
+        .optional(),
     })
   ),
 });
