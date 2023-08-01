@@ -11,7 +11,6 @@ import {
   createStyles,
   ScrollArea,
   Text,
-  Button,
 } from "@mantine/core";
 
 const useStyles = createStyles((theme) => ({
@@ -33,14 +32,27 @@ export default function Help() {
   const helpManage = helpData ? helpData : [];
 
   const [audio, setAudio] = useState<HTMLAudioElement | null>(null);
+  const [prevOccurrences, setPrevOccurrences] = useState(0);
+  const [initialLoad, setInitialLoad] = useState(true);
 
   useEffect(() => {
     setAudio(new Audio("/audio/Notif.ogg"));
   }, []);
 
-  audio?.play();
+  const totalOccurrences = helpManage.reduce((acc, call) => {
+    return acc + call.numOccurrence;
+  }, 0);
 
-  // } else
+  if (prevOccurrences < totalOccurrences && !initialLoad) {
+    audio?.play();
+    setPrevOccurrences(totalOccurrences);
+  } else if (initialLoad) {
+    setPrevOccurrences(totalOccurrences);
+    setInitialLoad(false);
+  } else if (prevOccurrences > totalOccurrences) {
+    setPrevOccurrences(totalOccurrences);
+  }
+
   const latestHelp = helpManage.length === 0 ? null : helpManage[0];
   const otherHelp = helpManage.length === 0 ? [] : helpManage.slice(1);
 

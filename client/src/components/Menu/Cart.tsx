@@ -231,7 +231,7 @@ export const Cart = ({ close, restaurant, table, menu }: CartProps) => {
             });
           }}
         >
-          Pay with Apple Pay
+          Send Order To Kitchen
         </GradientButton>
       </div>
     </div>
