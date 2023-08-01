@@ -14,6 +14,7 @@ router.post("/:restaurantId/:tableId", async (req, res, next) => {
       items.map((item) => ({
         itemId: item.itemId,
         units: item.units,
+        alterations: item.alterations,
         status: "ordered",
         placedOn: new Date().toISOString(),
       }))

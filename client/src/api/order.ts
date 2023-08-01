@@ -9,7 +9,7 @@ export type CreateOrderBody = {
 
 export type CreateOrderResponse = {
   itemId: number;
-  orderGroupId: number
+  orderGroupId: number;
   units: number;
   id: number;
 }[];
@@ -44,6 +44,10 @@ export type GetRestaurantOrdersByDeviceIdResponse = {
       priceCents: number;
     };
     units: number;
+    alterations: {
+      alterationName: string;
+      alterationOptions: string[];
+    }[];
   }[];
 }[];
 

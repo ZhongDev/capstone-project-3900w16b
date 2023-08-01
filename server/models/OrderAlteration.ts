@@ -11,7 +11,7 @@ export default class OrderAlteration extends Model {
 
   order?: Order;
   alteration?: Alteration;
-  alterationOptions?: AlterationOption[];
+  alterationOption?: AlterationOption;
 
   static tableName = "OrderAlteration";
 
@@ -32,7 +32,7 @@ export default class OrderAlteration extends Model {
         to: "Alteration.id",
       },
     },
-    alterationOptions: {
+    alterationOption: {
       relation: Model.BelongsToOneRelation,
       modelClass: AlterationOption,
       join: {
