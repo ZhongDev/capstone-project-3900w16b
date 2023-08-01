@@ -98,26 +98,4 @@ router.get("/orders", auth, async (req, res, next) => {
   }
 });
 
-router.post("/statusComplete/:orderGroupId", async (req, res, next) => {
-  try {
-    const status = await orderService.changeOrderToComplete(
-      Number(req.params.orderGroupId)
-    );
-    res.json(status);
-  } catch (err) {
-    next(err);
-  }
-});
-
-router.post("/statusOrdered/:orderGroupId", async (req, res, next) => {
-  try {
-    const status = await orderService.changeOrderToOrdered(
-      Number(req.params.orderGroupId)
-    );
-    res.json(status);
-  } catch (err) {
-    next(err);
-  }
-});
-
 export default router;
