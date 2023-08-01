@@ -231,7 +231,7 @@ export const Cart = ({ close, restaurant, table, menu }: CartProps) => {
             });
           }}
         >
-          Pay with Apple Pay
+          Send to Kitchen
         </GradientButton>
       </div>
     </div>
@@ -259,26 +259,6 @@ export const Cart = ({ close, restaurant, table, menu }: CartProps) => {
         </div>
       </div>
     </>
-  );
-};
-
-type InCartAlterationListProps = { optionName: string; choices: string[] };
-
-const InCartAlterationList = ({
-  optionName,
-  choices,
-}: InCartAlterationListProps) => {
-  const { classes } = useStyles();
-
-  return (
-    <div className={classes.alterationsList}>
-      <Text fz="sm">{optionName}</Text>
-      <List withPadding size="sm">
-        {choices.map((choice, i) => {
-          return <List.Item key={i}>{choice}</List.Item>;
-        })}
-      </List>
-    </div>
   );
 };
 

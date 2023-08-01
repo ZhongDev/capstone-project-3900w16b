@@ -195,7 +195,7 @@ export const getRestaurantOrders = async (
     const totalRevenueOrderDay = orderDay.reduce((acc, orderGroup) => {
       let totalRevenueOrderGroup = orderGroup.orders?.reduce((acc2, order) => {
         const cost = order.item?.priceCents
-          ? order.item?.priceCents * order.units
+          ? (order.item?.priceCents / 100) * order.units
           : 0;
         return acc2 + cost;
       }, 0);
