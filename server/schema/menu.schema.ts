@@ -30,6 +30,10 @@ export const CreateItemRequest = z.object({
   }),
 });
 
+export const UpdateItemImageRequest = z.object({
+  itemId: z.string().regex(/[0-9]+/),
+});
+
 export const CreateAlterationRequest = z.object({
   itemId: z.number(),
   maxChoices: z.number().int(),
