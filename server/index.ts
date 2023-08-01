@@ -4,6 +4,7 @@ config();
 import express, { NextFunction, Request, Response } from "express";
 import cors from "cors";
 import cookie from "cookie-parser";
+import { MulterError } from "multer";
 import { ZodError } from "zod";
 import restaurantController from "./controller/restaurant.controller";
 import menuController from "./controller/menu.controller";
@@ -23,6 +24,7 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookie());
+app.use("/public", express.static("public"));
 
 app.use("/restaurant", restaurantController);
 app.use("/menu", menuController);
@@ -43,6 +45,8 @@ app.use((err: unknown, req: Request, res: Response, next: NextFunction) => {
     res.status(400).json(err);
   } else if (err instanceof CustomError) {
     res.status(err.status).json({ msg: err.message });
+  } else if (err instanceof MulterError) {
+    res.status(400).json({ msg: err.message });
   } else {
     console.error("Error: ", err);
     res.status(500).json("Internal Server Error");

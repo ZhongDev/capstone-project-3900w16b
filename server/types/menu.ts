@@ -20,6 +20,8 @@ export type UpdateCategory = { name?: string; displayOrder?: number };
 
 export type UpdateItem = {
   name?: string;
+  imageMimeType?: string;
+  image?: string;
   description?: string;
   ingredients?: string | null;
   priceCents?: number;

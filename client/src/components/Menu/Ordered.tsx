@@ -17,7 +17,6 @@ import {
   getRestaurantOrdersByDeviceId,
 } from "@/api/order";
 import { formatCurrency } from "@/helpers";
-import ayaya from "@/public/img/ayaya.jpg";
 import { GradientButton } from "../Button";
 import { useDeviceId } from "@/hooks";
 
@@ -100,6 +99,10 @@ const OrderedItemCard = ({ orderGroup }: OrderedItemCardProps) => {
     [orderGroup]
   );
 
+  if (orderGroup.items.length === 0) {
+    return null;
+  }
+
   return (
     <div>
       <Paper p="lg" shadow="lg" mb="sm">
@@ -149,13 +152,23 @@ const OrderedItemCard = ({ orderGroup }: OrderedItemCardProps) => {
             )}
           </Flex>
           <Flex direction="column" justify="space-between" align="flex-end">
-            <Image
-              className={classes.foodImage}
-              src={ayaya}
-              alt="food image"
-              width={75}
-            />
-            {formatCurrency(groupTotalPrice)}
+            {orderGroup.items[0].item.image && (
+              <Image
+                className={classes.foodImage}
+                src={
+                  process.env.NEXT_PUBLIC_BASEURL +
+                  "/public/" +
+                  orderGroup.items[0].item.image
+                }
+                alt="food image"
+                width={75}
+                height={75}
+                style={{
+                  objectFit: "cover",
+                }}
+              />
+            )}
+            <b>{formatCurrency(groupTotalPrice)}</b>
           </Flex>
         </Flex>
       </Paper>

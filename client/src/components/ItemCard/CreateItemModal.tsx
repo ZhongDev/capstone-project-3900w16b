@@ -10,13 +10,14 @@ import {
   createStyles,
   Flex,
   ActionIcon,
+  FileButton,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useDisclosure } from "@mantine/hooks";
 import { useState } from "react";
 import { mutate } from "swr";
 import { Alteration, AlterationModal } from "./AlterationModal";
-import { createItem } from "@/api/menu";
+import { createItem, uploadItemImage } from "@/api/menu";
 import { IconTrashX, IconPencil } from "@tabler/icons-react";
 
 const useStyles = createStyles((theme) => ({
@@ -44,9 +45,11 @@ export const CreateItemModal = ({
   ] = useDisclosure(false);
 
   const [alterations, setAlterations] = useState<Alteration[]>([]);
+  const [image, setImage] = useState<File | null>(null);
 
   const close = () => {
     itemForm.reset();
+    setImage(null);
     setAlterations([]);
     closeDisclosure();
   };
@@ -97,10 +100,16 @@ export const CreateItemModal = ({
                 };
               }),
               priceCents: values.priceCents * 100,
-            }).then(() => {
-              mutate("/menu");
-              close();
-            });
+            })
+              .then((item) => {
+                if (image) {
+                  return uploadItemImage(item.id, image);
+                }
+              })
+              .then(() => {
+                mutate("/menu");
+                close();
+              });
           })}
         >
           <TextInput
@@ -138,6 +147,20 @@ export const CreateItemModal = ({
             withAsterisk
             {...itemForm.getInputProps("description")}
           />
+          <Flex align="center" columnGap="xs">
+            <FileButton onChange={setImage} accept="image/png,image/jpeg">
+              {(props) => (
+                <Button mb="xs" {...props} variant="outline">
+                  Upload image
+                </Button>
+              )}
+            </FileButton>
+            {image && (
+              <Text truncate size="xs">
+                {image.name}
+              </Text>
+            )}
+          </Flex>
           <div>
             <Text fz="xs">Estimated preparation time (minutes):</Text>
             <Group className={classes.estTimeGroup} grow>

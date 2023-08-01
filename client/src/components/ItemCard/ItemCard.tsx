@@ -13,6 +13,7 @@ import { useSWRConfig } from "swr";
 import { MenuItem, deleteMenuItem, updateMenuItem } from "@/api/menu";
 import { formatCurrency } from "@/helpers";
 import { EditItemModal } from "./EditItemModal";
+import Image from "next/image";
 
 export type ItemsProps = {
   items: MenuItem[];
@@ -41,12 +42,25 @@ export const ItemCard = ({ item }: ItemCardProps) => {
   return (
     <Paper shadow="md" mt="xs" px="xl" py="md" radius="md">
       <Flex align="center" justify="space-between">
-        <div>
-          <Text fw={500} fz="lg">
-            {item.name}
-          </Text>
-          <Text c="dimmed">{item.description}</Text>
-        </div>
+        <Flex align="center" columnGap="xs">
+          {item.image && (
+            <div>
+              <Image
+                src={process.env.NEXT_PUBLIC_BASEURL + "/public/" + item.image}
+                height={75}
+                width={75}
+                alt="food image"
+                style={{ objectFit: "cover" }}
+              />
+            </div>
+          )}
+          <div>
+            <Text fw={500} fz="lg">
+              {item.name}
+            </Text>
+            <Text c="dimmed">{item.description}</Text>
+          </div>
+        </Flex>
         <Flex columnGap="lg" align="center">
           <div>
             <Text fw={500} fz="lg">
