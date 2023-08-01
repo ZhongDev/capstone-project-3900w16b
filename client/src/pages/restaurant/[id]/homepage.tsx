@@ -89,15 +89,6 @@ export default function HomePage() {
           >
             Order Now
           </Button>
-          <Button
-            className={classes.button}
-            variant="outline"
-            radius="xl"
-            size="lg"
-            onClick={() => router.reload()}
-          >
-            Scan QR Code
-          </Button>
         </Flex>
       </div>
       <div className={classes.image}>

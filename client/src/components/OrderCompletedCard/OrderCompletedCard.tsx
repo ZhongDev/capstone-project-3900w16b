@@ -28,7 +28,7 @@ import useSWR from "swr";
 
 const useStyles = createStyles((theme) => ({
   menuCategory: {
-    width: "16rem",
+    width: "15rem",
     maxHeight: "50rem",
     alignSelf: "start",
   },
@@ -50,7 +50,7 @@ type OrdersProp = {
   orders: GetOrdersResponse[0];
 };
 
-export const OrderStatusCard = ({ orders }: OrdersProp) => {
+export const OrderCompletedCard = ({ orders }: OrdersProp) => {
   const { classes } = useStyles();
   const { data: OrdersData } = useSWR("order_status_card", getOrders);
   const [opened, { open, close }] = useDisclosure(false);
@@ -110,9 +110,6 @@ export const OrderStatusCard = ({ orders }: OrdersProp) => {
         </Flex>
         <Flex justify="center" align="flex-end">
           <Stack>
-            <Button radius="xl" mr="xs" disabled>
-              {viewStatus[0].toUpperCase() + viewStatus.slice(1).toLowerCase()}
-            </Button>
             <Button
               radius="xl"
               variant="outline"
@@ -132,6 +129,7 @@ export const OrderStatusCard = ({ orders }: OrdersProp) => {
                     orderStatusToOrdered(orders.orderGroupId).then(() => {
                       setViewStatus("ordered");
                     });
+                    mutate("/order_status");
                     handler.close();
                   }}
                 >
@@ -142,21 +140,11 @@ export const OrderStatusCard = ({ orders }: OrdersProp) => {
                     orderStatusToPrepared(orders.orderGroupId).then(() => {
                       setViewStatus("prepared");
                     });
-                    handler.close();
-                  }}
-                >
-                  Prepared
-                </Button>
-                <Button
-                  onClick={() => {
-                    orderStatusToComplete(orders.orderGroupId).then(() => {
-                      setViewStatus("completed");
-                    });
                     mutate("/order_status");
                     handler.close();
                   }}
                 >
-                  Complete
+                  Prepared
                 </Button>
               </Group>
             </Modal>

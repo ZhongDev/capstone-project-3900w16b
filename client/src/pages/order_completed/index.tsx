@@ -2,7 +2,7 @@ import { Title, Loader, createStyles, Flex, ScrollArea } from "@mantine/core";
 import useSWR from "swr";
 import { Sidebar } from "@/components/Sidebar";
 import { getOrders, GetOrdersResponse } from "@/api/order_status";
-import { OrderStatusCard } from "@/components/OrderStatusCard";
+import { OrderCompletedCard } from "@/components/OrderCompletedCard";
 
 const useStyles = createStyles((theme) => ({
   menuSection: {
@@ -31,7 +31,7 @@ export default function OrderManagement() {
   return (
     <Sidebar>
       <Flex gap="lg" align="center">
-        <Title>Order status</Title>
+        <Title>Orders Completed</Title>
       </Flex>
       <ScrollArea>
         <Flex className={classes.helpSection} gap="xs">
@@ -39,11 +39,11 @@ export default function OrderManagement() {
             <Loader />
           ) : (
             OrdersData?.map((orders) => {
-              if (orders.status == "completed") {
+              if (orders.status != "completed") {
                 return <></>;
               }
               return (
-                <OrderStatusCard key={orders.orderGroupId} orders={orders} />
+                <OrderCompletedCard key={orders.orderGroupId} orders={orders} />
               );
             })
           )}

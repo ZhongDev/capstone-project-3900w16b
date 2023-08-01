@@ -5,8 +5,18 @@ import auth from "./middleware/auth";
 
 const router = Router();
 
+router.get("/timeAgo/:orderGroupId", async (req, res, next) => {
+  try {
+    const time = await orderService.getOrderTimeAgo(
+      Number(req.params.orderGroupId)
+    );
+    res.json(time);
+  } catch (err) {
+    next(err);
+  }
+});
+
 router.post("/statusComplete/:orderGroupId", async (req, res, next) => {
-  console.log("nooo");
   try {
     const status = await orderService.changeOrderToComplete(
       Number(req.params.orderGroupId)
@@ -29,9 +39,7 @@ router.post("/statusOrdered/:orderGroupId", async (req, res, next) => {
 });
 
 router.post("/statusPrepared/:orderGroupId", async (req, res, next) => {
-  //console.log("a");
   try {
-    //console.log("whyyy");
     const status = await orderService.changeOrderToPrepared(
       Number(req.params.orderGroupId)
     );
@@ -78,12 +86,9 @@ router.get("/:restaurantId/:deviceId", async (req, res, next) => {
 // Controls get of orders
 router.get("/orders", auth, async (req, res, next) => {
   try {
-    //console.log("succ");
-    //console.log("testttttttttttttttttttttt");
     const tables = await orderService.getOrdersByRestaurantId(
       req.restaurant!.restaurantId
     );
-    //console.log(tables[0]);
     res.json(
       await orderService.getOrdersByRestaurantId(req.restaurant!.restaurantId)
     );

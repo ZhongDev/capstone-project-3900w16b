@@ -17,6 +17,22 @@ export type GetOrdersResponse = {
   }[];
 }[];
 
+export type GetTimeAgoResponse = {
+  orderGroupId: number;
+  placedOn: string;
+  hour: string;
+  minute: string;
+};
+
+export const getOrderTimeById = (orderGroupId: number) => {
+  return request
+    .get(process.env.NEXT_PUBLIC_BASEURL + "/order/timeAgo/" + orderGroupId)
+    .then((res) => res.data)
+    .catch((err) => {
+      throw err.response.data;
+    }) as Promise<GetTimeAgoResponse>;
+};
+
 export const getOrders = () => {
   return request
     .get(process.env.NEXT_PUBLIC_BASEURL + "/order/orders")

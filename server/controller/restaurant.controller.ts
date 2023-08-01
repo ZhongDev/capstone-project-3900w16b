@@ -73,7 +73,6 @@ router.get("/tableName/:tableId", async (req, res, next) => {
     const name = await restaurantService.getRestaurantTableName(
       Number(req.params.tableId)
     );
-    console.log(name);
     res.json(name);
   } catch (err) {
     next(err);

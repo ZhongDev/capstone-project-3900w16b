@@ -72,3 +72,9 @@ export const changeOrderStatusToPrepared = async (orderGroupId: number) => {
     .where({ id: orderGroupId });
   return OrderGroup.query().findOne({ id: orderGroupId });
 };
+
+export const getOrderGroupById = (orderGroupId: number) => {
+  return OrderGroup.query().findOne({
+    id: orderGroupId,
+  });
+};

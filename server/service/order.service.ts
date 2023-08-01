@@ -1,6 +1,7 @@
 import { ForeignKeyViolationError } from "objection";
 import * as orderRepo from "../repository/order.repository";
 import BadRequest from "../errors/BadRequest";
+import NotFound from "../errors/NotFound";
 
 export const createOrder = async (
   restaurantId: number,
@@ -52,7 +53,6 @@ export const getRestaurantOrdersByDeviceId = async (
 
 export const getOrdersByRestaurantId = async (restaurantId: number) => {
   const orderGroups = await orderRepo.getRestaurantOrderGroups(restaurantId);
-  //console.log(orderGroups[0].orders);
   return orderGroups.map((group) => {
     return {
       orderGroupId: group.id,
@@ -86,4 +86,22 @@ export const changeOrderToOrdered = async (orderGroupId: number) => {
 export const changeOrderToPrepared = async (orderGroupId: number) => {
   const status = await orderRepo.changeOrderStatusToPrepared(orderGroupId);
   return status;
+};
+
+export const getOrderTimeAgo = async (orderGroupId: number) => {
+  const order = await orderRepo.getOrderGroupById(orderGroupId);
+  if (!order) {
+    throw new NotFound("Order does not exist.");
+  }
+  const time = new Date(order?.placedOn);
+  const dateNow = new Date();
+  const diff = Math.floor((dateNow.getTime() - time.getTime()) / (1000 * 60));
+  const hours = Math.floor(diff / 60);
+  const minutes = diff % 60;
+  return {
+    orderGroupId: orderGroupId,
+    placedOn: order.placedOn,
+    hour: hours.toString(),
+    minute: minutes.toString(),
+  };
 };

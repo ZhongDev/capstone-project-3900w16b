@@ -71,7 +71,6 @@ export const getRestaurantTable = async (tableId: number) => {
 
 export const getRestaurantTableName = async (tableId: number) => {
   const table = await restaurantRepo.getRestaurantTableById(tableId);
-  console.log(table);
   return table?.name;
 };
 
