@@ -94,6 +94,19 @@ export const Sidebar = ({ children }: { children: React.ReactNode }) => {
               </GradientButton>
             </Link>
           </Navbar.Section>
+          <Navbar.Section className={classes.section} px="xl">
+            <Link href="/summary">
+              <GradientButton
+                variant={
+                  router.pathname === "/order_status" ? "filled" : "outline"
+                }
+                size="md"
+                fullWidth
+              >
+                Restaurant Statistics
+              </GradientButton>
+            </Link>
+          </Navbar.Section>
         </Navbar>
       }
       styles={(theme) => ({

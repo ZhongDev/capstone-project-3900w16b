@@ -17,9 +17,7 @@ import {
   CartesianGrid,
   Tooltip,
   Legend,
-  ResponsiveContainer,
 } from "recharts";
-import { render } from "react-dom";
 
 const useStyles = createStyles((theme) => ({
   statSection: {
@@ -36,7 +34,7 @@ const useStyles = createStyles((theme) => ({
 
 export default function TableManagement() {
   const { classes } = useStyles();
-  const { data, error, isLoading } = useSWR("/me", getMe);
+  const { data } = useSWR("/me", getMe);
   const [dates, setDates] = useState<[Date | null, Date | null]>([null, null]);
   const [statData, setStatData] = useState<
     | {
@@ -79,11 +77,11 @@ export default function TableManagement() {
   return (
     <>
       <Head>
-        <title> Order Summaries </title>
+        <title> Restaurant Statistics </title>
       </Head>
       <Sidebar>
         <Flex gap="lg" align="center">
-          <Title>Order Summaries</Title>
+          <Title>Restaurant Statistics</Title>
         </Flex>
         <Flex className={classes.statSection}>
           <Flex direction="column" className={classes.miniSection}>
