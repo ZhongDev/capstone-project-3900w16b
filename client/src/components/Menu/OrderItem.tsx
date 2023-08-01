@@ -9,7 +9,6 @@ import {
   Radio,
 } from "@mantine/core";
 import { GradientButton, IncrementButton } from "@/components/Button";
-import ayaya from "@/public/img/ayaya.jpg";
 import useSWR from "swr";
 import { Alteration, getMenuItem } from "@/api/menu";
 import { useLocalCart } from "@/hooks";
@@ -77,14 +76,18 @@ export const OrderItem = ({ itemId, restaurantId, close }: OrderItemProps) => {
   return (
     <div className={classes.container}>
       <div className={classes.menuContent}>
-        <div className={classes.foodImageContainer}>
-          <Image
-            src={ayaya}
-            alt="food image"
-            fill
-            style={{ objectFit: "cover", objectPosition: "center" }}
-          />
-        </div>
+        {itemData.image && (
+          <div className={classes.foodImageContainer}>
+            <Image
+              src={
+                process.env.NEXT_PUBLIC_BASEURL + "/public/" + itemData.image
+              }
+              alt="food image"
+              fill
+              style={{ objectFit: "cover", objectPosition: "center" }}
+            />
+          </div>
+        )}
         <div className={classes.itemInformation}>
           <div>
             <Text fw={500} fz="lg">

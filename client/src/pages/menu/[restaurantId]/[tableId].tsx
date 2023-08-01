@@ -19,7 +19,6 @@ import { MenuTab } from "@/components/Menu";
 import { OrderItem, Cart, Ordered } from "@/components/Menu";
 import { getRestaurantTableById } from "@/api/table";
 import { createHelpCall } from "@/api/help";
-import { mutate } from "swr";
 
 const useStyles = createStyles((theme) => ({
   menuContainer: {

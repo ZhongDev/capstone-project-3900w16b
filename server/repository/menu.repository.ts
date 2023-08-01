@@ -137,6 +137,8 @@ export const updateCategoryItem = async (
       description: updateItem.description,
       ingredients: updateItem.ingredients,
       priceCents: updateItem.priceCents,
+      imageMimeType: updateItem.imageMimeType,
+      image: updateItem.image,
       minPrepMins: updateItem.minPrepMins,
       maxPrepMins: updateItem.maxPrepMins,
     })

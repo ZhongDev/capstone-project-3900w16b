@@ -28,6 +28,7 @@ export type MenuItem = {
   displayOrder: number;
   name: string;
   image: string | null;
+  imageMimeType: string | null;
   priceCents: number;
   description: string;
   ingredients: string | null;
@@ -314,4 +315,16 @@ export const deleteAlterationOption = (alterationOptionId: number) => {
     .catch((err) => {
       throw err.response.data;
     }) as Promise<number>;
+};
+
+export const uploadItemImage = (itemId: number, image: File) => {
+  const form = new FormData();
+  form.append("image", image);
+  form.append("itemId", itemId.toString());
+  return request
+    .post(process.env.NEXT_PUBLIC_BASEURL + "/menu/itemImage", form)
+    .then((res) => res.data)
+    .catch((err) => {
+      throw err.response.data;
+    }) as Promise<MenuItem>;
 };

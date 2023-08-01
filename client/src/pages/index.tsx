@@ -153,8 +153,9 @@ export default function Home() {
             anytime, anywhere. Manage, monitor and process orders with a tap.
             Boost productivity, reduce errors, and save valuable time. Empower
             your team and delight your customers with improved accuracy and
-            faster service. It's more than an order management system - it's
-            your business, simplified. Revolutionize your order process today.
+            faster service. It&apos;s more than an order management system -
+            it&apos;s your business, simplified. Revolutionize your order
+            process today.
           </Text>
         </Container>
         <Image
