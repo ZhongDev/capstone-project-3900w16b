@@ -63,7 +63,7 @@ export const getRestaurantOrdersByDeviceId = (
     .withGraphFetched("orders.item");
 };
 
-export const getRestaurantROrders = (restaurantId: number) => {
+export const getRestaurantUncompletedOrders = (restaurantId: number) => {
   return OrderGroup.query()
     .where({ restaurantId })
     .where({ status: "ordered" })

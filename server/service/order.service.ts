@@ -78,7 +78,9 @@ export const getEstTimeByOrderGroupId = async (
   if (!orderGroup) {
     throw new NotFound("Invalid order");
   }
-  const allOrders = await orderRepo.getRestaurantROrders(restaurantId);
+  const allOrders = await orderRepo.getRestaurantUncompletedOrders(
+    restaurantId
+  );
   const recentOrders = allOrders.filter((order) => {
     const ordertime = new Date(order.placedOn);
     return Date.now() - ordertime.valueOf() <= ONE_HOUR;
