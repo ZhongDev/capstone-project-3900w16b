@@ -9,6 +9,9 @@ export default class Item extends Model {
   displayOrder!: number;
   name!: string;
   image!: string;
+
+  // absolute hack
+  imageMimeType!: string;
   priceCents!: number;
   description!: string;
   ingredients!: string | null;

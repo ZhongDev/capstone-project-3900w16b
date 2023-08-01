@@ -65,7 +65,7 @@ export const TableCard = ({ table }: { table: Table }) => {
                 id="QRCode"
                 size={256}
                 style={{ height: "auto", maxWidth: "100%", width: "100%" }}
-                value={`${process.env.NEXT_PUBLIC_BASEURL}/restaurant/${table.restaurantId}/${table.id}`}
+                value={`${process.env.NEXT_PUBLIC_BASEURL}/menu/${table.restaurantId}/${table.id}`}
               />
               <Button onClick={downloadQR}>Save Image</Button>
             </Group>

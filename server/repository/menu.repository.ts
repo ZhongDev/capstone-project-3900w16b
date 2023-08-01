@@ -112,6 +112,11 @@ export const getItem = async (itemId: number) => {
   return Item.query().findById(itemId).withGraphFetched("alterations.options");
 };
 
+export const getItemPrep = async (itemId: number) => {
+  const item = await Item.query().findById(itemId);
+  return { minPrepTime: item?.minPrepMins, maxPrepTime: item?.maxPrepMins };
+};
+
 // Get a given item's restaurant
 export const getCategoryItemRestaurant = async (id: number) => {
   const item = await Item.query()
@@ -132,6 +137,8 @@ export const updateCategoryItem = async (
       description: updateItem.description,
       ingredients: updateItem.ingredients,
       priceCents: updateItem.priceCents,
+      imageMimeType: updateItem.imageMimeType,
+      image: updateItem.image,
       minPrepMins: updateItem.minPrepMins,
       maxPrepMins: updateItem.maxPrepMins,
     })

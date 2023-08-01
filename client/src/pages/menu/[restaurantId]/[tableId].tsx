@@ -11,7 +11,7 @@ import {
   Modal,
   Group,
 } from "@mantine/core";
-import { useDisclosure, useMediaQuery } from "@mantine/hooks";
+import { useDisclosure } from "@mantine/hooks";
 import { IconHistory, IconBellRingingFilled } from "@tabler/icons-react";
 import { getMenuByRestaurantId } from "@/api/menu";
 import { GradientButton } from "@/components/Button";
@@ -20,7 +20,6 @@ import { OrderItem, Cart, Ordered } from "@/components/Menu";
 import { getRestaurantTableById } from "@/api/table";
 import { createHelpCall } from "@/api/help";
 import Head from "next/head";
-import { mutate } from "swr";
 
 const useStyles = createStyles((theme) => ({
   menuContainer: {
@@ -85,7 +84,7 @@ export default function RestaurantMenu() {
     return null;
   }
 
-  if (isNaN(restaurantId) || tableData === undefined) {
+  if (isNaN(restaurantId) || tableData === undefined || !tableData) {
     return <Title>Do you think you&apos;re funny?</Title>;
   }
 

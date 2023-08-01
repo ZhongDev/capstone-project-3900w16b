@@ -10,6 +10,7 @@ import {
   Group,
   ButtonProps,
   createStyles,
+  FileButton,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useDisclosure } from "@mantine/hooks";
@@ -24,6 +25,7 @@ import {
   updateAlteration,
   createAlterationOption,
   deleteAlterationOption,
+  uploadItemImage,
 } from "@/api/menu";
 import { OptionsEntry } from "./CreateItemModal";
 
@@ -57,6 +59,8 @@ export const EditItemModal = ({
     []
   );
 
+  const [image, setImage] = useState<File | null>(null);
+
   const [
     alterationOpened,
     { open: openAlterationDisclosure, close: closeAlterationDisclosure },
@@ -79,6 +83,7 @@ export const EditItemModal = ({
   }, [item.alterations]);
 
   const close = () => {
+    setImage(null);
     setAlterations(item.alterations);
     setDeletedAlterationIds([]);
     setNewAlterations([]);
@@ -149,6 +154,7 @@ export const EditItemModal = ({
                 ...deletedAlterationIds.map((alterationId) =>
                   deleteAlteration(alterationId)
                 ),
+                image && uploadItemImage(item.id, image),
               ]).finally(() => {
                 mutate("/menu");
                 itemForm.reset();
@@ -192,6 +198,20 @@ export const EditItemModal = ({
             withAsterisk
             {...itemForm.getInputProps("description")}
           />
+          <Flex align="center" columnGap="xs">
+            <FileButton onChange={setImage} accept="image/png,image/jpeg">
+              {(props) => (
+                <Button mb="xs" {...props} variant="outline">
+                  Upload image
+                </Button>
+              )}
+            </FileButton>
+            {image && (
+              <Text truncate size="xs">
+                {image.name}
+              </Text>
+            )}
+          </Flex>
           <Paper>
             <Text fz="xs">Estimated preparation time (minutes):</Text>
             <Group className={classes.estTimeGroup} grow>
@@ -296,6 +316,7 @@ export const EditItemModal = ({
               Add options
             </Button>
           </Paper>
+
           <Group position="right">
             <Button variant="subtle" onClick={close}>
               Cancel

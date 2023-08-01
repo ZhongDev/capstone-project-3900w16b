@@ -1,22 +1,22 @@
 import { useMemo, useState } from "react";
+import { useRouter } from "next/router";
 import {
   rem,
-  List,
   Paper,
   Text,
   Title,
   createStyles,
   Flex,
   ActionIcon,
+  List,
 } from "@mantine/core";
-import { Alteration, MenuItem } from "@/api/menu";
+import { Alteration, MenuItem, getMenuItemPrep } from "@/api/menu";
 import { useDeviceId, useLocalCart } from "@/hooks";
 import { formatCurrency } from "@/helpers";
 import { GradientButton, IncrementButton } from "../Button";
-import { createOrder } from "@/api/order";
+import { createOrder, getEstTimeByOrderGroupId } from "@/api/order";
 import { Table } from "@/api/table";
 import Image from "next/image";
-import ayaya from "@/public/img/ayaya.jpg";
 import { IconTrash } from "@tabler/icons-react";
 
 const useStyles = createStyles((theme) => ({
@@ -72,10 +72,15 @@ export type CartProps = {
 };
 
 export const Cart = ({ close, restaurant, table, menu }: CartProps) => {
+  const router = useRouter();
   const { classes } = useStyles();
 
   const deviceId = useDeviceId();
   const [cart, { setUnitInCart, removeFromCart, clearCart }] = useLocalCart();
+
+  const [estTime, setEstTime] = useState<number>(0);
+  const [ordered, setOrdered] = useState(false);
+
   const restCart = useMemo(
     () => (cart[restaurant.id] ? cart[restaurant.id] : []),
     [cart, restaurant.id]
@@ -93,7 +98,7 @@ export const Cart = ({ close, restaurant, table, menu }: CartProps) => {
       .reduce((acc, curr) => acc + curr, 0);
   }, [menu, restCart]);
 
-  return (
+  return !ordered ? (
     <div className={classes.container}>
       <div>
         <Title align="center" size={rem(50)}>
@@ -160,11 +165,23 @@ export const Cart = ({ close, restaurant, table, menu }: CartProps) => {
                           );
                         })}
                       </div>
-                      <div className={classes.foodImage}>
-                        <Image src={ayaya} alt="food image" width={75} />
-                      </div>
+                      {inCartItem.image && (
+                        <div className={classes.foodImage}>
+                          <Image
+                            src={
+                              process.env.NEXT_PUBLIC_BASEURL +
+                              "/public/" +
+                              inCartItem.image
+                            }
+                            alt="food image"
+                            width={75}
+                            height={75}
+                            style={{ objectFit: "cover" }}
+                          />
+                        </div>
+                      )}
                     </Flex>
-                    <Flex columnGap="xs">
+                    <Flex mt="xs" columnGap="xs">
                       <IncrementButton
                         value={item.units}
                         onChange={(value) => {
@@ -204,9 +221,13 @@ export const Cart = ({ close, restaurant, table, menu }: CartProps) => {
               table.id,
               deviceId,
               cart[restaurant.id]
-            ).then(() => {
-              clearCart();
-              close?.();
+            ).then((res) => {
+              setOrdered(true);
+              getEstTimeByOrderGroupId(restaurant.id, res[0].orderGroupId).then(
+                (res) => {
+                  res ? setEstTime(res) : null;
+                }
+              );
             });
           }}
         >
@@ -214,6 +235,30 @@ export const Cart = ({ close, restaurant, table, menu }: CartProps) => {
         </GradientButton>
       </div>
     </div>
+  ) : (
+    <>
+      <div className={classes.container}>
+        <Paper withBorder shadow="md" p="xl" mt="xl">
+          <Title align="center">Your food will arrive in around:</Title>
+          <Text align="center" size="4.5rem">
+            {estTime}+
+          </Text>
+          <Text align="center" size="2rem">
+            Mins
+          </Text>
+        </Paper>
+        <div className={classes.floatingButtonGroup}>
+          <GradientButton
+            onClick={() => {
+              clearCart();
+              close?.();
+            }}
+          >
+            Confirm
+          </GradientButton>
+        </div>
+      </div>
+    </>
   );
 };
 

@@ -190,6 +190,14 @@ export const getMenuItem = async (itemId: number) => {
   return item;
 };
 
+export const getMenuItemPrep = async (itemId: number) => {
+  const prepTime = await menuRepo.getItemPrep(itemId);
+  if (!prepTime) {
+    throw new NotFound();
+  }
+  return prepTime;
+};
+
 export const reorderCategories = async (
   restaurantId: number,
   newCategoryOrder: number[]
