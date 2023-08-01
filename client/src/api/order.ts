@@ -9,7 +9,7 @@ export type CreateOrderBody = {
 
 export type CreateOrderResponse = {
   itemId: number;
-  orderGroupId: number
+  orderGroupId: number;
   units: number;
   id: number;
 }[];
@@ -58,6 +58,29 @@ export const getRestaurantOrdersByDeviceId = (
       throw err.response.data;
     }) as Promise<GetRestaurantOrdersByDeviceIdResponse>;
 
+export type Order = {
+  itemIds: number | undefined;
+  itemNames: string | undefined;
+  units: number;
+};
+
+export type OrderDay = {
+  orderGroupId: number;
+  order: Order[] | undefined;
+}[][];
+
+export type RestaurantStats = {
+  fromDate: string;
+  toDate: string;
+
+  revenue: number[];
+  totalRevenue: number;
+  numOrders: number[];
+  totalOrders: number;
+  ordersByDay: OrderDay;
+  mostPopularItem: string | undefined;
+};
+
 export const getEstTimeByOrderGroupId = (
   restaurantId: number,
   orderGroupId: number
@@ -70,3 +93,13 @@ export const getEstTimeByOrderGroupId = (
     .catch((err) => {
       throw err.response.data;
     }) as Promise<number>;
+
+export const getDaySummary = (restaurantId: number, from: string, to: string) =>
+  request
+    .get(
+      `${process.env.NEXT_PUBLIC_BASEURL}/order/${restaurantId}/summary/${from}/${to}`
+    )
+    .then((res) => res.data)
+    .catch((err) => {
+      throw err.response.data;
+    }) as Promise<RestaurantStats>;

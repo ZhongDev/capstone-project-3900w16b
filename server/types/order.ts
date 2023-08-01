@@ -1,9 +1,13 @@
 export type Order = {
-  id: number;
-  itemId: number;
-  itemName: string;
+  itemIds: number | undefined;
+  itemNames: string | undefined;
   units: number;
 };
+
+export type OrderDay = {
+  orderGroupId: number;
+  order: Order[] | undefined;
+}[][];
 
 export type RestaurantStats = {
   fromDate: string;
@@ -13,7 +17,6 @@ export type RestaurantStats = {
   totalRevenue: number;
   numOrders: number[];
   totalOrders: number;
-  ordersByDay: Order[];
-  mostPopularCategory: string;
-  mostPopularItem: string;
+  ordersByDay: OrderDay;
+  mostPopularItem: string | undefined;
 };

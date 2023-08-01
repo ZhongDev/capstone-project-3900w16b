@@ -6,7 +6,7 @@ import Head from "next/head";
 import { CreateTable, TableCard } from "@/components/TableCard";
 import { Group } from "@mantine/core";
 import { useState } from "react";
-import { DatePicker } from "@mantine/dates";
+// import { DatePicker } from "@mantine/dates";
 
 const useStyles = createStyles((theme) => ({
   menuSection: {

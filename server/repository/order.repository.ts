@@ -75,9 +75,13 @@ export const getRestaurantOrders = async (
   from: string,
   to: string
 ) => {
+  const newFrom = new Date(from).toISOString();
+  // "To" is not inclusive, so need to add a day
+  const newDate = new Date(to);
+  newDate.setDate(newDate.getDate() + 1);
+  const newTo = newDate.toISOString();
   return OrderGroup.query()
     .where({ restaurantId })
-    .whereBetween("placedOn", [from, to])
+    .whereBetween("placedOn", [newFrom, newTo])
     .withGraphFetched("orders.item");
-  // .withGraphFetched("itemId");
 };
