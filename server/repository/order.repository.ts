@@ -90,7 +90,9 @@ export const getRestaurantOrderGroups = (restaurantId: number) => {
     .where({
       restaurantId,
     })
-    .withGraphFetched("orders.item");
+    .withGraphFetched(
+      "orders.[item, orderAlterations.[alteration, alterationOption]]"
+    );
 };
 
 export const changeOrderStatusToComplete = async (orderGroupId: number) => {

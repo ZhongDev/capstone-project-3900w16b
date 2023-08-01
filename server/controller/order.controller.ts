@@ -87,9 +87,6 @@ router.get("/:restaurantId/:deviceId", async (req, res, next) => {
 // Controls get of orders
 router.get("/orders", auth, async (req, res, next) => {
   try {
-    const tables = await orderService.getOrdersByRestaurantId(
-      req.restaurant!.restaurantId
-    );
     res.json(
       await orderService.getOrdersByRestaurantId(req.restaurant!.restaurantId)
     );
