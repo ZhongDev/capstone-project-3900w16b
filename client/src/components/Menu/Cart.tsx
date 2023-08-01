@@ -6,12 +6,10 @@ import {
   Text,
   Title,
   createStyles,
-  Tabs,
   Flex,
-  Badge,
   ActionIcon,
 } from "@mantine/core";
-import { MenuItem } from "@/api/menu";
+import { Alteration, MenuItem } from "@/api/menu";
 import { useDeviceId, useLocalCart } from "@/hooks";
 import { formatCurrency } from "@/helpers";
 import { GradientButton, IncrementButton } from "../Button";
@@ -61,6 +59,9 @@ const useStyles = createStyles((theme) => ({
     },
   },
   item: { cursor: "pointer" },
+  alterationsList: {
+    marginBottom: theme.spacing.xs,
+  },
 }));
 
 export type CartProps = {
@@ -133,9 +134,31 @@ export const Cart = ({ close, restaurant, table, menu }: CartProps) => {
                             ]
                           </Text>
                         </Text>
-                        <Text c="dimmed" fz="md">
-                          {inCartItem.description}
-                        </Text>
+                        {item.alterations?.map((alteration) => {
+                          const itemAlteration = inCartItem.alterations.find(
+                            (itemAlteration) =>
+                              itemAlteration.id === alteration.alterationId
+                          );
+                          if (!itemAlteration) {
+                            return null;
+                          }
+                          return (
+                            <InCartAlterationList
+                              key={alteration.alterationId}
+                              optionName={itemAlteration.optionName}
+                              choices={
+                                alteration.selectedOptions
+                                  .map((selectedOption) => {
+                                    return itemAlteration.options.find(
+                                      (alterationChoice) =>
+                                        alterationChoice.id === selectedOption
+                                    )?.choice;
+                                  })
+                                  .filter(Boolean) as string[]
+                              }
+                            />
+                          );
+                        })}
                       </div>
                       <div className={classes.foodImage}>
                         <Image src={ayaya} alt="food image" width={75} />
@@ -145,7 +168,7 @@ export const Cart = ({ close, restaurant, table, menu }: CartProps) => {
                       <IncrementButton
                         value={item.units}
                         onChange={(value) => {
-                          setUnitInCart(inCartItem.id, restaurant.id, value);
+                          setUnitInCart(item, restaurant.id, value);
                         }}
                       />
                       <ActionIcon
@@ -154,7 +177,7 @@ export const Cart = ({ close, restaurant, table, menu }: CartProps) => {
                         size="lg"
                         color="gold5"
                         onClick={() => {
-                          removeFromCart(inCartItem.id, restaurant.id);
+                          removeFromCart(item, restaurant.id);
                         }}
                       >
                         <IconTrash />
@@ -190,6 +213,26 @@ export const Cart = ({ close, restaurant, table, menu }: CartProps) => {
           Pay with Apple Pay
         </GradientButton>
       </div>
+    </div>
+  );
+};
+
+type InCartAlterationListProps = { optionName: string; choices: string[] };
+
+const InCartAlterationList = ({
+  optionName,
+  choices,
+}: InCartAlterationListProps) => {
+  const { classes } = useStyles();
+
+  return (
+    <div className={classes.alterationsList}>
+      <Text fz="sm">{optionName}</Text>
+      <List withPadding size="sm">
+        {choices.map((choice, i) => {
+          return <List.Item key={i}>{choice}</List.Item>;
+        })}
+      </List>
     </div>
   );
 };

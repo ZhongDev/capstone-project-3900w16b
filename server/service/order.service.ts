@@ -1,5 +1,6 @@
 import { ForeignKeyViolationError } from "objection";
 import * as orderRepo from "../repository/order.repository";
+import * as menuRepo from "../repository/menu.repository";
 import BadRequest from "../errors/BadRequest";
 import NotFound from "../errors/NotFound";
 
@@ -10,6 +11,42 @@ export const createOrder = async (
   orders: orderRepo.CreateOrder[]
 ) => {
   try {
+    await Promise.all(
+      orders.map(async (order) => {
+        const item = await menuRepo.getItem(order.itemId);
+        if (!item) {
+          throw new BadRequest(`Item with ID ${order.itemId} does not exist.`);
+        }
+        order.alterations?.map((alteration) => {
+          const selectedOptions = alteration.selectedOptions.length;
+          const targetAlteration = item.alterations?.find(
+            (itemAlteration) => itemAlteration.id === alteration.alterationId
+          );
+          if (!targetAlteration) {
+            throw new BadRequest(
+              `Alteration with ID ${alteration.alterationId} does not exist for item ID ${order.itemId}.`
+            );
+          }
+          if (selectedOptions > targetAlteration.maxChoices) {
+            throw new BadRequest(
+              `Alteration with ID ${alteration.alterationId} has too many options (max ${targetAlteration.maxChoices}).`
+            );
+          }
+
+          // Make sure sure all the options customer selected actually exists
+          if (
+            alteration.selectedOptions.find(
+              (selectedOption) =>
+                !targetAlteration.options?.find(
+                  (option) => option.id === selectedOption
+                )
+            )
+          ) {
+            throw new BadRequest("Invalid options sent");
+          }
+        });
+      })
+    );
     return await orderRepo.createOrder(restaurantId, tableId, device, orders);
   } catch (err) {
     if (err instanceof ForeignKeyViolationError) {
@@ -36,6 +73,27 @@ export const getRestaurantOrdersByDeviceId = async (
       placedOn: group.placedOn,
       status: group.status,
       items: group.orders?.map((order) => {
+        const groupedAlterations = new Map<string, Set<string>>();
+        for (const alteration of order.orderAlterations ?? []) {
+          if (!alteration.alteration?.optionName) {
+            continue;
+          }
+
+          let groupedAlteration = groupedAlterations.get(
+            alteration.alteration.optionName
+          );
+          if (!groupedAlteration) {
+            groupedAlteration = new Set();
+            groupedAlterations.set(
+              alteration.alteration.optionName,
+              groupedAlteration
+            );
+          }
+          if (alteration.alterationOption?.choice) {
+            groupedAlteration.add(alteration.alterationOption.choice);
+          }
+        }
+
         return {
           id: order.id,
           item: {
@@ -45,6 +103,12 @@ export const getRestaurantOrdersByDeviceId = async (
             priceCents: order.item?.priceCents,
           },
           units: order.units,
+          alterations: [...groupedAlterations.entries()].map(
+            ([alterationName, alterationOptions]) => ({
+              alterationName,
+              alterationOptions: [...alterationOptions],
+            })
+          ),
         };
       }),
     };

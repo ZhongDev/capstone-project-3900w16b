@@ -1,10 +1,17 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
-import { Flex, Loader, Text, createStyles } from "@mantine/core";
+import {
+  Flex,
+  Loader,
+  Text,
+  createStyles,
+  Checkbox,
+  Radio,
+} from "@mantine/core";
 import { GradientButton, IncrementButton } from "@/components/Button";
 import ayaya from "@/public/img/ayaya.jpg";
 import useSWR from "swr";
-import { getMenuItem } from "@/api/menu";
+import { Alteration, getMenuItem } from "@/api/menu";
 import { useLocalCart } from "@/hooks";
 import { formatCurrency } from "@/helpers";
 
@@ -49,6 +56,9 @@ export type OrderItemProps = {
 export const OrderItem = ({ itemId, restaurantId, close }: OrderItemProps) => {
   const { classes } = useStyles();
   const [units, setUnits] = useState(1);
+  const [alterations, setAlterations] = useState<Map<number, number[]>>(
+    new Map()
+  );
 
   const { data: itemData } = useSWR(["/menu", itemId], () =>
     getMenuItem(itemId)
@@ -82,6 +92,15 @@ export const OrderItem = ({ itemId, restaurantId, close }: OrderItemProps) => {
             </Text>
             <Text fz="sm">{formatCurrency(itemData.priceCents)}</Text>
             <Text fz="sm">{itemData.description}</Text>
+            {itemData.alterations.map((alteration) => (
+              <AlterationSelector
+                key={alteration.id}
+                alteration={alteration}
+                onChange={(optionIds) =>
+                  alterations.set(alteration.id, optionIds)
+                }
+              />
+            ))}
           </div>
         </div>
       </div>
@@ -90,10 +109,17 @@ export const OrderItem = ({ itemId, restaurantId, close }: OrderItemProps) => {
         <GradientButton
           fullWidth
           onClick={() => {
+            console.log(alterations);
             addToCart({
               itemId: itemData.id,
               restaurantId: restaurantId,
               units,
+              alterations: [...alterations.entries()].map(
+                ([alterationId, selectedOptions]) => ({
+                  alterationId,
+                  selectedOptions,
+                })
+              ),
             });
             close?.();
           }}
@@ -101,6 +127,52 @@ export const OrderItem = ({ itemId, restaurantId, close }: OrderItemProps) => {
           Add {units} to cart • {formatCurrency(itemData.priceCents * units)}
         </GradientButton>
       </div>
+    </div>
+  );
+};
+
+type AlterationSelectorProps = {
+  alteration: Alteration;
+  onChange?: (choices: number[]) => void;
+};
+
+const AlterationSelector = ({
+  alteration,
+  onChange,
+}: AlterationSelectorProps) => {
+  const [choices, setChoices] = useState<Set<number>>(new Set());
+
+  return (
+    <div key={alteration.id}>
+      <Text>
+        {alteration.optionName}{" "}
+        <Text c="dimmed" span>
+          [Pick {alteration.maxChoices}]
+        </Text>
+      </Text>
+      {alteration.options.map((option) => {
+        return (
+          <Checkbox
+            key={option.id}
+            label={option.choice}
+            checked={choices.has(option.id)}
+            disabled={
+              choices.size >= alteration.maxChoices && !choices.has(option.id)
+            }
+            onChange={(e) => {
+              if (e.target.checked && choices.size < alteration.maxChoices) {
+                choices.add(option.id);
+              } else {
+                choices.delete(option.id);
+              }
+
+              const newChoices = new Set(choices);
+              setChoices(newChoices);
+              onChange?.([...newChoices]);
+            }}
+          />
+        );
+      })}
     </div>
   );
 };
