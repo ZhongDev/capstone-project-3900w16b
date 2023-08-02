@@ -21,6 +21,7 @@ import {
   TextInput,
   List,
   Checkbox,
+  Badge,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 
@@ -106,8 +107,12 @@ export const OrderStatusCard = ({ orders }: OrdersProp) => {
             <Flex mt="xs">
               <Stack align="flex-start" spacing="xs">
                 <Title order={3} align="center">
-                  {"Table: " + tableName}
+                  Table: {tableName}
                 </Title>
+                <Badge>
+                  {viewStatus[0].toUpperCase() +
+                    viewStatus.slice(1).toLowerCase()}
+                </Badge>
                 <Text>{"Order Id: " + orders.orderGroupId}</Text>
                 <Text>
                   {"Order Time: " +
@@ -155,9 +160,6 @@ export const OrderStatusCard = ({ orders }: OrdersProp) => {
         </Flex>
         <Flex justify="center" align="flex-end">
           <Stack>
-            <Button radius="xl" mr="xs" disabled>
-              {viewStatus[0].toUpperCase() + viewStatus.slice(1).toLowerCase()}
-            </Button>
             <Button
               radius="xl"
               variant="outline"
