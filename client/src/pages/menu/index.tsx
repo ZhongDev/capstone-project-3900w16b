@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import useSWR from "swr";
-import { Title, Loader, createStyles, Flex, Button } from "@mantine/core";
+import { Title, createStyles, Flex, Button } from "@mantine/core";
 import { Sidebar } from "@/components/Sidebar";
 import Head from "next/head";
 import {
@@ -9,6 +9,7 @@ import {
   ReorderCategories,
 } from "@/components/CategoryCard";
 import { getMenu } from "@/api/menu";
+import { RequireAuth } from "@/components/RequireAuth";
 
 const useStyles = createStyles((theme) => ({
   menuSection: {
@@ -18,11 +19,11 @@ const useStyles = createStyles((theme) => ({
 
 export default function MenuManagement() {
   const { classes } = useStyles();
-  const { data: menuData } = useSWR("/menu", getMenu);
   const [reordering, setReordering] = useState(false);
+  const { data: menuData } = useSWR("/menu", getMenu);
 
   return (
-    <>
+    <RequireAuth>
       <Head>
         <title> Edit Menu </title>
       </Head>
@@ -53,6 +54,6 @@ export default function MenuManagement() {
           ) : null}
         </div>
       </Sidebar>
-    </>
+    </RequireAuth>
   );
 }

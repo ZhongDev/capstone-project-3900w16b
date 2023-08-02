@@ -4,6 +4,7 @@ import { Sidebar } from "@/components/Sidebar";
 import { getRestaurantTables } from "@/api/table";
 import Head from "next/head";
 import { CreateTable, TableCard } from "@/components/TableCard";
+import { RequireAuth } from "@/components/RequireAuth";
 
 const useStyles = createStyles((theme) => ({
   menuSection: {
@@ -20,7 +21,7 @@ export default function TableManagement() {
   } = useSWR("/restaurant/table", getRestaurantTables);
 
   return (
-    <>
+    <RequireAuth>
       <Head>
         <title> Edit Tables</title>
       </Head>
@@ -39,6 +40,6 @@ export default function TableManagement() {
           )}
         </div>
       </Sidebar>
-    </>
+    </RequireAuth>
   );
 }
