@@ -14,6 +14,10 @@ export type GetOrdersResponse = {
       name: string;
     };
     units: number;
+    alterations: {
+      alterationName: string;
+      alterationOptions: string[];
+    }[];
   }[];
 }[];
 

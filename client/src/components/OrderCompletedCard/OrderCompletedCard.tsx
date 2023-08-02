@@ -100,6 +100,19 @@ export const OrderCompletedCard = ({ orders }: OrdersProp) => {
                     return (
                       <List.Item key={item.id}>
                         {item.item.name} x{item.units}
+                        <List>
+                          {item.alterations.map((alteration, i) => {
+                            return alteration.alterationOptions.map(
+                              (optionText) => {
+                                return (
+                                  <List.Item key={optionText}>
+                                    {optionText}
+                                  </List.Item>
+                                );
+                              }
+                            );
+                          })}
+                        </List>
                       </List.Item>
                     );
                   })}

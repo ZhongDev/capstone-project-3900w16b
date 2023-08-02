@@ -125,6 +125,27 @@ export const getOrdersByRestaurantId = async (restaurantId: number) => {
       placedOn: group.placedOn,
       status: group.status,
       items: group.orders?.map((order) => {
+        const groupedAlterations = new Map<string, Set<string>>();
+        for (const alteration of order.orderAlterations ?? []) {
+          if (!alteration.alteration?.optionName) {
+            continue;
+          }
+
+          let groupedAlteration = groupedAlterations.get(
+            alteration.alteration.optionName
+          );
+          if (!groupedAlteration) {
+            groupedAlteration = new Set();
+            groupedAlterations.set(
+              alteration.alteration.optionName,
+              groupedAlteration
+            );
+          }
+          if (alteration.alterationOption?.choice) {
+            groupedAlteration.add(alteration.alterationOption.choice);
+          }
+        }
+
         return {
           id: order.id,
           item: {
@@ -132,6 +153,12 @@ export const getOrdersByRestaurantId = async (restaurantId: number) => {
             name: order.item?.name,
           },
           units: order.units,
+          alterations: [...groupedAlterations.entries()].map(
+            ([alterationName, alterationOptions]) => ({
+              alterationName,
+              alterationOptions: [...alterationOptions],
+            })
+          ),
         };
       }),
     };
