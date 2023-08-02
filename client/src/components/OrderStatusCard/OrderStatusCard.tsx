@@ -6,6 +6,7 @@ import {
   orderStatusToOrdered,
   orderStatusToPrepared,
   getOrderTimeById,
+  orderItemStatusToReady,
 } from "@/api/order_status";
 import {
   Paper,
@@ -19,6 +20,7 @@ import {
   Text,
   TextInput,
   List,
+  Checkbox,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 
@@ -43,11 +45,32 @@ const useStyles = createStyles((theme) => ({
     fontWeight: 600,
   },
   texts: {
-    paddingRight: "10px",
+    paddingRight: "15px",
   },
 }));
 type OrdersProp = {
   orders: GetOrdersResponse[0];
+};
+type Item_status = {
+  statusOfOrderItem: { itemOrderStatus: "notready" | "ready"; id: number };
+};
+
+export const StatusItem = ({ statusOfOrderItem }: Item_status) => {
+  const [viewWord, setViewWord] = useState(statusOfOrderItem.itemOrderStatus);
+  if (viewWord == "ready") {
+    return <Checkbox disabled checked />;
+  }
+  return (
+    <>
+      <Checkbox
+        onClick={() => {
+          setViewWord("ready");
+          orderItemStatusToReady(statusOfOrderItem.id);
+          mutate("/order_status");
+        }}
+      ></Checkbox>
+    </>
+  );
 };
 
 export const OrderStatusCard = ({ orders }: OrdersProp) => {
@@ -61,7 +84,6 @@ export const OrderStatusCard = ({ orders }: OrdersProp) => {
   const [viewMinute, setViewMinute] = useState("");
   useEffect(() => {
     getTableNameById(orders.tableId).then((a) => {
-      console.log(a);
       setTableName(a);
     });
     getOrderTimeById(orders.orderGroupId).then((b) => {
@@ -98,22 +120,32 @@ export const OrderStatusCard = ({ orders }: OrdersProp) => {
                 <List className={classes.itemText}>
                   {orders.items.map((item) => {
                     return (
-                      <List.Item key={item.id}>
-                        {item.item.name} x{item.units}
-                        <List>
-                          {item.alterations.map((alteration, i) => {
-                            return alteration.alterationOptions.map(
-                              (optionText) => {
-                                return (
-                                  <List.Item key={optionText}>
-                                    {optionText}
-                                  </List.Item>
+                      <>
+                        <Flex gap="md">
+                          <StatusItem
+                            statusOfOrderItem={{
+                              itemOrderStatus: item.itemStatus,
+                              id: item.id,
+                            }}
+                          />
+                          <List.Item key={item.id}>
+                            {item.item.name} x{item.units}
+                            <List>
+                              {item.alterations.map((alteration, i) => {
+                                return alteration.alterationOptions.map(
+                                  (optionText) => {
+                                    return (
+                                      <List.Item key={optionText}>
+                                        {optionText}
+                                      </List.Item>
+                                    );
+                                  }
                                 );
-                              }
-                            );
-                          })}
-                        </List>
-                      </List.Item>
+                              })}
+                            </List>
+                          </List.Item>
+                        </Flex>
+                      </>
                     );
                   })}
                 </List>

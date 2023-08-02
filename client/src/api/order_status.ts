@@ -1,6 +1,7 @@
 import request from "./request";
 
 type OrderStatus = "ordered" | "prepared" | "completed";
+type OrderItemStatus = "notready" | "ready";
 
 export type GetOrdersResponse = {
   orderGroupId: number;
@@ -14,6 +15,7 @@ export type GetOrdersResponse = {
       name: string;
     };
     units: number;
+    itemStatus: OrderItemStatus;
     alterations: {
       alterationName: string;
       alterationOptions: string[];
@@ -72,6 +74,17 @@ export const orderStatusToPrepared = (orderGroupId: number) => {
   return request
     .post(
       `${process.env.NEXT_PUBLIC_BASEURL}/order/statusPrepared/${orderGroupId}`
+    )
+    .then((res) => res.data)
+    .catch((err) => {
+      throw err.response.data;
+    }) as Promise<GetOrdersResponse>;
+};
+
+export const orderItemStatusToReady = (orderItemId: number) => {
+  return request
+    .post(
+      `${process.env.NEXT_PUBLIC_BASEURL}/order/OrderItemReady/${orderItemId}`
     )
     .then((res) => res.data)
     .catch((err) => {
