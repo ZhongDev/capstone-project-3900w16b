@@ -62,16 +62,16 @@ export const StatusItem = ({ statusOfOrderItem }: Item_status) => {
   return (
     <>
       <Checkbox
+        checked={statusOfOrderItem.itemOrderStatus === "ready"}
         onClick={() => {
-          if (statusOfOrderItem.itemOrderStatus == "notready") {
+          if (statusOfOrderItem.itemOrderStatus === "notready") {
             setViewWord("ready");
             orderItemStatusToReady(statusOfOrderItem.id);
-            mutate("/order_status");
           } else {
             setViewWord("notready");
             orderItemStatusToNotReady(statusOfOrderItem.id);
-            mutate("/order_status");
           }
+          mutate("/order_status");
         }}
       ></Checkbox>
     </>
