@@ -76,7 +76,13 @@ export default function Help() {
             />
           </>
         ) : (
-          <Text size="xl" style={{ paddingTop: "3rem" }}>
+          <Text
+            fs="italic"
+            align="center"
+            c="dimmed"
+            size="xl"
+            style={{ paddingTop: "3rem" }}
+          >
             You have no unresolved requests :)
           </Text>
         )}
