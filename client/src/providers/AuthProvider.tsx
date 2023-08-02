@@ -17,7 +17,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     loginRestaurant({ email, password })
       .then(() => getMe())
       .then((me) => setMe(me))
-      .catch(() => setMe(null));
+      .catch((err) => {
+        setMe(null);
+        throw err;
+      });
 
   return (
     <AuthContext.Provider value={me !== undefined ? { me, login } : undefined}>
