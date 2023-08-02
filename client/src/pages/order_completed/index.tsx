@@ -4,6 +4,7 @@ import { Sidebar } from "@/components/Sidebar";
 import { getOrders, GetOrdersResponse } from "@/api/order_status";
 import { OrderCompletedCard } from "@/components/OrderCompletedCard";
 import { useMemo } from "react";
+import Head from "next/head";
 
 const useStyles = createStyles((theme) => ({
   menuSection: {

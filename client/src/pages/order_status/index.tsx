@@ -4,6 +4,7 @@ import useSWR from "swr";
 import { Sidebar } from "@/components/Sidebar";
 import { getOrders, GetOrdersResponse } from "@/api/order_status";
 import { OrderStatusCard } from "@/components/OrderStatusCard";
+import Head from "next/head";
 
 const useStyles = createStyles((theme) => ({
   menuSection: {
@@ -36,24 +37,29 @@ export default function OrderManagement() {
   }, [ordersData]);
 
   return (
-    <Sidebar>
-      <Flex gap="lg" align="center">
-        <Title>Order status</Title>
-      </Flex>
-      <Flex wrap="wrap" className={classes.helpSection} gap="xs">
-        {ordersDataIsLoading && <Loader />}
-        {!ordersDataIsLoading && noncompletedOrders?.length ? (
-          noncompletedOrders?.map((orders) => {
-            return (
-              <OrderStatusCard key={orders.orderGroupId} orders={orders} />
-            );
-          })
-        ) : (
-          <Text fs="italic" c="dimmed">
-            No orders yet
-          </Text>
-        )}
-      </Flex>
-    </Sidebar>
+    <>
+      <Head>
+        <title> Order Statuses </title>
+      </Head>
+      <Sidebar>
+        <Flex gap="lg" align="center">
+          <Title>Order status</Title>
+        </Flex>
+        <Flex wrap="wrap" className={classes.helpSection} gap="xs">
+          {ordersDataIsLoading && <Loader />}
+          {!ordersDataIsLoading && noncompletedOrders?.length ? (
+            noncompletedOrders?.map((orders) => {
+              return (
+                <OrderStatusCard key={orders.orderGroupId} orders={orders} />
+              );
+            })
+          ) : (
+            <Text fs="italic" c="dimmed">
+              No orders yet
+            </Text>
+          )}
+        </Flex>
+      </Sidebar>
+    </>
   );
 }
