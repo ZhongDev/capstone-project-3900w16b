@@ -194,6 +194,11 @@ export const CreateItemModal = ({
                         alterations.filter((_, index) => i !== index)
                       )
                     }
+                    onSave={(alteration) => {
+                      const newAlterations = [...alterations];
+                      newAlterations[i] = alteration;
+                      setAlterations(newAlterations);
+                    }}
                     options={alteration.options}
                     maxChoices={alteration.maxChoices}
                     name={alteration.optionName}

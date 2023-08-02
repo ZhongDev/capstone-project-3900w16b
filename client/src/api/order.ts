@@ -111,3 +111,13 @@ export const getDaySummary = (
     .catch((err) => {
       throw err.response.data;
     }) as Promise<RestaurantStats>;
+
+export const markOrderGroupAsPaid = (orderGroupId: number) =>
+  request
+    .patch(
+      `${process.env.NEXT_PUBLIC_BASEURL}/order/orderGroup/${orderGroupId}/paid`
+    )
+    .then((res) => res.data)
+    .catch((err) => {
+      throw err.response.data;
+    }) as Promise<number>;

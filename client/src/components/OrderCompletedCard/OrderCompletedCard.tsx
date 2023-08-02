@@ -61,7 +61,6 @@ export const OrderCompletedCard = ({ orders }: OrdersProp) => {
   const [viewMinute, setViewMinute] = useState("");
   useEffect(() => {
     getTableNameById(orders.tableId).then((a) => {
-      console.log(a);
       setTableName(a);
     });
     getOrderTimeById(orders.orderGroupId).then((b) => {

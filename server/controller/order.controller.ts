@@ -2,6 +2,7 @@ import { CreateOrderRequest } from "../schema/order.schema";
 import * as orderService from "../service/order.service";
 import { Router } from "express";
 import auth from "./middleware/auth";
+import BadRequest from "../errors/BadRequest";
 
 const router = Router();
 
@@ -101,6 +102,23 @@ router.get("/orders", auth, async (req, res, next) => {
   try {
     res.json(
       await orderService.getOrdersByRestaurantId(req.restaurant!.restaurantId)
+    );
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.patch("/orderGroup/:orderGroupId/paid", auth, async (req, res, next) => {
+  try {
+    const orderGroupId = Number(req.params.orderGroupId);
+    if (isNaN(orderGroupId)) {
+      throw new BadRequest("Invalid order group id");
+    }
+    res.json(
+      await orderService.markOrderGroupAsPaid(
+        req.restaurant!.restaurantId,
+        orderGroupId
+      )
     );
   } catch (err) {
     next(err);

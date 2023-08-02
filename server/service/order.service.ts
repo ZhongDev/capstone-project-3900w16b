@@ -74,8 +74,10 @@ export const getRestaurantOrdersByDeviceId = async (
     return {
       orderGroupId: group.id,
       tableId: group.tableId,
+      tableName: group.table?.name,
       placedOn: group.placedOn,
       status: group.status,
+      paid: !!group.paid,
       items: group.orders?.map((order) => {
         const groupedAlterations = new Map<string, Set<string>>();
         for (const alteration of order.orderAlterations ?? []) {
@@ -119,14 +121,30 @@ export const getRestaurantOrdersByDeviceId = async (
   });
 };
 
+export const markOrderGroupAsPaid = async (
+  restaurantId: number,
+  orderGroupId: number
+) => {
+  const orderGroup = await orderRepo.getOrderGroupById(orderGroupId);
+  if (orderGroup?.restaurantId !== restaurantId) {
+    throw new NotFound("Order group does not exist for restaurant.");
+  }
+
+  return orderRepo.updateOrderGroupById(orderGroupId, {
+    paid: true,
+  });
+};
+
 export const getOrdersByRestaurantId = async (restaurantId: number) => {
   const orderGroups = await orderRepo.getRestaurantOrderGroups(restaurantId);
   return orderGroups.map((group) => {
     return {
       orderGroupId: group.id,
       tableId: group.tableId,
+      tableName: group.table?.name,
       placedOn: group.placedOn,
       status: group.status,
+      paid: !!group.paid,
       items: group.orders?.map((order) => {
         const groupedAlterations = new Map<string, Set<string>>();
         for (const alteration of order.orderAlterations ?? []) {
@@ -154,6 +172,8 @@ export const getOrdersByRestaurantId = async (restaurantId: number) => {
           item: {
             id: order.item?.id,
             name: order.item?.name,
+            image: order.item?.image,
+            priceCents: order.item?.priceCents,
           },
           units: order.units,
           itemStatus: order.itemStatus,
