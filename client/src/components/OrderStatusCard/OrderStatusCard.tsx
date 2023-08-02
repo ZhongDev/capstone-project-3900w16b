@@ -7,6 +7,7 @@ import {
   orderStatusToPrepared,
   getOrderTimeById,
   orderItemStatusToReady,
+  orderItemStatusToNotReady,
 } from "@/api/order_status";
 import {
   Paper,
@@ -21,6 +22,7 @@ import {
   TextInput,
   List,
   Checkbox,
+  Badge,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 
@@ -57,15 +59,18 @@ type Item_status = {
 
 export const StatusItem = ({ statusOfOrderItem }: Item_status) => {
   const [viewWord, setViewWord] = useState(statusOfOrderItem.itemOrderStatus);
-  if (viewWord == "ready") {
-    return <Checkbox disabled checked />;
-  }
   return (
     <>
       <Checkbox
+        checked={statusOfOrderItem.itemOrderStatus === "ready"}
         onClick={() => {
-          setViewWord("ready");
-          orderItemStatusToReady(statusOfOrderItem.id);
+          if (statusOfOrderItem.itemOrderStatus === "notready") {
+            setViewWord("ready");
+            orderItemStatusToReady(statusOfOrderItem.id);
+          } else {
+            setViewWord("notready");
+            orderItemStatusToNotReady(statusOfOrderItem.id);
+          }
           mutate("/order_status");
         }}
       ></Checkbox>
@@ -106,8 +111,12 @@ export const OrderStatusCard = ({ orders }: OrdersProp) => {
             <Flex mt="xs">
               <Stack align="flex-start" spacing="xs">
                 <Title order={3} align="center">
-                  {"Table: " + tableName}
+                  Table: {tableName}
                 </Title>
+                <Badge>
+                  {viewStatus[0].toUpperCase() +
+                    viewStatus.slice(1).toLowerCase()}
+                </Badge>
                 <Text>{"Order Id: " + orders.orderGroupId}</Text>
                 <Text>
                   {"Order Time: " +
@@ -120,32 +129,30 @@ export const OrderStatusCard = ({ orders }: OrdersProp) => {
                 <List className={classes.itemText}>
                   {orders.items.map((item) => {
                     return (
-                      <>
-                        <Flex gap="md">
-                          <StatusItem
-                            statusOfOrderItem={{
-                              itemOrderStatus: item.itemStatus,
-                              id: item.id,
-                            }}
-                          />
-                          <List.Item key={item.id}>
-                            {item.item.name} x{item.units}
-                            <List>
-                              {item.alterations.map((alteration, i) => {
-                                return alteration.alterationOptions.map(
-                                  (optionText) => {
-                                    return (
-                                      <List.Item key={optionText}>
-                                        {optionText}
-                                      </List.Item>
-                                    );
-                                  }
-                                );
-                              })}
-                            </List>
-                          </List.Item>
-                        </Flex>
-                      </>
+                      <Flex gap="md" key={item.id}>
+                        <StatusItem
+                          statusOfOrderItem={{
+                            itemOrderStatus: item.itemStatus,
+                            id: item.id,
+                          }}
+                        />
+                        <List.Item key={item.id}>
+                          {item.item.name} x{item.units}
+                          <List>
+                            {item.alterations.map((alteration, i) => {
+                              return alteration.alterationOptions.map(
+                                (optionText) => {
+                                  return (
+                                    <List.Item key={optionText}>
+                                      {optionText}
+                                    </List.Item>
+                                  );
+                                }
+                              );
+                            })}
+                          </List>
+                        </List.Item>
+                      </Flex>
                     );
                   })}
                 </List>
@@ -155,9 +162,6 @@ export const OrderStatusCard = ({ orders }: OrdersProp) => {
         </Flex>
         <Flex justify="center" align="flex-end">
           <Stack>
-            <Button radius="xl" mr="xs" disabled>
-              {viewStatus[0].toUpperCase() + viewStatus.slice(1).toLowerCase()}
-            </Button>
             <Button
               radius="xl"
               variant="outline"

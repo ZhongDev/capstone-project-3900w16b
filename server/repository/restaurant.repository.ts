@@ -41,9 +41,11 @@ export const createRestaurantTable = async (
 };
 
 export const getRestaurantTables = (restaurantId: number) => {
-  return Table.query().where({
-    restaurantId,
-  });
+  return Table.query()
+    .where({
+      restaurantId,
+    })
+    .orderBy("id");
 };
 
 export const getRestaurantTableById = (tableId: number) => {

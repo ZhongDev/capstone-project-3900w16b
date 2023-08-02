@@ -4,6 +4,8 @@ import { Card, TextInput, Text, createStyles } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { GradientButton } from "../Button";
 import { loginRestaurant } from "@/api/auth";
+import { useContext } from "react";
+import { AuthContext } from "@/providers";
 
 const useStyles = createStyles((theme) => ({
   loginForm: {
@@ -23,7 +25,7 @@ const useStyles = createStyles((theme) => ({
 export const LoginForm = () => {
   const { classes } = useStyles();
   const router = useRouter();
-
+  const authContext = useContext(AuthContext);
   const loginForm = useForm({
     initialValues: {
       email: "",
@@ -32,7 +34,8 @@ export const LoginForm = () => {
   });
 
   const login = ({ email, password }: { email: string; password: string }) => {
-    loginRestaurant({ email, password })
+    authContext
+      ?.login(email, password)
       .then(() => router.push("/menu"))
       .catch((err) => {
         loginForm.setFieldError("password", err.msg);

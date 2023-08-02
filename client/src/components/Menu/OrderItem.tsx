@@ -112,7 +112,6 @@ export const OrderItem = ({ itemId, restaurantId, close }: OrderItemProps) => {
         <GradientButton
           fullWidth
           onClick={() => {
-            console.log(alterations);
             addToCart({
               itemId: itemData.id,
               restaurantId: restaurantId,

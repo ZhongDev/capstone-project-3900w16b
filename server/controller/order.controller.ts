@@ -2,6 +2,7 @@ import { CreateOrderRequest } from "../schema/order.schema";
 import * as orderService from "../service/order.service";
 import { Router } from "express";
 import auth from "./middleware/auth";
+import BadRequest from "../errors/BadRequest";
 
 const router = Router();
 
@@ -60,6 +61,17 @@ router.post("/OrderItemReady/:orderItemId", async (req, res, next) => {
   }
 });
 
+router.post("/OrderItemReady/:orderItemId/notReady", async (req, res, next) => {
+  try {
+    const status = await orderService.changeOrderItemToNotReady(
+      Number(req.params.orderItemId)
+    );
+    res.json(status);
+  } catch (err) {
+    next(err);
+  }
+});
+
 router.post("/:restaurantId/:tableId", async (req, res, next) => {
   try {
     const { items, device } = CreateOrderRequest.parse(req.body);
@@ -107,6 +119,23 @@ router.get("/orders", auth, async (req, res, next) => {
   }
 });
 
+router.patch("/orderGroup/:orderGroupId/paid", auth, async (req, res, next) => {
+  try {
+    const orderGroupId = Number(req.params.orderGroupId);
+    if (isNaN(orderGroupId)) {
+      throw new BadRequest("Invalid order group id");
+    }
+    res.json(
+      await orderService.markOrderGroupAsPaid(
+        req.restaurant!.restaurantId,
+        orderGroupId
+      )
+    );
+  } catch (err) {
+    next(err);
+  }
+});
+
 router.get(
   "/:restaurantId/orderGroup/:orderGroupId",
   async (req, res, next) => {
@@ -125,6 +154,20 @@ router.get("/:restaurantId/orders/:orderGroupId", async (req, res, next) => {
     res.json(
       await orderService.getOrdersByOrderGroupId(
         Number(req.params.orderGroupId)
+      )
+    );
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.get("/:restaurantId/summary/:from/:to", async (req, res, next) => {
+  try {
+    res.json(
+      await orderService.getRestaurantOrders(
+        Number(req.params.restaurantId),
+        req.params.from,
+        req.params.to
       )
     );
   } catch (err) {
