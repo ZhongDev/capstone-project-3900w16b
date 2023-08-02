@@ -61,6 +61,17 @@ router.post("/OrderItemReady/:orderItemId", async (req, res, next) => {
   }
 });
 
+router.post("/OrderItemReady/:orderItemId/notReady", async (req, res, next) => {
+  try {
+    const status = await orderService.changeOrderItemToNotReady(
+      Number(req.params.orderItemId)
+    );
+    res.json(status);
+  } catch (err) {
+    next(err);
+  }
+});
+
 router.post("/:restaurantId/:tableId", async (req, res, next) => {
   try {
     const { items, device } = CreateOrderRequest.parse(req.body);

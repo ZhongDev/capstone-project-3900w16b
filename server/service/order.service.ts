@@ -204,6 +204,11 @@ export const changeOrderToPrepared = async (orderGroupId: number) => {
   return status;
 };
 
+export const changeOrderItemToNotReady = async (orderItemId: number) => {
+  const status = await orderRepo.changeOrderItemStatusToNotReady(orderItemId);
+  return status;
+};
+
 export const changeOrderItemToReady = async (orderItemId: number) => {
   const status = await orderRepo.changeOrderItemStatusToReady(orderItemId);
   return status;

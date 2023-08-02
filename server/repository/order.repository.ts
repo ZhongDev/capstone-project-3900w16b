@@ -138,6 +138,13 @@ export const changeOrderItemStatusToReady = async (orderItemId: number) => {
   return Order.query().findOne({ id: orderItemId });
 };
 
+export const changeOrderItemStatusToNotReady = async (orderItemId: number) => {
+  await Order.query()
+    .patch({ itemStatus: "notready" })
+    .where({ id: orderItemId });
+  return Order.query().findOne({ id: orderItemId });
+};
+
 export const getsOrderGroupById = (orderGroupId: number) => {
   return OrderGroup.query().findOne({
     id: orderGroupId,

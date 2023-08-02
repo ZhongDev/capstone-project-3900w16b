@@ -7,6 +7,7 @@ import {
   orderStatusToPrepared,
   getOrderTimeById,
   orderItemStatusToReady,
+  orderItemStatusToNotReady,
 } from "@/api/order_status";
 import {
   Paper,
@@ -58,15 +59,18 @@ type Item_status = {
 
 export const StatusItem = ({ statusOfOrderItem }: Item_status) => {
   const [viewWord, setViewWord] = useState(statusOfOrderItem.itemOrderStatus);
-  if (viewWord == "ready") {
-    return <Checkbox disabled checked />;
-  }
   return (
     <>
       <Checkbox
+        checked={statusOfOrderItem.itemOrderStatus === "ready"}
         onClick={() => {
-          setViewWord("ready");
-          orderItemStatusToReady(statusOfOrderItem.id);
+          if (statusOfOrderItem.itemOrderStatus === "notready") {
+            setViewWord("ready");
+            orderItemStatusToReady(statusOfOrderItem.id);
+          } else {
+            setViewWord("notready");
+            orderItemStatusToNotReady(statusOfOrderItem.id);
+          }
           mutate("/order_status");
         }}
       ></Checkbox>
