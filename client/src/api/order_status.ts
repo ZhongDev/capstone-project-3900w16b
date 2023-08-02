@@ -95,3 +95,14 @@ export const orderItemStatusToReady = (orderItemId: number) => {
       throw err.response.data;
     }) as Promise<GetOrdersResponse>;
 };
+
+export const orderItemStatusToNotReady = (orderItemId: number) => {
+  return request
+    .post(
+      `${process.env.NEXT_PUBLIC_BASEURL}/order/OrderItemReady/${orderItemId}/notReady`
+    )
+    .then((res) => res.data)
+    .catch((err) => {
+      throw err.response.data;
+    }) as Promise<GetOrdersResponse>;
+};
