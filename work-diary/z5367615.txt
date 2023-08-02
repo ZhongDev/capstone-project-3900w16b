@@ -1,3 +1,30 @@
-//made file
+Week 1:
+Planned out what potential tasks to do for the product. Starting reviewing javascript, react, nodejs
 
-actual diary is saved on google doc will transfer later
+Week 2:
+Chose topic and scrum master, started on the project proposal
+
+Week 3:
+Finished off proposal
+
+Week 4:
+Made mockup of project base page, attempted login stuff
+
+Week 5:
+Prepared for the sprint 1 demo
+
+Week 6:
+Worked on restaurant table creation and deletion. Made homepage for the restaurants.
+Maded the manual table input page for customers who are unable to scan QR
+
+Week 7: 
+Worked on some menu frontend, mainly updating and deletion.
+
+Week 8:
+Worked on some ui stuff and prepared for demo 2
+
+Week 9:
+Worked on and completed order status
+
+Week 10:
+Edited order status to include the ability to change the status of each individual order item
