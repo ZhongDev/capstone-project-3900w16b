@@ -95,29 +95,25 @@ export default function TableManagement() {
             <Paper shadow="md" mt="xs" px="xl" py="md" radius="md">
               {statData?.data.length !== 0 ? (
                 <Flex direction="column" align="center">
-                  <Text size="xl" fw={700} style={{ paddingBottom: "1rem" }}>
+                  <Text fw={700} style={{ paddingBottom: "1rem" }}>
                     {statData?.from} - {statData?.to}
                   </Text>
 
-                  <Text size="xl">
+                  <Text>
                     Total Revenue: ${statData?.totalRevenue.toLocaleString()}
                   </Text>
-                  <Text size="xl">
+                  <Text>
                     Total Item Orders: {statData?.totalOrders.toLocaleString()}
                   </Text>
-                  <Text size="xl">
-                    Most Popular Menu Item: {statData?.mostOrdered}
-                  </Text>
+                  <Text>Most Popular Menu Item: {statData?.mostOrdered}</Text>
                 </Flex>
               ) : (
-                <Text size="xl" fw={700}>
-                  Select dates to see restaurant stats!
-                </Text>
+                <Text fw={700}>Select dates to see restaurant stats!</Text>
               )}
             </Paper>
           </Flex>
           {statData?.data.length !== 0 && (
-            <ResponsiveContainer width={"75%"} height={500}>
+            <ResponsiveContainer width={"65%"} height={500}>
               <LineChart data={statData?.data}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="date" />
