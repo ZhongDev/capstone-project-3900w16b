@@ -4,6 +4,7 @@ import { Sidebar } from "@/components/Sidebar";
 import { getOrders, GetOrdersResponse } from "@/api/order_status";
 import { OrderCompletedCard } from "@/components/OrderCompletedCard";
 import { useMemo } from "react";
+import Head from "next/head"
 
 const useStyles = createStyles((theme) => ({
   menuSection: {
@@ -36,24 +37,29 @@ export default function OrderManagement() {
   }, [ordersData]);
 
   return (
-    <Sidebar>
-      <Flex gap="lg" align="center">
-        <Title>Orders Completed</Title>
-      </Flex>
-      <Flex wrap="wrap" className={classes.helpSection} gap="xs">
-        {ordersDataIsLoading && <Loader />}
-        {!ordersDataIsLoading && ordersCompleted?.length ? (
-          ordersCompleted.map((orders) => {
-            return (
-              <OrderCompletedCard key={orders.orderGroupId} orders={orders} />
-            );
-          })
-        ) : (
-          <Text fs="italic" c="dimmed">
-            No orders completed yet
-          </Text>
-        )}
-      </Flex>
-    </Sidebar>
+    <>
+      <Head>
+        <title> Completed Orders</title>
+      </Head>
+      <Sidebar>
+        <Flex gap="lg" align="center">
+          <Title>Orders Completed</Title>
+        </Flex>
+        <Flex wrap="wrap" className={classes.helpSection} gap="xs">
+          {ordersDataIsLoading && <Loader />}
+          {!ordersDataIsLoading && ordersCompleted?.length ? (
+            ordersCompleted.map((orders) => {
+              return (
+                <OrderCompletedCard key={orders.orderGroupId} orders={orders} />
+              );
+            })
+          ) : (
+            <Text fs="italic" c="dimmed">
+              No orders completed yet
+            </Text>
+          )}
+        </Flex>
+      </Sidebar>
+    </>
   );
 }
