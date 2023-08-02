@@ -1,4 +1,3 @@
-import { raw } from "objection";
 import Order from "../models/Order";
 import OrderAlteration from "../models/OrderAlteration";
 import OrderGroup from "../models/OrderGroup";
@@ -59,7 +58,17 @@ export const getOrderGroupById = async (orderGroupId: number) => {
     .findOne({
       id: orderGroupId,
     })
-    .withGraphFetched("orders");
+    .withGraphFetched("[orders, table]");
+};
+
+export const updateOrderGroupById = async (
+  orderGroupId: number,
+  update: {
+    status?: "ordered" | "prepared" | "completed";
+    paid?: boolean;
+  }
+) => {
+  return OrderGroup.query().patch(update).where({ id: orderGroupId });
 };
 
 export const getOrdersByOrderGroupId = (orderGroupId: number) => {
@@ -83,7 +92,7 @@ export const getRestaurantOrdersByDeviceId = (
     })
     .orderBy("placedOn", "desc")
     .withGraphFetched(
-      "orders.[item, orderAlterations.[alteration, alterationOption]]"
+      "[table, orders.[item, orderAlterations.[alteration, alterationOption]]]"
     );
 };
 
@@ -93,7 +102,7 @@ export const getRestaurantOrderGroups = (restaurantId: number) => {
       restaurantId,
     })
     .withGraphFetched(
-      "orders.[item, orderAlterations.[alteration, alterationOption]]"
+      "[table, orders.[item, orderAlterations.[alteration, alterationOption]]]"
     );
 };
 
@@ -101,21 +110,27 @@ export const changeOrderStatusToComplete = async (orderGroupId: number) => {
   await OrderGroup.query()
     .patch({ status: "completed" })
     .where({ id: orderGroupId });
-  return OrderGroup.query().findOne({ id: orderGroupId });
+  return OrderGroup.query()
+    .findOne({ id: orderGroupId })
+    .withGraphFetched("table");
 };
 
 export const changeOrderStatusToOrdered = async (orderGroupId: number) => {
   await OrderGroup.query()
     .patch({ status: "ordered" })
     .where({ id: orderGroupId });
-  return OrderGroup.query().findOne({ id: orderGroupId });
+  return OrderGroup.query()
+    .findOne({ id: orderGroupId })
+    .withGraphFetched("table");
 };
 
 export const changeOrderStatusToPrepared = async (orderGroupId: number) => {
   await OrderGroup.query()
     .patch({ status: "prepared" })
     .where({ id: orderGroupId });
-  return OrderGroup.query().findOne({ id: orderGroupId });
+  return OrderGroup.query()
+    .findOne({ id: orderGroupId })
+    .withGraphFetched("table");
 };
 
 export const changeOrderItemStatusToReady = async (orderItemId: number) => {
@@ -133,5 +148,5 @@ export const getRestaurantUncompletedOrders = (restaurantId: number) => {
   return OrderGroup.query()
     .where({ restaurantId })
     .where({ status: "ordered" })
-    .withGraphFetched("orders");
+    .withGraphFetched("[orders, table]");
 };

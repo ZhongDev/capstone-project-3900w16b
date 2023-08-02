@@ -125,32 +125,30 @@ export const OrderStatusCard = ({ orders }: OrdersProp) => {
                 <List className={classes.itemText}>
                   {orders.items.map((item) => {
                     return (
-                      <>
-                        <Flex gap="md">
-                          <StatusItem
-                            statusOfOrderItem={{
-                              itemOrderStatus: item.itemStatus,
-                              id: item.id,
-                            }}
-                          />
-                          <List.Item key={item.id}>
-                            {item.item.name} x{item.units}
-                            <List>
-                              {item.alterations.map((alteration, i) => {
-                                return alteration.alterationOptions.map(
-                                  (optionText) => {
-                                    return (
-                                      <List.Item key={optionText}>
-                                        {optionText}
-                                      </List.Item>
-                                    );
-                                  }
-                                );
-                              })}
-                            </List>
-                          </List.Item>
-                        </Flex>
-                      </>
+                      <Flex gap="md" key={item.id}>
+                        <StatusItem
+                          statusOfOrderItem={{
+                            itemOrderStatus: item.itemStatus,
+                            id: item.id,
+                          }}
+                        />
+                        <List.Item key={item.id}>
+                          {item.item.name} x{item.units}
+                          <List>
+                            {item.alterations.map((alteration, i) => {
+                              return alteration.alterationOptions.map(
+                                (optionText) => {
+                                  return (
+                                    <List.Item key={optionText}>
+                                      {optionText}
+                                    </List.Item>
+                                  );
+                                }
+                              );
+                            })}
+                          </List>
+                        </List.Item>
+                      </Flex>
                     );
                   })}
                 </List>

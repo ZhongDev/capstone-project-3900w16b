@@ -1,7 +1,6 @@
 import { Model } from "objection";
 import Table from "./Table";
 import Restaurant from "./Restaurant";
-import Item from "./Item";
 import Order from "./Order";
 
 export default class OrderGroup extends Model {
@@ -11,6 +10,7 @@ export default class OrderGroup extends Model {
   status!: "ordered" | "prepared" | "completed";
   device!: string | null; // free text to attempt to identify the device that ordered
   placedOn!: string; // This is a date string
+  paid!: boolean;
 
   table?: Table;
   restaurant?: Restaurant;
@@ -23,7 +23,7 @@ export default class OrderGroup extends Model {
       relation: Model.BelongsToOneRelation,
       modelClass: Table,
       join: {
-        from: "Order.tableId",
+        from: "OrderGroup.tableId",
         to: "Table.id",
       },
     },

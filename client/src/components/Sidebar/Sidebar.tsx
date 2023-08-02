@@ -90,7 +90,18 @@ export const Sidebar = ({ children }: { children: React.ReactNode }) => {
                 size="md"
                 fullWidth
               >
-                Orders Completed
+                Completed Orders
+              </GradientButton>
+            </Link>
+          </Navbar.Section>
+          <Navbar.Section className={classes.section} px="xl">
+            <Link href="/bill">
+              <GradientButton
+                variant={router.pathname === "/bill" ? "filled" : "outline"}
+                size="md"
+                fullWidth
+              >
+                Table Bill
               </GradientButton>
             </Link>
           </Navbar.Section>

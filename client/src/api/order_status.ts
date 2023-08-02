@@ -6,6 +6,8 @@ type OrderItemStatus = "notready" | "ready";
 export type GetOrdersResponse = {
   orderGroupId: number;
   tableId: number;
+  tableName: string;
+  paid: boolean;
   placedOn: string;
   status: OrderStatus;
   items: {
@@ -13,6 +15,8 @@ export type GetOrdersResponse = {
     item: {
       id: number;
       name: string;
+      image: string | null;
+      priceCents: number;
     };
     units: number;
     itemStatus: OrderItemStatus;

@@ -38,7 +38,7 @@ export default function OrderManagement() {
   return (
     <Sidebar>
       <Flex gap="lg" align="center">
-        <Title>Orders Completed</Title>
+        <Title>Completed Orders</Title>
       </Flex>
       <Flex wrap="wrap" className={classes.helpSection} gap="xs">
         {ordersDataIsLoading && <Loader />}
