@@ -3,6 +3,7 @@ import { Sidebar } from "@/components/Sidebar";
 import { useEffect, useState } from "react";
 import { getUnresolvedHelpCalls } from "@/api/help";
 import { HelpCallCard } from "@/components/HelpCallCard";
+import { RequireAuth } from "@/components/RequireAuth";
 import Head from "next/head";
 import {
   Flex,
@@ -57,7 +58,7 @@ export default function Help() {
   const otherHelp = helpManage.length === 0 ? [] : helpManage.slice(1);
 
   return (
-    <>
+    <RequireAuth>
       <Head>
         <title> Assistance Requests </title>
       </Head>
@@ -105,6 +106,6 @@ export default function Help() {
           </Flex>
         </ScrollArea>
       </Sidebar>
-    </>
+    </RequireAuth>
   );
 }

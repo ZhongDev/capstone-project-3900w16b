@@ -128,6 +128,27 @@ export const getOrdersByRestaurantId = async (restaurantId: number) => {
       placedOn: group.placedOn,
       status: group.status,
       items: group.orders?.map((order) => {
+        const groupedAlterations = new Map<string, Set<string>>();
+        for (const alteration of order.orderAlterations ?? []) {
+          if (!alteration.alteration?.optionName) {
+            continue;
+          }
+
+          let groupedAlteration = groupedAlterations.get(
+            alteration.alteration.optionName
+          );
+          if (!groupedAlteration) {
+            groupedAlteration = new Set();
+            groupedAlterations.set(
+              alteration.alteration.optionName,
+              groupedAlteration
+            );
+          }
+          if (alteration.alterationOption?.choice) {
+            groupedAlteration.add(alteration.alterationOption.choice);
+          }
+        }
+
         return {
           id: order.id,
           item: {
@@ -135,6 +156,13 @@ export const getOrdersByRestaurantId = async (restaurantId: number) => {
             name: order.item?.name,
           },
           units: order.units,
+          itemStatus: order.itemStatus,
+          alterations: [...groupedAlterations.entries()].map(
+            ([alterationName, alterationOptions]) => ({
+              alterationName,
+              alterationOptions: [...alterationOptions],
+            })
+          ),
         };
       }),
     };
@@ -153,6 +181,11 @@ export const changeOrderToOrdered = async (orderGroupId: number) => {
 
 export const changeOrderToPrepared = async (orderGroupId: number) => {
   const status = await orderRepo.changeOrderStatusToPrepared(orderGroupId);
+  return status;
+};
+
+export const changeOrderItemToReady = async (orderItemId: number) => {
+  const status = await orderRepo.changeOrderItemStatusToReady(orderItemId);
   return status;
 };
 

@@ -49,6 +49,17 @@ router.post("/statusPrepared/:orderGroupId", async (req, res, next) => {
   }
 });
 
+router.post("/OrderItemReady/:orderItemId", async (req, res, next) => {
+  try {
+    const status = await orderService.changeOrderItemToReady(
+      Number(req.params.orderItemId)
+    );
+    res.json(status);
+  } catch (err) {
+    next(err);
+  }
+});
+
 router.post("/:restaurantId/:tableId", async (req, res, next) => {
   try {
     const { items, device } = CreateOrderRequest.parse(req.body);
@@ -61,6 +72,7 @@ router.post("/:restaurantId/:tableId", async (req, res, next) => {
         units: item.units,
         alterations: item.alterations,
         status: "ordered",
+        itemStatus: "notready",
         placedOn: new Date().toISOString(),
       }))
     );
@@ -87,9 +99,6 @@ router.get("/:restaurantId/:deviceId", async (req, res, next) => {
 // Controls get of orders
 router.get("/orders", auth, async (req, res, next) => {
   try {
-    const tables = await orderService.getOrdersByRestaurantId(
-      req.restaurant!.restaurantId
-    );
     res.json(
       await orderService.getOrdersByRestaurantId(req.restaurant!.restaurantId)
     );

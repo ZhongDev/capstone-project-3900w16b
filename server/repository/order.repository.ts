@@ -6,6 +6,7 @@ import OrderGroup from "../models/OrderGroup";
 export type CreateOrder = {
   itemId: number;
   units: number;
+  itemStatus: "notready" | "ready";
   alterations?: {
     alterationId: number;
     selectedOptions: number[];
@@ -32,6 +33,7 @@ export const createOrder = (
           itemId: order.itemId,
           orderGroupId: orderGroup.id,
           units: order.units,
+          itemStatus: order.itemStatus,
         });
         if (order.alterations) {
           await Promise.all(
@@ -90,7 +92,9 @@ export const getRestaurantOrderGroups = (restaurantId: number) => {
     .where({
       restaurantId,
     })
-    .withGraphFetched("orders.item");
+    .withGraphFetched(
+      "orders.[item, orderAlterations.[alteration, alterationOption]]"
+    );
 };
 
 export const changeOrderStatusToComplete = async (orderGroupId: number) => {
@@ -112,6 +116,11 @@ export const changeOrderStatusToPrepared = async (orderGroupId: number) => {
     .patch({ status: "prepared" })
     .where({ id: orderGroupId });
   return OrderGroup.query().findOne({ id: orderGroupId });
+};
+
+export const changeOrderItemStatusToReady = async (orderItemId: number) => {
+  await Order.query().patch({ itemStatus: "ready" }).where({ id: orderItemId });
+  return Order.query().findOne({ id: orderItemId });
 };
 
 export const getsOrderGroupById = (orderGroupId: number) => {

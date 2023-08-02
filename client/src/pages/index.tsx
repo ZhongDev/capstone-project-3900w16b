@@ -12,8 +12,6 @@ import {
   Divider,
 } from "@mantine/core";
 import Image from "next/image";
-import { getMe } from "@/api/auth";
-import useSWR from "swr";
 import PlateHolderImg from "@/public/img/landing_ramen.png";
 import Head from "next/head";
 import { useRouter } from "next/router";
@@ -89,7 +87,6 @@ const useStyles = createStyles((theme) => ({
 }));
 
 export default function Home() {
-  const { data, error, isLoading } = useSWR("/me", getMe);
   const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] =
     useDisclosure(false);
   const { classes, theme } = useStyles();

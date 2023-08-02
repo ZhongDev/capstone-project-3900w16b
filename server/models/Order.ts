@@ -8,6 +8,7 @@ export default class Order extends Model {
   orderGroupId!: number;
   itemId!: number;
   units!: number;
+  itemStatus!: "notready" | "ready";
 
   item?: Item;
   orderGroup?: OrderGroup;
