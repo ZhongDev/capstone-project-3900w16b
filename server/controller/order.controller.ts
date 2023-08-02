@@ -132,6 +132,20 @@ router.get("/:restaurantId/orders/:orderGroupId", async (req, res, next) => {
   }
 });
 
+router.get("/:restaurantId/summary/:from/:to", async (req, res, next) => {
+  try {
+    res.json(
+      await orderService.getRestaurantOrders(
+        Number(req.params.restaurantId),
+        req.params.from,
+        req.params.to
+      )
+    );
+  } catch (err) {
+    next(err);
+  }
+});
+
 router.get("/:restaurantId/est/:orderGroupId", async (req, res, next) => {
   try {
     res.json(
