@@ -1,10 +1,7 @@
 import { Title, Loader, createStyles, Flex, Text, Paper } from "@mantine/core";
 import useSWR from "swr";
 import { Sidebar } from "@/components/Sidebar";
-import { getRestaurantTables } from "@/api/table";
 import Head from "next/head";
-import { CreateTable, TableCard } from "@/components/TableCard";
-import { Group } from "@mantine/core";
 import { useEffect, useState } from "react";
 import { getDaySummary } from "@/api/order";
 import { DatePicker } from "@mantine/dates";
@@ -17,6 +14,7 @@ import {
   CartesianGrid,
   Tooltip,
   Legend,
+  ResponsiveContainer,
 } from "recharts";
 
 const useStyles = createStyles((theme) => ({
@@ -43,7 +41,7 @@ export default function TableManagement() {
         totalRevenue: Number;
         totalOrders: Number;
         mostOrdered: string | undefined;
-        data: { date: string; "revenue ($)": number; orders: number }[];
+        data: { date: string; "revenue ($)": number; "item orders": number }[];
       }
     | undefined
   >();
@@ -66,7 +64,7 @@ export default function TableManagement() {
           return {
             date: dateString,
             "revenue ($)": val,
-            orders: res.numOrders[i],
+            "item orders": res.numOrders[i],
           };
         }),
       });
@@ -105,7 +103,7 @@ export default function TableManagement() {
                     Total Revenue: ${statData?.totalRevenue.toLocaleString()}
                   </Text>
                   <Text size="xl">
-                    Total Orders: {statData?.totalOrders.toLocaleString()}
+                    Total Item Orders: {statData?.totalOrders.toLocaleString()}
                   </Text>
                   <Text size="xl">
                     Most Popular Menu Item: {statData?.mostOrdered}
@@ -119,20 +117,22 @@ export default function TableManagement() {
             </Paper>
           </Flex>
           {statData?.data.length !== 0 && (
-            <LineChart width={1000} height={600} data={statData?.data}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="date" />
-              <YAxis />
-              <Tooltip />
-              <Legend />
-              <Line
-                type="monotone"
-                dataKey="revenue ($)"
-                stroke="#EAA844"
-                activeDot={{ r: 8 }}
-              />
-              <Line type="monotone" dataKey="orders" stroke="#03adfc" />
-            </LineChart>
+            <ResponsiveContainer width={"75%"} height={500}>
+              <LineChart data={statData?.data}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="date" />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                <Line
+                  type="monotone"
+                  dataKey="revenue ($)"
+                  stroke="#EAA844"
+                  activeDot={{ r: 8 }}
+                />
+                <Line type="monotone" dataKey="item orders" stroke="#03adfc" />
+              </LineChart>
+            </ResponsiveContainer>
           )}
         </Flex>
       </Sidebar>
