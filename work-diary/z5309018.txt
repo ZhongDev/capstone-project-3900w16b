@@ -29,3 +29,15 @@ Week 7
 Week 8
 - Project Demo and Retro for Sprint 2
 - Met up with group and discussed remaining tasks for Sprint 3, may need to meet up more to get everything finished
+- This was the week were the group employed pair programming. Specifically, I paired with Kenneth to finish some of the remaining functionalities.
+
+Week 9
+- Second last week until the final project demo, the group agreed to continue to meetup twice this week to allow the project to go smoothly.
+- Half of the remaining functionalities are planned to be done this week. 
+- Was assigned to do the order ETA functionalities. 
+- Ended up also largely helping with the daily summary functionality that we renamed into the restaurant statistics functionality. 
+
+Week 10
+- Last second touchups on the code.
+- Final project demo!
+- Group met up to discuss how to split up the work for the final report. Decided to split each section to group members by who worked on which functionality.
