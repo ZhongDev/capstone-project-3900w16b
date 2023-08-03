@@ -52,3 +52,12 @@ export const loginRestaurant = ({
       throw err.response.data;
     }) as Promise<AuthResponse>;
 };
+
+export const logoutRestaurant = () => {
+  return request
+    .post(process.env.NEXT_PUBLIC_BASEURL + "/restaurant/logout")
+    .then((res) => res.data)
+    .catch((err) => {
+      throw err.response.data;
+    }) as Promise<void>;
+};
