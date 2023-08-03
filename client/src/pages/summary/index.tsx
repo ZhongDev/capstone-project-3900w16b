@@ -46,30 +46,28 @@ export default function TableManagement() {
     | undefined
   >();
   useEffect(() => {
-    getDaySummary(
-      data?.restaurantId,
-      dates[0]?.toString(),
-      dates[1]?.toString()
-    ).then((res) => {
-      let date = new Date(res.fromDate);
-      setStatData({
-        from: new Date(res.fromDate).toDateString(),
-        to: new Date(res.toDate).toDateString(),
-        totalRevenue: res.totalRevenue,
-        totalOrders: res.totalOrders,
-        mostOrdered: res.mostPopularItem,
-        data: res.revenue.map((val, i) => {
-          const dateString = date.toDateString();
-          date.setDate(date.getDate() + 1);
-          return {
-            date: dateString,
-            "revenue ($)": val,
-            "item orders": res.numOrders[i],
-          };
-        }),
-      });
-      console.log("STATDATA :" + statData);
-    });
+    getDaySummary(data?.id, dates[0]?.toString(), dates[1]?.toString()).then(
+      (res) => {
+        let date = new Date(res.fromDate);
+        setStatData({
+          from: new Date(res.fromDate).toDateString(),
+          to: new Date(res.toDate).toDateString(),
+          totalRevenue: res.totalRevenue,
+          totalOrders: res.totalOrders,
+          mostOrdered: res.mostPopularItem,
+          data: res.revenue.map((val, i) => {
+            const dateString = date.toDateString();
+            date.setDate(date.getDate() + 1);
+            return {
+              date: dateString,
+              "revenue ($)": val,
+              "item orders": res.numOrders[i],
+            };
+          }),
+        });
+        console.log("STATDATA :" + statData);
+      }
+    );
   }, [dates]);
 
   return (

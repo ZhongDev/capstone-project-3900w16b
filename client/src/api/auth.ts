@@ -1,6 +1,6 @@
 import request from "./request";
 
-export type GetMeResponse = { restaurantId: number };
+export type GetMeResponse = { id: number };
 export const getMe = () =>
   request
     .get(process.env.NEXT_PUBLIC_BASEURL + "/me")

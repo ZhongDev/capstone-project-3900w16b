@@ -13,6 +13,8 @@ import helpController from "./controller/help.controller";
 import "./db";
 import CustomError from "./errors/CustomError";
 import auth from "./controller/middleware/auth";
+import { getRestaurantById } from "./repository/restaurant.repository";
+import Unauthorized from "./errors/Unauthorized";
 
 const app = express();
 app.use(
@@ -31,8 +33,16 @@ app.use("/menu", menuController);
 app.use("/order", orderController);
 app.use("/help", helpController);
 
-app.get("/me", auth, (req, res, next) => {
-  res.send(req.restaurant);
+app.get("/me", auth, async (req, res, next) => {
+  try {
+    const restaurant = await getRestaurantById(req.restaurant!.restaurantId);
+    if (!restaurant) {
+      throw new Unauthorized();
+    }
+    res.send(restaurant);
+  } catch (err) {
+    next(err);
+  }
 });
 
 app.use("*", (req, res) => {
