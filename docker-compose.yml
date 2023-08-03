@@ -1,0 +1,18 @@
+version: "3.4"
+services:
+  plateholder-server:
+    build: ./server
+    ports:
+      - "3001:3001"
+    expose:
+      - "3001"
+  plateholder-client:
+    build: ./client
+    environment:
+      - NEXT_PUBLIC_BASEURL=http://plateholder-server:3001
+    ports:
+      - "3000:3000"
+    expose:
+      - "3000"
+    links:
+      - "plateholder-server:localhost"

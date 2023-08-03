@@ -80,7 +80,7 @@ export const OrderItem = ({ itemId, restaurantId, close }: OrderItemProps) => {
           <div className={classes.foodImageContainer}>
             <Image
               src={
-                process.env.NEXT_PUBLIC_BASEURL + "/public/" + itemData.image
+                process.env.NEXT_PUBLIC_IMAGEURL + "/public/" + itemData.image
               }
               alt="food image"
               fill

@@ -46,7 +46,7 @@ export const ItemCard = ({ item }: ItemCardProps) => {
           {item.image && (
             <div>
               <Image
-                src={process.env.NEXT_PUBLIC_BASEURL + "/public/" + item.image}
+                src={process.env.NEXT_PUBLIC_IMAGEURL + "/public/" + item.image}
                 height={75}
                 width={75}
                 alt="food image"

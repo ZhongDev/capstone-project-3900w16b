@@ -4,6 +4,8 @@ import { Card, TextInput, Text, createStyles } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { GradientButton } from "../Button";
 import { registerRestaurant } from "@/api/auth";
+import { useContext } from "react";
+import { AuthContext } from "@/providers";
 
 const useStyles = createStyles((theme) => ({
   registerForm: {
@@ -23,6 +25,8 @@ const useStyles = createStyles((theme) => ({
 export const RegisterForm = () => {
   const { classes } = useStyles();
   const router = useRouter();
+
+  const authContext = useContext(AuthContext);
 
   const registerForm = useForm({
     initialValues: {
@@ -48,7 +52,8 @@ export const RegisterForm = () => {
     name: string;
     password: string;
   }) => {
-    registerRestaurant({ email, name, password })
+    authContext
+      ?.register(email, name, password)
       .then(() => router.push("/menu"))
       .catch((err) => {
         /**
