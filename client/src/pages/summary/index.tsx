@@ -28,6 +28,9 @@ const useStyles = createStyles((theme) => ({
     justifyItems: "space-evenly",
     marginTop: theme.spacing.xl,
   },
+  textCenter: {
+    textAlign: "center",
+  },
 }));
 
 export default function TableManagement() {
@@ -93,17 +96,26 @@ export default function TableManagement() {
             <Paper shadow="md" mt="xs" px="xl" py="md" radius="md">
               {statData?.data.length !== 0 ? (
                 <Flex direction="column" align="center">
-                  <Text fw={700} style={{ paddingBottom: "1rem" }}>
+                  <Text
+                    fw={700}
+                    style={{ paddingBottom: "1rem" }}
+                    className={classes.textCenter}
+                  >
                     {statData?.from} - {statData?.to}
                   </Text>
 
-                  <Text>
+                  <Text className={classes.textCenter}>
                     Total Revenue: ${statData?.totalRevenue.toLocaleString()}
                   </Text>
-                  <Text>
+                  <Text className={classes.textCenter}>
                     Total Item Orders: {statData?.totalOrders.toLocaleString()}
                   </Text>
-                  <Text>Most Popular Menu Item: {statData?.mostOrdered}</Text>
+                  <Text className={classes.textCenter}>
+                    Most Popular Menu Item:
+                  </Text>
+                  <Text className={classes.textCenter}>
+                    {statData?.mostOrdered}
+                  </Text>
                 </Flex>
               ) : (
                 <Text fw={700}>Select dates to see restaurant stats!</Text>
