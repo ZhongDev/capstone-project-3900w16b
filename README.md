@@ -26,6 +26,10 @@ To install Plateholder for evaluation, ensure that [docker](https://www.docker.c
 
 # Development Installation Instructions
 
+## NOTE
+
+These are instructions mainly aimed at development, and may show slowdowns when compared to a built version, such as when build commands are run, or using the docker container above. Do not use the development enviroment for evaluation of software performance.
+
 To install the project for development, make sure [nodeJS](https://nodejs.org/en/download/ "Click here to goto the nodeJS download page") is already installed. The LTS version is recommended for this project. If issues occur, please attempt to install node version `v18.16.0`.
 
 ### Setup
@@ -41,8 +45,24 @@ To install the project for development, make sure [nodeJS](https://nodejs.org/en
     replacing `<jwt key>` with any string of choice for jwt authenication.
 5.  Run `npm i` in `/client`, and wait for packages to install
 
-### Running the software
+### Running the software (development mode)
+
+Development mode will automatically show updates when files are saved, at the expense of performance as software is compiled on webpage request.
 
 1.  Run `nodemon index.ts` in `/server` to initiate the backend
+<<<<<<< Updated upstream
 2.  In another terminal, run `npm run dev` in `/client` to start the frontend
 3.  Use `Ctrl + C` to close either instance.
+=======
+2.  Run `npm run dev` in `/client` to initiate the frontend
+3.  Use `Cntrl + C` to close either instance.
+
+### Building the software for runtime (production mode)
+
+Production mode will not show updates when files are saved, however will run at production speed as the software is precompiled.
+
+1.  Run `nodemon index.ts` in `/server` to initiate the backend
+2.  Run `npm run build` in `/client` to build the frontend
+3.  Run `npm start` in `/client` to start the frontend
+4.  Use `Cntrl + C` to close either instance.
+>>>>>>> Stashed changes
