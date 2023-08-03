@@ -1,0 +1,33 @@
+Week 1
+- Started with basic functions in the codebase (registering a restaurant, add db)
+
+Week 2
+- Worked on basic authentication and category creation
+
+Week 3
+- Worked on frontend work for category creation
+- Set up linting and tooling for repository
+
+Week 4
+- Set up merge rules for repository
+- Worked on backend for create items
+
+Week 5
+- Worked on reordering categories and items
+
+Week 6
+- Worked on updating and deleting items
+
+Week 7
+- Worked on user device cart (adding, editting, removing cart items)
+- Worked on user device ordering (sending order to restaurant)
+
+Week 8
+- Worked on user device cart (bug fixes)
+- Worked on user device ordering
+
+Week 9
+- Worked on table billing (small bug fixes on backend/frontend)
+
+Week 10
+- Worked on docker containerization
