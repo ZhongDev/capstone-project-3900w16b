@@ -1,0 +1,40 @@
+# Week 1
+- Settled on node/react technology stack
+- Settled on restaurant waiting system
+
+# Week 2
+- Create Jira readme file to make communications more clear.
+
+# Week 3
+- Made mockups of UI in figma as a guide for other members to follow, and to insert into proposal
+- linting/tooling with dow
+- category work with dow
+
+# Week 4
+- Ui mockups work and refinements
+
+# Week 5
+- Frontend navbar implement
+- Frontend categories work
+
+# Week 6 (Flexi-week)
+- minor changes
+- Create more mockups for new screens
+
+# Week 7
+- Work on fronend code.
+
+# Week 8
+- Some code debugging.
+- Ui mockups for alterations
+
+# Week 9
+- audio chimes working
+- start work on summary functionality / restaurant statistics. 
+- help with identifying and fixing bugs
+
+# Week 10
+- working statistics
+- debugged audio chimes firing incorrectly
+- Minor code polish before submission.
+- Working on final report.
