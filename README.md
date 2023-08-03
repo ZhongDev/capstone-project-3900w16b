@@ -44,6 +44,5 @@ To install the project for development, make sure [nodeJS](https://nodejs.org/en
 ### Running the software
 
 1.  Run `nodemon index.ts` in `/server` to initiate the backend
-2.  Run `npm run build` in `/client` to build the frontend
-3.  Run `npm start` in `/client` to start the frontend
-4.  Use `Cntrl + C` to close either instance.
+2.  In another terminal, run `npm run dev` in `/client` to start the frontend
+3.  Use `Ctrl + C` to close either instance.
