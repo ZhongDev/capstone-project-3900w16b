@@ -2,6 +2,7 @@ import {
   getMe,
   GetMeResponse,
   loginRestaurant,
+  logoutRestaurant,
   registerRestaurant,
 } from "@/api/auth";
 import { useAuth } from "@/hooks";
@@ -12,6 +13,7 @@ export const AuthContext = createContext<
       me: GetMeResponse | null;
       login: (email: string, password: string) => Promise<any>;
       register: (email: string, name: string, password: string) => Promise<any>;
+      logout: () => Promise<void>;
     }
   | undefined
 >(undefined);
@@ -37,9 +39,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         throw err;
       });
 
+  const logout = () => logoutRestaurant();
+
   return (
     <AuthContext.Provider
-      value={me !== undefined ? { me, login, register } : undefined}
+      value={me !== undefined ? { me, login, register, logout } : undefined}
     >
       {children}
     </AuthContext.Provider>

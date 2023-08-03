@@ -41,6 +41,10 @@ router.post("/login", async (req, res, next) => {
   }
 });
 
+router.post("/logout", async (req, res, next) => {
+  res.clearCookie("Authorization").json("Logged out");
+});
+
 // Controls creation of tables
 router.post("/table", auth, async (req, res, next) => {
   try {

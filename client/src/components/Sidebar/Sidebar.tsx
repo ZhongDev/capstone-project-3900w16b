@@ -2,6 +2,8 @@ import { AppShell, Navbar, createStyles, Title } from "@mantine/core";
 import { GradientButton } from "../Button";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import { useContext } from "react";
+import { AuthContext } from "@/providers";
 
 const useStyles = createStyles((theme) => ({
   titleSection: {
@@ -19,102 +21,113 @@ export const Sidebar = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter();
   const { classes } = useStyles();
 
+  const authContext = useContext(AuthContext);
+
   return (
     <AppShell
       padding="md"
       navbar={
         <Navbar width={{ base: 300 }} p="xl">
-          <Link href="/">
-            <Title
-              className={classes.titleSection}
-              mb="xl"
-              p="lg"
-              align="center"
-              color="gold"
-            >
-              Plateholder
-            </Title>
-          </Link>
-          <Navbar.Section className={classes.section} px="xl">
+          <Navbar.Section>
+            <Link href="/">
+              <Title
+                className={classes.titleSection}
+                mb="xl"
+                p="lg"
+                align="center"
+                color="gold"
+              >
+                Plateholder
+              </Title>
+            </Link>
+          </Navbar.Section>
+          <Navbar.Section grow className={classes.section} px="xl">
             <Link href="/help">
               <GradientButton
                 variant={router.pathname === "/help" ? "filled" : "outline"}
                 size="md"
+                mb="xs"
                 fullWidth
               >
                 Assistance List
               </GradientButton>
             </Link>
-          </Navbar.Section>
-          <Navbar.Section className={classes.section} px="xl">
             <Link href="/menu">
               <GradientButton
                 variant={router.pathname === "/menu" ? "filled" : "outline"}
                 size="md"
+                mb="xs"
                 fullWidth
               >
                 Menu Management
               </GradientButton>
             </Link>
-          </Navbar.Section>
-          <Navbar.Section className={classes.section} px="xl">
             <Link href="/table">
               <GradientButton
                 variant={router.pathname === "/table" ? "filled" : "outline"}
                 size="md"
+                mb="xs"
                 fullWidth
               >
                 Table Setup
               </GradientButton>
-            </Link>
-          </Navbar.Section>
-          <Navbar.Section className={classes.section} px="xl">
+            </Link>{" "}
             <Link href="/order_status">
               <GradientButton
                 variant={
                   router.pathname === "/order_status" ? "filled" : "outline"
                 }
                 size="md"
+                mb="xs"
                 fullWidth
               >
                 Order Status
               </GradientButton>
             </Link>
-          </Navbar.Section>
-          <Navbar.Section className={classes.section} px="xl">
             <Link href="/order_completed">
               <GradientButton
                 variant={
                   router.pathname === "/order_completed" ? "filled" : "outline"
                 }
                 size="md"
+                mb="xs"
                 fullWidth
               >
                 Completed Orders
               </GradientButton>
             </Link>
-          </Navbar.Section>
-          <Navbar.Section className={classes.section} px="xl">
             <Link href="/bill">
               <GradientButton
                 variant={router.pathname === "/bill" ? "filled" : "outline"}
                 size="md"
+                mb="xs"
                 fullWidth
               >
                 Table Bill
               </GradientButton>
             </Link>
-          </Navbar.Section>
-          <Navbar.Section className={classes.section} px="xl">
             <Link href="/summary">
               <GradientButton
                 variant={router.pathname === "/summary" ? "filled" : "outline"}
                 size="md"
+                mb="xs"
                 fullWidth
               >
                 Restaurant Statistics
               </GradientButton>
             </Link>
+          </Navbar.Section>
+          <Navbar.Section className={classes.section} px="xl">
+            <GradientButton
+              onClick={() => {
+                authContext?.logout();
+                router.replace("/");
+              }}
+              size="md"
+              fullWidth
+            >
+              Log out
+            </GradientButton>
           </Navbar.Section>
         </Navbar>
       }
