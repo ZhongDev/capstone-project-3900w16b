@@ -21,3 +21,9 @@ Worked on some menu frontend, mainly updating and deletion.
 
 Week 8:
 Working on the assistance request section of the project.
+
+Week 9:
+Finished off the assistance part, now helping others finish what needs to be done.
+
+Week 10:
+Preparing for demo and report/code submission.
