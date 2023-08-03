@@ -28,7 +28,7 @@ To install Plateholder for evaluation, ensure that [docker](https://www.docker.c
 
 ## NOTE
 
-These are instructions mainly aimed at development, and may show slowdowns when compared to a built version, such as when build commands are run, or using the docker container above. </br>
+These are instructions mainly aimed at development, and may show slowdowns when compared to a built version, such as it is reccomened to use build commands, or using the docker container above unless required.</br>
 **Do not use the development enviroment for evaluation of software performance.**
 
 ### Prerequisite
