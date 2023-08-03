@@ -160,7 +160,7 @@ const OrderedItemCard = ({ orderGroup }: OrderedItemCardProps) => {
               <Image
                 className={classes.foodImage}
                 src={
-                  process.env.NEXT_PUBLIC_BASEURL +
+                  process.env.NEXT_PUBLIC_IMAGEURL +
                   "/public/" +
                   orderGroup.items[0].item.image
                 }

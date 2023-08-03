@@ -169,7 +169,7 @@ export const Cart = ({ close, restaurant, table, menu }: CartProps) => {
                         <div className={classes.foodImage}>
                           <Image
                             src={
-                              process.env.NEXT_PUBLIC_BASEURL +
+                              process.env.NEXT_PUBLIC_IMAGEURL +
                               "/public/" +
                               inCartItem.image
                             }

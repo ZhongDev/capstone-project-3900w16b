@@ -98,7 +98,7 @@ export const MenuItemsCards = ({ category, onClick }: MenuItemsProps) => {
                   <div className={classes.foodImage}>
                     <Image
                       src={
-                        process.env.NEXT_PUBLIC_BASEURL +
+                        process.env.NEXT_PUBLIC_IMAGEURL +
                         "/public/" +
                         item.image
                       }
