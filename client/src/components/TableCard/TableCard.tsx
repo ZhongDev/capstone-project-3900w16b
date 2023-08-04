@@ -14,6 +14,7 @@ import { useDisclosure } from "@mantine/hooks";
 import QRCode from "qrcode.react";
 import { useState } from "react";
 import { mutate } from "swr";
+import Link from "next/link";
 
 const downloadQR = () => {
   const canvas = document.getElementById("QRCode") as HTMLCanvasElement;
@@ -60,6 +61,15 @@ export const TableCard = ({ table }: { table: Table }) => {
           </Button>
           <Modal opened={opened} onClose={close} title="QR Code">
             <Text>QR Code for table: {table.name}</Text>
+            <Text mb="md">
+              Link for table:{" "}
+              <Link
+                href={`${process.env.NEXT_PUBLIC_FRONTEND_URL}/menu/${table.restaurantId}/${table.id}`}
+                target="_blank"
+              >
+                {`${process.env.NEXT_PUBLIC_FRONTEND_URL}/menu/${table.restaurantId}/${table.id}`}
+              </Link>
+            </Text>
             <Group position="center">
               <QRCode
                 id="QRCode"
